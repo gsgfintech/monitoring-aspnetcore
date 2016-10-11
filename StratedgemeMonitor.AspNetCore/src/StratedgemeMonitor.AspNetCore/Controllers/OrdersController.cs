@@ -2,18 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using StratedgemeMonitor.AspNetCore.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     [Authorize]
-    public class ExecutionsController : Controller
+    public class OrdersController : Controller
     {
-        private readonly ExecutionsControllerUtils utils;
+        private readonly OrdersControllerUtils utils;
 
-        public ExecutionsController(MonitorDbContext db)
+        public OrdersController(MonitorDbContext db)
         {
-            utils = new ExecutionsControllerUtils(db);
+            utils = new OrdersControllerUtils(db);
         }
 
         // GET: /<controller>/
@@ -22,9 +24,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return View(await utils.CreateListViewModel(day));
         }
 
-        public async Task<IActionResult> Details(string executionid)
+        public async Task<IActionResult> Details(int id)
         {
-            return View(await utils.GetById(executionid));
+            return View(await utils.GetByPermanentId(id));
         }
     }
 }

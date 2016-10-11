@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-StratedgemeMonitor.AspNetCore-17d589bd-1d1e-4f0d-bd12-47da9aa1d853",
 
   "dependencies": {
@@ -33,7 +33,7 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
     "Capital.GSG.FX.Utils.Core": "1.0.0",
-    "Capital.GSG.FX.Data.Core": "1.1.0",
+    "Capital.GSG.FX.Data.Core": "1.1.3",
     "Syncfusion.EJ.AspNet.Core": "14.3600.0.49-preview2-final"
   },
 

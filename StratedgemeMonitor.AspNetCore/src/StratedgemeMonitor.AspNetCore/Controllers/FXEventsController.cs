@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StratedgemeMonitor.AspNetCore.Models;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
+    [Authorize]
     public class FXEventsController : Controller
     {
         private readonly FXEventsControllerUtils utils;
