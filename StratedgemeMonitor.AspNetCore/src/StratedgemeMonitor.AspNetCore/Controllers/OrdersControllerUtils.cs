@@ -48,7 +48,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders
+            return (await (from e in db.Orders.Include(o => o.History)
                            where !activeStatus.Contains(e.Status)
                            where e.PlacedTime >= boundaries.Item1
                            where e.PlacedTime <= boundaries.Item2
@@ -62,7 +62,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders
+            return (await (from e in db.Orders.Include(o => o.History)
                            where activeStatus.Contains(e.Status)
                            orderby e.PlacedTime descending
                            select e).ToListAsync()).ToOrderModels();
@@ -74,7 +74,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
             // TODO : replace Where().FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.Orders.Where(o => o.PermanentID == permanentId).FirstOrDefaultAsync(cts.Token)).ToOrderModel();
+            return (await db.Orders.Include(o => o.History).FirstOrDefaultAsync(o => o.PermanentID == permanentId, cts.Token)).ToOrderModel();
         }
     }
 
@@ -93,7 +93,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return new OrderHistoryPointModel()
             {
                 Status = point.Status,
-                Timestamp = point.Timestamp
+                Timestamp = point.Timestamp.ToOffset(TimeSpan.FromHours(8))
             };
         }
 
@@ -113,7 +113,6 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 Cross = order.Cross,
                 EstimatedCommission = order.EstimatedCommission,
                 EstimatedCommissionCcy = order.EstimatedCommissionCcy,
-                ExitProfitabilityLevel = order.ExitProfitabilityLevel,
                 FillPrice = order.FillPrice,
                 History = order.History.ToOrderHistoryPointModels(),
                 LastAsk = order.LastAsk,
@@ -135,10 +134,8 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 Strategy = order.Strategy,
                 TimeInForce = order.TimeInForce,
                 TrailingAmount = order.TrailingAmount,
-                TransmitOrder = order.TransmitOrder,
                 Type = order.Type,
-                UsdQuantity = order.UsdQuantity,
-                WarningMessage = order.WarningMessage
+                UsdQuantity = order.UsdQuantity
             };
         }
 

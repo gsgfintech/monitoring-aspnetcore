@@ -25,6 +25,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
             modelBuilder.Entity<Order>().HasKey(o => o.PermanentID);
             modelBuilder.Entity<OrderHistoryPoint>().HasKey(p => new { p.OrderPermanentID, p.ID });
+            modelBuilder.Entity<OrderHistoryPoint>().ToTable("OrderHistoryPoints");
         }
     }
 }

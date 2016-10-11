@@ -36,11 +36,10 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
         public int ClientId { get; set; }
 
+        [Display(Name = "Commission (est.)")]
         public double? EstimatedCommission { get; set; }
 
         public Currency? EstimatedCommissionCcy { get; set; }
-
-        public double? ExitProfitabilityLevel { get; set; }
 
         public List<OrderHistoryPointModel> History { get; set; }
 
@@ -75,11 +74,8 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [Display(Name = "Trail Amt")]
         public double? TrailingAmount { get; set; }
 
-        public bool TransmitOrder { get; set; }
-
+        [DisplayFormat(DataFormatString = "{0:N0}")]
         public int? UsdQuantity { get; set; }
-
-        public string WarningMessage { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N1} pips")]
         public double? Slippage { get; set; }

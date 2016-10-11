@@ -66,9 +66,18 @@
                         @Html.DisplayNameFor(model => model.Quantity)
                     </dt>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Quantity)
-                    </dd>
+                    @if (Model.UsdQuantity.HasValue && Model.UsdQuantity.Value / 1000 != Model.Quantity)
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => model.Quantity) <small>(@Html.DisplayFor(m => Model.UsdQuantity) USD)</small>
+                        </dd>
+                    }
+                    else
+                    {
+                        <dd>
+                            @Html.DisplayFor(model => model.Quantity)
+                        </dd>
+                    }
 
                     <dt>
                         @Html.DisplayNameFor(model => model.Side)
@@ -111,25 +120,8 @@
                     </dt>
 
                     <dd>
-                        @Html.DisplayFor(model => model.EstimatedCommission)
+                        @Html.DisplayFor(model => model.EstimatedCommission) @Html.DisplayFor(model => model.EstimatedCommissionCcy)
                     </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.EstimatedCommissionCcy)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.EstimatedCommissionCcy)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.ExitProfitabilityLevel)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.ExitProfitabilityLevel)
-                    </dd>
-
                     <dt>
                         @Html.DisplayNameFor(model => model.LastAsk)
                     </dt>
@@ -209,36 +201,38 @@
                     <dd>
                         @Html.DisplayFor(model => model.TrailingAmount)
                     </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TransmitOrder)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.TransmitOrder)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.UsdQuantity)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.UsdQuantity)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.WarningMessage)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.WarningMessage)
-                    </dd>
-
                 </dl>
                 <p class="pull-right">
                     <a class="btn btn-primary" asp-action="Index">Back</a>
                 </p>
             </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>History</h4>
+            </div>
+            @if (Model.History.Count > 0)
+            {
+                <table class="table table-condensed">
+                    @foreach (var point in Model.History)
+                {
+                        <tr>
+                            <td>@Html.DisplayFor(p => point.Timestamp)</td>
+                            <td>@Html.DisplayFor(p => point.Status)</td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No history point recorder for this order</p>
+                </div>
+            }
         </div>
     </div>
 </div>
