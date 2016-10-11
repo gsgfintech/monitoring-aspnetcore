@@ -57,7 +57,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
             // TODO : replace Where().FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.Executions.Where(e => e.Id == id).FirstOrDefaultAsync(cts.Token)).ToExecutionModel();
+            return (await db.Executions.FirstOrDefaultAsync(e => e.Id == id, cts.Token)).ToExecutionModel();
         }
     }
 

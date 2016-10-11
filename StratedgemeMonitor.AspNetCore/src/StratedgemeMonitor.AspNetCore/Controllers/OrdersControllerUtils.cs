@@ -48,7 +48,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders.Include(o => o.History)
+            return (await (from e in db.Orders
                            where !activeStatus.Contains(e.Status)
                            where e.PlacedTime >= boundaries.Item1
                            where e.PlacedTime <= boundaries.Item2
@@ -62,7 +62,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders.Include(o => o.History)
+            return (await (from e in db.Orders
                            where activeStatus.Contains(e.Status)
                            orderby e.PlacedTime descending
                            select e).ToListAsync()).ToOrderModels();

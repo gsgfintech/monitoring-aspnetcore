@@ -69,8 +69,8 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            // TODO : replace Where().FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.FXEvents.Where(e => e.EventId == id).FirstOrDefaultAsync(cts.Token)).ToFXEventModel();
+            // TODO : replace FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
+            return (await db.FXEvents.FirstOrDefaultAsync(e => e.EventId == id, cts.Token)).ToFXEventModel();
         }
     }
 
