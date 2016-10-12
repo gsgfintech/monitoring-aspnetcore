@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Capital.GSG.FX.Data.Core.OrderData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StratedgemeMonitor.AspNetCore.Models;
 using System;

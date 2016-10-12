@@ -16,6 +16,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
         public DbSet<Execution> Executions { get; set; }
         public DbSet<FXEvent> FXEvents { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderHistoryPoint> OrderHistoryPoints { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
