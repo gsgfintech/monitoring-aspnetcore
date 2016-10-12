@@ -23,14 +23,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         internal async Task<ExecutionsListViewModel> CreateListViewModel(DateTime? day = null)
         {
             if (!day.HasValue)
-            {
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday)
-                    day = DateTime.Today.AddDays(-1);
-                else if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-                    day = DateTime.Today.AddDays(-2);
-                else
-                    day = DateTime.Today;
-            }
+                day = DateTimeUtils.GetLastBusinessDayInHKT();
 
             List<ExecutionModel> trades = await GetExecutionsForDay(day.Value);
 

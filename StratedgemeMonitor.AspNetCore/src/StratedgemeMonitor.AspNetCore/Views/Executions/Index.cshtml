@@ -113,7 +113,14 @@
                 <h2>Cumulative PnL <small>(Gross)</small></h2>
             </div>
             <div class="panel-body">
-                <ej-chart id="pnlChart" series="@Model.PnlChartData" primary-x-axis="@Model.PnlChartXAxis" primary-y-axis="@Model.PnlChartYAxis"></ej-chart>
+                @if (Model.Trades.Count > 0)
+                {
+                    <ej-chart id="pnlChart" series="@Model.PnlChartData" primary-x-axis="@Model.PnlChartXAxis" primary-y-axis="@Model.PnlChartYAxis"></ej-chart>
+                }
+                else
+                {
+                    <p>Nothing to display</p>
+                }
             </div>
         </div>
     </div>

@@ -26,14 +26,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         internal async Task<OrdersListViewModel> CreateListViewModel(DateTime? day = null)
         {
             if (!day.HasValue)
-            {
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday)
-                    day = DateTime.Today.AddDays(-1);
-                else if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-                    day = DateTime.Today.AddDays(-2);
-                else
-                    day = DateTime.Today;
-            }
+                day = DateTimeUtils.GetLastBusinessDayInHKT();
 
             List<OrderModel> activeOrders = await GetActiveOrders();
             List<OrderModel> inactiveOrders = await GetInactiveOrdersForDay(day.Value);
