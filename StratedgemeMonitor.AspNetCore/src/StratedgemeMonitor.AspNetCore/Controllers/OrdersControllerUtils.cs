@@ -1,7 +1,7 @@
 ﻿using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Data.Core.OrderData;
+using Capital.GSG.FX.MongoConnector.Core;
 using Capital.GSG.FX.Utils.Core;
-using Microsoft.EntityFrameworkCore;
 using StratedgemeMonitor.AspNetCore.Models;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System;
@@ -14,13 +14,13 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class OrdersControllerUtils
     {
-        private readonly MonitorDbContext db;
+        private readonly MongoDBServer mongoDBServer;
 
         private readonly OrderStatusCode[] activeStatus = new OrderStatusCode[3] { OrderStatusCode.PendingSubmit, OrderStatusCode.PreSubmitted, OrderStatusCode.Submitted };
 
-        public OrdersControllerUtils(MonitorDbContext db)
+        public OrdersControllerUtils(MongoDBServer mongoDBServer)
         {
-            this.db = db;
+            this.mongoDBServer = mongoDBServer;
         }
 
         internal async Task<OrdersListViewModel> CreateListViewModel(DateTime? day = null)
@@ -36,17 +36,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<OrderModel>> GetInactiveOrdersForDay(DateTime day)
         {
-            Tuple<DateTimeOffset, DateTimeOffset> boundaries = DateTimeUtils.GetTradingDayBoundariesDateTimeOffset(day);
-
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
-
-            return (await (from e in db.Orders
-                           where !activeStatus.Contains(e.Status)
-                           where e.PlacedTime >= boundaries.Item1
-                           where e.PlacedTime <= boundaries.Item2
-                           orderby e.PlacedTime descending
-                           select e).ToListAsync()).ToOrderModels();
+            return (await GetOrdersForDay(day))?.Where(o => !activeStatus.Contains(o.Status))?.ToList();
         }
 
         internal async Task<List<OrderModel>> GetOrdersForDay(DateTime day)
@@ -56,23 +46,15 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders
-                           where e.PlacedTime >= boundaries.Item1
-                           where e.PlacedTime <= boundaries.Item2
-                           orderby e.PlacedTime descending
-                           select e).ToListAsync()).ToOrderModels();
+            return (await mongoDBServer.OrderActioner.GetOrdersPlacedOnDay(day, cts.Token)).ToOrderModels();
         }
 
         private async Task<List<OrderModel>> GetActiveOrders()
         {
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Orders
-                           where activeStatus.Contains(e.Status)
-                           orderby e.PlacedTime descending
-                           select e).ToListAsync()).ToOrderModels();
+            return (await mongoDBServer.OrderActioner.GetByStatus(activeStatus, ct: cts.Token)).ToOrderModels();
         }
 
         internal async Task<OrderModel> GetByPermanentId(int permanentId)
@@ -80,8 +62,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            // TODO : replace Where().FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.Orders.Include(o => o.History).FirstOrDefaultAsync(o => o.PermanentID == permanentId, cts.Token)).ToOrderModel();
+            return (await mongoDBServer.OrderActioner.Get(permanentId, cts.Token)).ToOrderModel();
         }
 
         internal async Task<bool> AddOrUpdate(Order order)
@@ -89,54 +70,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            Order existing = await db.Orders.FirstOrDefaultAsync(o => o.PermanentID == order.PermanentID, cts.Token);
-
-            if (existing != null)
-            {
-                existing.FillPrice = order.FillPrice;
-                existing.History = order.History;
-                existing.LastUpdateTime = order.LastUpdateTime;
-                existing.LimitPrice = order.LimitPrice;
-                existing.Quantity = order.Quantity;
-                existing.Status = order.Status;
-                existing.StopPrice = order.StopPrice;
-                existing.TimeInForce = order.TimeInForce;
-                existing.TrailingAmount = order.TrailingAmount;
-                existing.WarningMessage = order.WarningMessage;
-
-                db.Entry(existing).State = EntityState.Modified;
-
-                if (!order.History.IsNullOrEmpty())
-                {
-                    foreach (var point in order.History)
-                    {
-                        if (string.IsNullOrEmpty(point.ID))
-                            point.ID = Guid.NewGuid().ToString();
-
-                        if (point.OrderPermanentID == 0)
-                            point.OrderPermanentID = order.PermanentID;
-                    }
-
-                    List<OrderHistoryPoint> existingHistoryPoints = await db.OrderHistoryPoints.Where(p => p.OrderPermanentID == order.PermanentID).ToListAsync(cts.Token);
-
-                    if (existingHistoryPoints.IsNullOrEmpty())
-                        db.OrderHistoryPoints.AddRange(order.History);
-                    else
-                    {
-                        foreach (var point in order.History)
-                        {
-                            if (!existingHistoryPoints.Contains(point))
-                                db.OrderHistoryPoints.Add(point);
-                            else
-                                db.Entry(point).State = EntityState.Unchanged;
-                        }
-                    }
-                }
-            }
-            else
-                db.Orders.Add(order);
-
-            return (await db.SaveChangesAsync(cts.Token)) >= 1;
+            return await mongoDBServer.OrderActioner.AddOrUpdate(order, cts.Token);
         }
     }
 

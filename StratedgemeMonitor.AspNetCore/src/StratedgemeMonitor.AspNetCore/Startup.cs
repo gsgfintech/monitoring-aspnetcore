@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using StratedgemeMonitor.AspNetCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Capital.GSG.FX.MongoConnector.Core;
 
 namespace StratedgemeMonitor.AspNetCore
 {
@@ -38,6 +39,18 @@ namespace StratedgemeMonitor.AspNetCore
             // Add framework services.
             var connection = Configuration["MS_TableConnectionString"];
             services.AddDbContext<MonitorDbContext>(options => options.UseSqlServer(connection));
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                string database = Configuration["MongoDB:Name"];
+                string host = Configuration["MongoDB:Host"];
+                int port = int.Parse(Configuration["MongoDB:Port"]);
+
+                string user = Configuration["MongoDB:User"];
+                string password = Configuration["MongoDB:Password"];
+
+                return MongoDBServer.CreateServer(database, host, port, user: user, password: password);
+            });
 
             services.AddApplicationInsightsTelemetry(Configuration);
 

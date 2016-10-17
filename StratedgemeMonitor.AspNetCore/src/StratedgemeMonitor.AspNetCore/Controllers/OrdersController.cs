@@ -1,4 +1,5 @@
 ﻿using Capital.GSG.FX.Data.Core.OrderData;
+using Capital.GSG.FX.MongoConnector.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StratedgemeMonitor.AspNetCore.Models;
@@ -14,9 +15,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly OrdersControllerUtils utils;
 
-        public OrdersController(MonitorDbContext db)
+        public OrdersController(MongoDBServer mongoDBServer)
         {
-            utils = new OrdersControllerUtils(db);
+            utils = new OrdersControllerUtils(mongoDBServer);
         }
 
         // GET: /<controller>/
