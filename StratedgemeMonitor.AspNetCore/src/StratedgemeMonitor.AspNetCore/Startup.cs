@@ -8,11 +8,19 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using StratedgemeMonitor.AspNetCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Capital.GSG.FX.MongoConnector.Core;
+using Capital.GSG.FX.Monitoring.Server.Connector;
+using Capital.GSG.FX.Utils.Core;
 
 namespace StratedgemeMonitor.AspNetCore
 {
     public class Startup
     {
+        internal static string ClientId;
+        internal static string ClientSecret;
+        internal static string Authority;
+        internal static string MonitorBackendServerAddress;
+        internal static string MonitorBackendServerResourceId;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -52,9 +60,17 @@ namespace StratedgemeMonitor.AspNetCore
                 return MongoDBServer.CreateServer(database, host, port, user: user, password: password);
             });
 
+            string monitorBackendAddress = Configuration["MonitorServerBackend:Address"];
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendOrdersConnector(monitorBackendAddress);
+            });
+
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
+
+            services.AddSession();
 
             services.AddAuthentication(
                 SharedOptions => SharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
@@ -65,6 +81,9 @@ namespace StratedgemeMonitor.AspNetCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            LoggingUtils.LoggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            LoggingUtils.LoggerFactory.AddDebug();
 
             app.UseApplicationInsightsRequestTelemetry();
 
@@ -82,15 +101,26 @@ namespace StratedgemeMonitor.AspNetCore
 
             app.UseStaticFiles();
 
+            app.UseSession();
+
+            // Populate AzureAd Configuration Values
+            Authority = Configuration["Authentication:AzureAd:AADInstance"] + Configuration["Authentication:AzureAd:TenantId"];
+            ClientId = Configuration["Authentication:AzureAd:ClientId"];
+            ClientSecret = Configuration["Authentication:AzureAd:ClientSecret"];
+
+            MonitorBackendServerAddress = Configuration["MonitorServerBackend:Address"];
+            MonitorBackendServerResourceId = Configuration["MonitorServerBackend:AppIdUri"];
+
             app.UseCookieAuthentication();
 
             app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
             {
-                ClientId = Configuration["Authentication:AzureAd:ClientId"],
-                ClientSecret = Configuration["Authentication:AzureAd:ClientSecret"],
-                Authority = Configuration["Authentication:AzureAd:AADInstance"] + Configuration["Authentication:AzureAd:TenantId"],
+                ClientId = ClientId,
+                ClientSecret = ClientSecret,
+                Authority = Authority,
                 CallbackPath = Configuration["Authentication:AzureAd:CallbackPath"],
-                ResponseType = OpenIdConnectResponseType.CodeIdToken
+                ResponseType = OpenIdConnectResponseType.CodeIdToken,
+                GetClaimsFromUserInfoEndpoint = false
             });
 
             app.UseMvc(routes =>

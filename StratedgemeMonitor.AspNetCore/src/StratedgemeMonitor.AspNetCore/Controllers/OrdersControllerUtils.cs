@@ -1,76 +1,67 @@
 ﻿using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Data.Core.OrderData;
-using Capital.GSG.FX.MongoConnector.Core;
+using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
+using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
+using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class OrdersControllerUtils
     {
-        private readonly MongoDBServer mongoDBServer;
+        private readonly BackendOrdersConnector connector;
 
         private readonly OrderStatusCode[] activeStatus = new OrderStatusCode[3] { OrderStatusCode.PendingSubmit, OrderStatusCode.PreSubmitted, OrderStatusCode.Submitted };
 
-        public OrdersControllerUtils(MongoDBServer mongoDBServer)
+        public OrdersControllerUtils(BackendOrdersConnector connector)
         {
-            this.mongoDBServer = mongoDBServer;
+            this.connector = connector;
         }
 
-        internal async Task<OrdersListViewModel> CreateListViewModel(DateTime? day = null)
+        internal async Task<OrdersListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
         {
             if (!day.HasValue)
                 day = DateTimeUtils.GetLastBusinessDayInHKT();
 
-            List<OrderModel> activeOrders = await GetActiveOrders();
-            List<OrderModel> inactiveOrders = await GetInactiveOrdersForDay(day.Value);
+            List<OrderModel> activeOrders = await GetActiveOrders(session, user);
+            List<OrderModel> inactiveOrders = await GetInactiveOrdersForDay(day.Value, session, user);
 
             return new OrdersListViewModel(day.Value, activeOrders, inactiveOrders);
         }
 
-        private async Task<List<OrderModel>> GetInactiveOrdersForDay(DateTime day)
+        private async Task<List<OrderModel>> GetInactiveOrdersForDay(DateTime day, ISession session, ClaimsPrincipal user)
         {
-            return (await GetOrdersForDay(day))?.Where(o => !activeStatus.Contains(o.Status))?.ToList();
+            return (await GetOrdersForDay(day, session, user))?.Where(o => !activeStatus.Contains(o.Status))?.ToList();
         }
 
-        internal async Task<List<OrderModel>> GetOrdersForDay(DateTime day)
+        internal async Task<List<OrderModel>> GetOrdersForDay(DateTime day, ISession session, ClaimsPrincipal user)
         {
-            Tuple<DateTimeOffset, DateTimeOffset> boundaries = DateTimeUtils.GetTradingDayBoundariesDateTimeOffset(day);
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
+            var orders = await connector.GetOrdersForDay(day, accessToken);
 
-            return (await mongoDBServer.OrderActioner.GetOrdersPlacedOnDay(day, cts.Token)).ToOrderModels();
+            return orders.ToOrderModels();
         }
 
-        private async Task<List<OrderModel>> GetActiveOrders()
+        private async Task<List<OrderModel>> GetActiveOrders(ISession session, ClaimsPrincipal user)
         {
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return (await mongoDBServer.OrderActioner.GetByStatus(activeStatus, ct: cts.Token)).ToOrderModels();
+            return (await connector.GetActiveOrders(accessToken)).ToOrderModels();
         }
 
-        internal async Task<OrderModel> GetByPermanentId(int permanentId)
+        internal async Task<OrderModel> GetByPermanentId(int permanentId, ISession session, ClaimsPrincipal user)
         {
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return (await mongoDBServer.OrderActioner.Get(permanentId, cts.Token)).ToOrderModel();
-        }
-
-        internal async Task<bool> AddOrUpdate(Order order)
-        {
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(30));
-
-            return await mongoDBServer.OrderActioner.AddOrUpdate(order, cts.Token);
+            return (await connector.GetOrderByPermanentId(permanentId, accessToken)).ToOrderModel();
         }
     }
 
