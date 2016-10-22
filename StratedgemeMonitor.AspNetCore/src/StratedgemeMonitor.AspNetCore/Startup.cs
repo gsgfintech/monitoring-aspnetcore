@@ -68,6 +68,11 @@ namespace StratedgemeMonitor.AspNetCore
                 return new BackendNewsBulletinsConnector(monitorBackendAddress);
             });
 
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendPositionsConnector(monitorBackendAddress);
+            });
+
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();

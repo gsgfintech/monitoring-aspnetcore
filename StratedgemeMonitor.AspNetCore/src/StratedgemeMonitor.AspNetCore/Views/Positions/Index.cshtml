@@ -1,0 +1,74 @@
+﻿@model StratedgemeMonitor.AspNetCore.ViewModels.PositionsListViewModel
+
+@{
+    ViewBag.Title = "Current Positions";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>Current Positions</h2>
+            </div>
+            @if (Model.Positions.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().Cross)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().PositionQuantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().AverageCost)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().UnrealizedPnlUsd)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().RealizedPnlUsd)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.Positions.First().LastUpdate)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.Positions)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cross)
+                            </td>
+                            <td class="@(item.PositionQuantity > 0 ? "bg-success" : item.PositionQuantity < 0 ? "bg-danger" : "")">
+                                @Html.DisplayFor(modelItem => item.PositionQuantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AverageCost)
+                            </td>
+                            <td class="@(item.UnrealizedPnlUsd > 0 ? "bg-success" : item.UnrealizedPnlUsd < 0 ? "bg-danger" : "")">
+                                @Html.DisplayFor(modelItem => item.UnrealizedPnlUsd)
+                            </td>
+                            <td class="@(item.RealizedPnlUsd > 0 ? "bg-success" : item.RealizedPnlUsd < 0 ? "bg-danger" : "")">
+                                @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastUpdate)
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-broker="@item.Broker" asp-route-cross="@item.Cross">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No position</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
