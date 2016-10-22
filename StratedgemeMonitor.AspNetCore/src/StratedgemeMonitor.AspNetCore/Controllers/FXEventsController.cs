@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Capital.GSG.FX.Monitoring.Server.Connector;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StratedgemeMonitor.AspNetCore.Models;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
@@ -10,20 +10,20 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly FXEventsControllerUtils utils;
 
-        public FXEventsController(MonitorDbContext db)
+        public FXEventsController(BackendFXEventsConnector connector)
         {
-            utils = new FXEventsControllerUtils(db);
+            utils = new FXEventsControllerUtils(connector);
         }
 
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            return View(await utils.CreateListViewModel());
+            return View(await utils.CreateListViewModel(HttpContext.Session, User));
         }
 
         public async Task<IActionResult> Details(string id)
         {
-            return View(await utils.GetById(id));
+            return View(await utils.GetById(id, HttpContext.Session, User));
         }
     }
 }

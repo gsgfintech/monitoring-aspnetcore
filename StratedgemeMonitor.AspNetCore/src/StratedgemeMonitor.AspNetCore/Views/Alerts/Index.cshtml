@@ -1,0 +1,122 @@
+﻿@using static Capital.GSG.FX.Data.Core.SystemData.AlertLevel;
+
+@model StratedgemeMonitor.AspNetCore.ViewModels.AlertsListViewModel
+
+@{
+    ViewBag.Title = $"Alerts - {Model.Day.ToString("dd MMM")}";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 style="display:inline-block">Open Alerts <small>(@Model.OpenAlerts.Count)</small></h2>
+                <div class="pull-right">
+                    <a class="@(Model.OpenAlerts.Count > 0 ? "btn btn-danger" : "btn btn-danger disabled")" asp-action="CloseAll">Close All</a>
+                </div>
+            </div>
+            @if (Model.OpenAlerts.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.OpenAlerts.First().Timestamp)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.OpenAlerts.First().Source)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.OpenAlerts.First().Subject)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.OpenAlerts)
+                    {
+                        <tr class="@(item.Level <= INFO ? "bg-success" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Source)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
+                                    <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId">Close</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No open alert</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 style="display:inline-block">Closed Alerts - @Html.DisplayFor(m => Model.Day) <small>(@Model.ClosedAlerts.Count)</small></h2>
+                <div class="pull-right">
+                    <form class="form-horizontal" asp-action="Index">
+                        <div class="form-group-sm">
+                            <input asp-for="Day" type="date" />
+                            <button type="submit">Go</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @if (Model.ClosedAlerts.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Timestamp)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Source)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Subject)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.ClosedAlerts)
+                    {
+                        <tr class="@(item.Level <= INFO ? "bg-success" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Source)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No alert</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

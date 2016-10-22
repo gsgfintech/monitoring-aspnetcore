@@ -5,9 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using StratedgemeMonitor.AspNetCore.Models;
-using Microsoft.EntityFrameworkCore;
-using Capital.GSG.FX.MongoConnector.Core;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
 
@@ -44,26 +41,31 @@ namespace StratedgemeMonitor.AspNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            var connection = Configuration["MS_TableConnectionString"];
-            services.AddDbContext<MonitorDbContext>(options => options.UseSqlServer(connection));
+            string monitorBackendAddress = Configuration["MonitorServerBackend:Address"];
 
             services.AddSingleton((serviceProvider) =>
             {
-                string database = Configuration["MongoDB:Name"];
-                string host = Configuration["MongoDB:Host"];
-                int port = int.Parse(Configuration["MongoDB:Port"]);
-
-                string user = Configuration["MongoDB:User"];
-                string password = Configuration["MongoDB:Password"];
-
-                return MongoDBServer.CreateServer(database, host, port, user: user, password: password);
+                return new BackendAlertsConnector(monitorBackendAddress);
             });
 
-            string monitorBackendAddress = Configuration["MonitorServerBackend:Address"];
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendExecutionsConnector(monitorBackendAddress);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendFXEventsConnector(monitorBackendAddress);
+            });
+
             services.AddSingleton((serviceProvider) =>
             {
                 return new BackendOrdersConnector(monitorBackendAddress);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendNewsBulletinsConnector(monitorBackendAddress);
             });
 
             services.AddApplicationInsightsTelemetry(Configuration);

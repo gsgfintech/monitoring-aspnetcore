@@ -81,8 +81,8 @@ namespace StratedgemeMonitor.AspNetCore.ViewModels
                     ValueType = AxisValueType.Datetime
                 };
 
-                int yUpperBound = ((int)Math.Max(0, cumulativePnl.Select(i => i.Item2).Max())) + 1;
-                int yLowerBound = ((int)Math.Min(0, cumulativePnl.Select(i => i.Item2).Min())) - 1;
+                int yUpperBound = !cumulativePnl.IsNullOrEmpty() ? ((int)Math.Max(0, cumulativePnl.Select(i => i.Item2).Max())) + 1 : 100;
+                int yLowerBound = !cumulativePnl.IsNullOrEmpty() ? ((int)Math.Min(0, cumulativePnl.Select(i => i.Item2).Min())) - 1 : -100;
 
                 PnlChartYAxis = new Axis()
                 {

@@ -1,11 +1,14 @@
 ﻿using Capital.GSG.FX.Data.Core.ExecutionData;
+using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
+using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,44 +16,45 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     public class ExecutionsControllerUtils
     {
-        private readonly MonitorDbContext db;
+        private readonly BackendExecutionsConnector connector;
 
-        public ExecutionsControllerUtils(MonitorDbContext db)
+        public ExecutionsControllerUtils(BackendExecutionsConnector connector)
         {
-            this.db = db;
+            this.connector = connector;
         }
 
-        internal async Task<ExecutionsListViewModel> CreateListViewModel(DateTime? day = null)
+        internal async Task<ExecutionsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
         {
             if (!day.HasValue)
                 day = DateTimeUtils.GetLastBusinessDayInHKT();
 
-            List<ExecutionModel> trades = await GetExecutionsForDay(day.Value);
+            List<ExecutionModel> trades = await GetExecutionsForDay(day.Value, session, user);
 
             return new ExecutionsListViewModel(day.Value, trades ?? new List<ExecutionModel>());
         }
 
-        private async Task<List<ExecutionModel>> GetExecutionsForDay(DateTime day)
+        private async Task<List<ExecutionModel>> GetExecutionsForDay(DateTime day, ISession session, ClaimsPrincipal user)
         {
-            Tuple<DateTimeOffset, DateTimeOffset> boundaries = DateTimeUtils.GetTradingDayBoundariesDateTimeOffset(day);
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.Executions
-                           where e.ExecutionTime >= boundaries.Item1
-                           where e.ExecutionTime <= boundaries.Item2
-                           orderby e.ExecutionTime descending
-                           select e).ToListAsync()).ToExecutionModels();
+            var executions = await connector.GetForDay(day, accessToken);
+
+            return executions.ToExecutionModels();
         }
 
-        internal async Task<ExecutionModel> GetById(string id)
+        internal async Task<ExecutionModel> GetById(string id, ISession session, ClaimsPrincipal user)
         {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            // TODO : replace Where().FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.Executions.FirstOrDefaultAsync(e => e.Id == id, cts.Token)).ToExecutionModel();
+            var execution = await connector.GetById(id, accessToken);
+
+            return execution.ToExecutionModel();
         }
     }
 

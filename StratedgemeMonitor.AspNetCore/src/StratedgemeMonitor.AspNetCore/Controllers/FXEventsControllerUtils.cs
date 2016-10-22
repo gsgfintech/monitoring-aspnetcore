@@ -1,11 +1,13 @@
 ﻿using Capital.GSG.FX.Data.Core.MarketData;
-using Capital.GSG.FX.Utils.Core;
-using Microsoft.EntityFrameworkCore;
+using Capital.GSG.FX.Monitoring.Server.Connector;
+using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
+using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,20 +15,20 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class FXEventsControllerUtils
     {
-        private readonly MonitorDbContext db;
+        private readonly BackendFXEventsConnector connector;
 
-        public FXEventsControllerUtils(MonitorDbContext db)
+        public FXEventsControllerUtils(BackendFXEventsConnector connector)
         {
-            this.db = db;
+            this.connector = connector;
         }
 
-        internal async Task<FXEventsListViewModel> CreateListViewModel()
+        internal async Task<FXEventsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user)
         {
             DateTimeOffset start = DateTime.Today.AddDays(-1 * (int)DateTime.Today.DayOfWeek);
             DateTimeOffset end = DateTime.Today.AddDays(-1 * ((int)DateTime.Today.DayOfWeek - 7));
 
-            List<FXEventModel> currentWeeksFXEvents = (await GetFXEventsInTimeRange(start, end)) ?? new List<FXEventModel>();
-            List<FXEventModel> todaysHighImpactFXEvents = (await GetHighImpactForToday()) ?? new List<FXEventModel>();
+            List<FXEventModel> currentWeeksFXEvents = (await GetFXEventsInTimeRange(start, end, session, user)) ?? new List<FXEventModel>();
+            List<FXEventModel> todaysHighImpactFXEvents = (await GetHighImpactForToday(session, user)) ?? new List<FXEventModel>();
 
             return new FXEventsListViewModel()
             {
@@ -37,40 +39,40 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             };
         }
 
-        private async Task<List<FXEventModel>> GetFXEventsInTimeRange(DateTimeOffset start, DateTimeOffset end)
+        private async Task<List<FXEventModel>> GetFXEventsInTimeRange(DateTimeOffset start, DateTimeOffset end, ISession session, ClaimsPrincipal user)
         {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.FXEvents
-                           where e.Timestamp >= start
-                           where e.Timestamp <= end
-                           orderby e.Timestamp
-                           select e).ToListAsync(cts.Token)).ToFXEventModels();
+            var fxEvents = await connector.GetInTimeRange(start, end, accessToken, cts.Token);
+
+            return fxEvents.ToFXEventModels();
         }
 
-        private async Task<List<FXEventModel>> GetHighImpactForToday()
+        private async Task<List<FXEventModel>> GetHighImpactForToday(ISession session, ClaimsPrincipal user)
         {
-            Tuple<DateTimeOffset, DateTimeOffset> boundaries = DateTimeUtils.GetTradingDayBoundariesDateTimeOffset(DateTime.Today);
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            return (await (from e in db.FXEvents
-                           where e.Timestamp >= boundaries.Item1
-                           where e.Timestamp <= boundaries.Item2
-                           where e.Level == FXEventLevel.HIGH
-                           orderby e.Timestamp
-                           select e).ToListAsync(cts.Token)).ToFXEventModels();
+            var fxEvents = await connector.GetHighImpactForToday(accessToken, cts.Token);
+
+            return fxEvents.ToFXEventModels();
         }
 
-        internal async Task<FXEventModel> GetById(string id)
+        internal async Task<FXEventModel> GetById(string id, ISession session, ClaimsPrincipal user)
         {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            // TODO : replace FirstOrDefaultAsync() by FindAsync once the method is implemented in EF Core
-            return (await db.FXEvents.FirstOrDefaultAsync(e => e.EventId == id, cts.Token)).ToFXEventModel();
+            var fxEvent = await connector.GetById(id, accessToken, cts.Token);
+
+            return fxEvent.ToFXEventModel();
         }
     }
 
