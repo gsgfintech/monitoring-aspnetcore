@@ -48,7 +48,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             var fxEvents = await connector.GetInTimeRange(start, end, accessToken, cts.Token);
 
-            return fxEvents.ToFXEventModels();
+            return fxEvents?.AsEnumerable().OrderBy(e => e.Timestamp).ToFXEventModels();
         }
 
         private async Task<List<FXEventModel>> GetHighImpactForToday(ISession session, ClaimsPrincipal user)
@@ -60,7 +60,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             var fxEvents = await connector.GetHighImpactForToday(accessToken, cts.Token);
 
-            return fxEvents.ToFXEventModels();
+            return fxEvents?.AsEnumerable().OrderBy(e => e.Timestamp).ToFXEventModels();
         }
 
         internal async Task<FXEventModel> GetById(string id, ISession session, ClaimsPrincipal user)

@@ -42,7 +42,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             var executions = await connector.GetForDay(day, accessToken);
 
-            return executions.ToExecutionModels();
+            return executions?.AsEnumerable().OrderByDescending(e => e.ExecutionTime).ToExecutionModels();
         }
 
         internal async Task<ExecutionModel> GetById(string id, ISession session, ClaimsPrincipal user)

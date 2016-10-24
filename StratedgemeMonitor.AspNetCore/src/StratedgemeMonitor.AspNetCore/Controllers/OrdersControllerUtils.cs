@@ -47,14 +47,14 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             var orders = await connector.GetOrdersForDay(day, accessToken);
 
-            return orders.ToOrderModels();
+            return orders?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
         private async Task<List<OrderModel>> GetActiveOrders(ISession session, ClaimsPrincipal user)
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return (await connector.GetActiveOrders(accessToken)).ToOrderModels();
+            return (await connector.GetActiveOrders(accessToken))?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
         internal async Task<OrderModel> GetByPermanentId(int permanentId, ISession session, ClaimsPrincipal user)
