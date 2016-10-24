@@ -12,9 +12,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly AlertsControllerUtils utils;
 
-        public AlertsController(BackendAlertsConnector connector)
+        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector)
         {
-            utils = new AlertsControllerUtils(connector);
+            utils = new AlertsControllerUtils(alertsConnector, statusesConnector);
         }
 
         public async Task<IActionResult> Index(DateTime? day)
@@ -24,10 +24,20 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            AlertModel bulletin = await utils.Get(id, HttpContext.Session, User);
+            AlertModel alert = await utils.Get(id, HttpContext.Session, User);
 
-            if (bulletin != null)
-                return View(bulletin);
+            if (alert != null)
+                return View(alert);
+            else
+                return View("Error");
+        }
+
+        public async Task<IActionResult> SystemDetails(string systemName)
+        {
+            SystemStatusModel status = await utils.GetSystemStatus(systemName, HttpContext.Session, User);
+
+            if (status != null)
+                return View(status);
             else
                 return View("Error");
         }

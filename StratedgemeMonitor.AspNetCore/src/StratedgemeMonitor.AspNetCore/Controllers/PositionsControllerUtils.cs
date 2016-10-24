@@ -13,25 +13,28 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class PositionsControllerUtils
     {
-        private readonly BackendPositionsConnector connector;
+        private readonly BackendAccountsConnector accountsConnector;
+        private readonly BackendPositionsConnector positionsConnector;
 
-        public PositionsControllerUtils(BackendPositionsConnector connector)
+        public PositionsControllerUtils(BackendPositionsConnector positionsConnector, BackendAccountsConnector accountsConnector)
         {
-            this.connector = connector;
+            this.accountsConnector = accountsConnector;
+            this.positionsConnector = positionsConnector;
         }
 
         internal async Task<PositionsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user)
         {
+            List<AccountModel> accounts = await GetAllAccounts(session, user);
             List<PositionModel> positions = await GetAllPositions(session, user);
 
-            return new PositionsListViewModel(positions ?? new List<PositionModel>());
+            return new PositionsListViewModel(positions ?? new List<PositionModel>(), accounts ?? new List<AccountModel>());
         }
 
         private async Task<List<PositionModel>> GetAllPositions(ISession session, ClaimsPrincipal user)
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            var positions = await connector.GetAll(accessToken);
+            var positions = await positionsConnector.GetAll(accessToken);
 
             return positions.ToPositionModels();
         }
@@ -40,7 +43,23 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return (await connector.Get(broker, cross, accessToken)).ToPositionModel();
+            return (await positionsConnector.Get(broker, cross, accessToken)).ToPositionModel();
+        }
+
+        private async Task<List<AccountModel>> GetAllAccounts(ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            var positions = await accountsConnector.GetAll(accessToken);
+
+            return positions.ToAccountModels();
+        }
+
+        internal async Task<AccountModel> GetAccount(Broker broker, string accountName, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            return (await accountsConnector.Get(broker, accountName, accessToken)).ToAccountModel();
         }
     }
 }

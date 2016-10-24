@@ -14,13 +14,15 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class AlertsControllerUtils
     {
-        private readonly BackendAlertsConnector connector;
+        private readonly BackendAlertsConnector alertsConnector;
+        private readonly BackendSystemStatusesConnector systemStatusesConnector;
 
         internal DateTime? CurrentDay { get; private set; }
 
-        public AlertsControllerUtils(BackendAlertsConnector connector)
+        public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector)
         {
-            this.connector = connector;
+            this.alertsConnector = alertsConnector;
+            this.systemStatusesConnector = systemStatusesConnector;
         }
 
         internal async Task<AlertsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
@@ -35,32 +37,42 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             List<AlertModel> openAlerts = await GetOpenAlerts(session, user);
             List<AlertModel> closedAlerts = await GetClosedAlertsForDay(day.Value, session, user);
+            List<SystemStatusModel> statuses = await GetAllSystemStatuses(session, user);
 
-            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>());
+            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<Models.SystemStatusModel>());
         }
 
         internal async Task<bool> Close(string id, ISession session, ClaimsPrincipal user)
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            var alert = await connector.GetById(id, accessToken);
+            var alert = await alertsConnector.GetById(id, accessToken);
 
             if (alert != null)
             {
                 alert.Status = AlertStatus.CLOSED;
                 alert.ClosedTimestamp = DateTimeOffset.Now;
 
-                return await connector.AddOrUpdate(alert, accessToken);
+                return await alertsConnector.AddOrUpdate(alert, accessToken);
             }
             else
                 return false;
+        }
+
+        private async Task<List<SystemStatusModel>> GetAllSystemStatuses(ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            var statuses = await systemStatusesConnector.GetAll(accessToken);
+
+            return statuses.ToSystemStatusModels();
         }
 
         private async Task<List<AlertModel>> GetOpenAlerts(ISession session, ClaimsPrincipal user)
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            var alerts = await connector.GetByStatus(AlertStatus.OPEN, accessToken);
+            var alerts = await alertsConnector.GetByStatus(AlertStatus.OPEN, accessToken);
 
             return alerts.ToAlertModels();
         }
@@ -69,7 +81,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            var alerts = await connector.GetForDay(day, accessToken);
+            var alerts = await alertsConnector.GetForDay(day, accessToken);
 
             return alerts?.Where(b => b.Status == AlertStatus.CLOSED).ToAlertModels();
         }
@@ -78,14 +90,21 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return (await connector.GetById(id, accessToken)).ToAlertModel();
+            return (await alertsConnector.GetById(id, accessToken)).ToAlertModel();
         }
 
         internal async Task<bool> CloseAll(ISession session, ClaimsPrincipal user)
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            return await connector.CloseAll(accessToken);
+            return await alertsConnector.CloseAll(accessToken);
+        }
+
+        internal async Task<SystemStatusModel> GetSystemStatus(string systemName, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            return (await systemStatusesConnector.Get(systemName, accessToken)).ToSystemStatusModel();
         }
     }
 }

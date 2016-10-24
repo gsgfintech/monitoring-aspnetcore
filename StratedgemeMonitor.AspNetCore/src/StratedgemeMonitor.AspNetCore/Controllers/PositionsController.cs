@@ -13,9 +13,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly PositionsControllerUtils utils;
 
-        public PositionsController(BackendPositionsConnector connector)
+        public PositionsController(BackendPositionsConnector positionsConnector, BackendAccountsConnector accountsConnector)
         {
-            utils = new PositionsControllerUtils(connector);
+            utils = new PositionsControllerUtils(positionsConnector, accountsConnector);
         }
 
         public async Task<IActionResult> Index()
@@ -29,6 +29,16 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             if (position != null)
                 return View(position);
+            else
+                return View("Error");
+        }
+
+        public async Task<IActionResult> AccountDetails(Broker broker, string accountName)
+        {
+            AccountModel account = await utils.GetAccount(broker, accountName, HttpContext.Session, User);
+
+            if (account != null)
+                return View(account);
             else
                 return View("Error");
         }

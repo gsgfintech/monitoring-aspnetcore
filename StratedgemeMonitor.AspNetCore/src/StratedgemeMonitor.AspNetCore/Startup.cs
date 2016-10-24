@@ -45,6 +45,11 @@ namespace StratedgemeMonitor.AspNetCore
 
             services.AddSingleton((serviceProvider) =>
             {
+                return new BackendAccountsConnector(monitorBackendAddress);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
                 return new BackendAlertsConnector(monitorBackendAddress);
             });
 
@@ -71,6 +76,11 @@ namespace StratedgemeMonitor.AspNetCore
             services.AddSingleton((serviceProvider) =>
             {
                 return new BackendPositionsConnector(monitorBackendAddress);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                return new BackendSystemStatusesConnector(monitorBackendAddress);
             });
 
             services.AddApplicationInsightsTelemetry(Configuration);
