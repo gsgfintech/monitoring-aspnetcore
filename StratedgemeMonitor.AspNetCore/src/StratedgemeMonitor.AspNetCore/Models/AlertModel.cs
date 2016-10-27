@@ -57,7 +57,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
         public static List<AlertModel> ToAlertModels(this IEnumerable<Alert> alerts)
         {
-            return alerts?.Select(a => a.ToAlertModel()).ToList();
+            return alerts?.Select(a => a.ToAlertModel()).OrderByDescending(a => a.Timestamp).ToList();
         }
     }
 }

@@ -15,6 +15,18 @@
             <div class="panel-body">
                 <dl class="dl-horizontal">
                     <dt>
+                        @Html.DisplayNameFor(model => model.IsAlive)
+                    </dt>
+                    @if (Model.IsAlive)
+                    {
+                        <dd class="text-success">RUNNING</dd>
+                    }
+                    else
+                    {
+                        <dd class="text-danger">STOPPED</dd>
+                    }
+
+                    <dt>
                         @Html.DisplayNameFor(model => model.OverallStatus)
                     </dt>
 
@@ -36,14 +48,8 @@
                     <dd>
                         @Html.DisplayFor(model => model.StartTime)
                     </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Restartable)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Restartable)
-                    </dd>
                 </dl>
+
                 <p class="pull-right">
                     <a class="btn btn-primary" asp-action="Index">Back</a>
                 </p>

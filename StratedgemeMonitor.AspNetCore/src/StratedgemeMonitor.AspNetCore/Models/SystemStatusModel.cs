@@ -9,7 +9,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
 {
     public class SystemStatusModel
     {
-        [Display(Name = "Alive")]
+        [Display(Name = "State")]
         public bool IsAlive { get; set; }
 
         [Display(Name = "Last Update (HKT)")]
@@ -65,10 +65,12 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
             if (!model.OverallStatus.HasValue)
             {
-                if (!model.Attributes.IsNullOrEmpty())
+                if (!model.IsAlive)
+                    model.OverallStatus = SystemStatusLevel.RED;
+                else if (!model.Attributes.IsNullOrEmpty())
                     model.OverallStatus = SystemStatusLevelUtils.CalculateWorstOf(model.Attributes.Select(a => a.Level));
                 else
-                    model.OverallStatus = SystemStatusLevel.RED;
+                    model.OverallStatus = SystemStatusLevel.GREEN;
             }
 
             return model;

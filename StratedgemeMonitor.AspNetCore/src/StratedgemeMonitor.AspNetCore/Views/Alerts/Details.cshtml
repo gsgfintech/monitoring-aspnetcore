@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="@(Model.Level <= INFO ? "panel panel-success" : Model.Level <= WARNING ? "panel panel-warning" : "panel panel-danger")">
+        <div class="@(Model.Level <= INFO ? "panel panel-info" : Model.Level <= WARNING ? "panel panel-warning" : "panel panel-danger")">
             <div class="panel-heading">
                 <h2>@Model.Subject</h2>
             </div>

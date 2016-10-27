@@ -1,4 +1,5 @@
 ﻿using Capital.GSG.FX.Data.Core.SystemData;
+using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
@@ -16,13 +17,15 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly BackendAlertsConnector alertsConnector;
         private readonly BackendSystemStatusesConnector systemStatusesConnector;
+        private readonly BackendSystemServicesConnector systemServicesConnector;
 
         internal DateTime? CurrentDay { get; private set; }
 
-        public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector)
+        public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector, BackendSystemServicesConnector systemServicesConnector)
         {
             this.alertsConnector = alertsConnector;
             this.systemStatusesConnector = systemStatusesConnector;
+            this.systemServicesConnector = systemServicesConnector;
         }
 
         internal async Task<AlertsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
@@ -105,6 +108,27 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
             return (await systemStatusesConnector.Get(systemName, accessToken)).ToSystemStatusModel();
+        }
+
+        internal async Task<GenericActionResult> StartSystem(string systemName, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            return await systemServicesConnector.StartService(systemName, accessToken);
+        }
+
+        internal async Task<GenericActionResult> StopSystem(string systemName, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            return await systemServicesConnector.StopService(systemName, accessToken);
+        }
+
+        internal async Task<bool> SystemDelete(string systemName, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            return await systemStatusesConnector.Delete(systemName, accessToken);
         }
     }
 }

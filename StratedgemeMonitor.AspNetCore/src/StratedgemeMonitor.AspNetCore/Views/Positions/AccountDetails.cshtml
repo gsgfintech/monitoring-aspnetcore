@@ -1,4 +1,6 @@
-﻿@model StratedgemeMonitor.AspNetCore.Models.AccountModel
+﻿@using static Capital.GSG.FX.Data.Core.ContractData.Currency;
+
+@model StratedgemeMonitor.AspNetCore.Models.AccountModel
 
 @{
     ViewBag.Title = $"{Model.Broker} - {Model.Name}";
@@ -56,7 +58,7 @@
                         <tr>
                             <td>@Html.DisplayFor(p => attribute.Key)</td>
                             <td>@Html.DisplayFor(p => attribute.Value)</td>
-                            <td>@Html.DisplayFor(p => attribute.Currency)</td>
+                            <td>@(attribute.Currency != UNKNOWN ? attribute.Currency.ToString() : "")</td>
                         </tr>
                     }
                 </table>

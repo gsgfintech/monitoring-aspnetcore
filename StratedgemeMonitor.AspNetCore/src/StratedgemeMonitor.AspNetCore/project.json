@@ -35,8 +35,8 @@
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.2",
     "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.13.5",
     "Microsoft.AspNetCore.Session": "1.0.0",
-    "Capital.GSG.FX.Utils.Core": "1.1.2",
-    "Monitoring.Server.Connector": "1.6.0"
+    "Capital.GSG.FX.Utils.Core": "1.1.3",
+    "Monitoring.Server.Connector": "1.7.0"
   },
   "tools": {
     "BundlerMinifier.Core": "2.2.281",

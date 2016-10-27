@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-default">
+        <div class="@(Model.AllSystemsStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.AllSystemsStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.AllSystemsStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
             <div class="panel-heading">
                 <h2>Systems <small>(@Model.SystemStatuses.Count)</small></h2>
             </div>
@@ -31,7 +31,7 @@
 
                     @foreach (var item in Model.SystemStatuses)
                     {
-                        <tr class="@(item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
+                        <tr class="@(!item.IsAlive ? "bg-danger" : item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
@@ -42,7 +42,17 @@
                                 @Html.DisplayFor(modelItem => item.StartTime)
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name">Details</a>
+                                <div class="btn-group btn-group-xs">
+                                    <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name">Details</a>
+                                    <a class="btn btn-xs btn-danger" asp-action="SystemDelete" asp-route-systemName="@item.Name">Delete</a>
+                                </div>
+                                @if (item.Restartable)
+                                {
+                                    <div class="btn-group btn-group-xs">
+                                        <a class="@(item.IsAlive ? "btn btn-xs btn-success disabled" : "btn btn-xs btn-success")" asp-acti asp-action="SystemStart" asp-route-systemName="@item.Name">Start</a>
+                                        <a class="@(item.IsAlive ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="SystemStop" asp-route-systemName="@item.Name">Stop</a>
+                                    </div>
+                                }
                             </td>
                         </tr>
                     }
@@ -84,7 +94,7 @@
 
                     @foreach (var item in Model.OpenAlerts)
                     {
-                        <tr class="@(item.Level <= INFO ? "bg-success" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
+                        <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
                             <td>
                                 @Html.DisplayFor(modelItem => item.Timestamp)
                             </td>
@@ -95,7 +105,7 @@
                                 @Html.DisplayFor(modelItem => item.Subject)
                             </td>
                             <td>
-                                <div class="btn-group btn-group-sm">
+                                <div class="btn-group btn-group-xs">
                                     <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
                                     <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId">Close</a>
                                 </div>

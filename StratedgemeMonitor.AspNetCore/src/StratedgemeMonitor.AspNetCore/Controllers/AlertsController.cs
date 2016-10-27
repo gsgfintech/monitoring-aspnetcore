@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using StratedgemeMonitor.AspNetCore.Models;
+using Capital.GSG.FX.Data.Core.WebApi;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
@@ -12,9 +13,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly AlertsControllerUtils utils;
 
-        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector)
+        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector, BackendSystemServicesConnector systemServicesConnector)
         {
-            utils = new AlertsControllerUtils(alertsConnector, statusesConnector);
+            utils = new AlertsControllerUtils(alertsConnector, statusesConnector, systemServicesConnector);
         }
 
         public async Task<IActionResult> Index(DateTime? day)
@@ -40,6 +41,33 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 return View(status);
             else
                 return View("Error");
+        }
+
+        public async Task<IActionResult> SystemStart(string systemName)
+        {
+            GenericActionResult result = await utils.StartSystem(systemName, HttpContext.Session, User);
+
+            // TODO: use the result
+
+            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+        }
+
+        public async Task<IActionResult> SystemStop(string systemName)
+        {
+            GenericActionResult result = await utils.StopSystem(systemName, HttpContext.Session, User);
+
+            // TODO: use the result
+
+            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+        }
+
+        public async Task<IActionResult> SystemDelete(string systemName)
+        {
+            bool result = await utils.SystemDelete(systemName, HttpContext.Session, User);
+
+            // TODO: use the result
+
+            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
         }
 
         public async Task<IActionResult> Close(string id)
