@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Stratedge.me Monitor</title>
+
+    <link rel="icon" href="~/images/favicon.png" />
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link href="~/lib/syncfusion-javascript/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
+        <link href="~/lib/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css" rel="stylesheet" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="https://cdn.syncfusion.com/14.3.0.49/js/web/bootstrap-theme/ej.web.all.min.css"
+              asp-fallback-href="~/lib/syncfusion-javascript/Content/ej/web/bootstrap-theme/ej.web.all.min.css"
+              asp-fallback-test-class="ejinputtext" asp-fallback-test-property="border-radius" asp-fallback-test-value="4px" />
+        <link rel="stylesheet" href="https://cdn.syncfusion.com/14.3.0.49/js/web/responsive-css/ej.responsive.css"
+              asp-fallback-href="~/lib/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css"
+              asp-fallback-test-class="ejinputtext" asp-fallback-test-property="border-radius" asp-fallback-test-value="4px" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+</head>
+
+@await FlushAsync();
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Alerts" asp-action="Index" class="navbar-brand">
+                    <img src="~/images/LogoGSG_300x893_transparent_bg.png" alt="GSG" />
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Alerts" asp-action="Index">Alerts</a></li>
+                    <li><a asp-area="" asp-controller="Positions" asp-action="Index">Positions</a></li>
+                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
+                    <li><a asp-area="" asp-controller="Executions" asp-action="Index">Trades</a></li>
+                    <li><a asp-area="" asp-controller="FXEvents" asp-action="Index">FX Events</a></li>
+                    <li><a asp-area="" asp-controller="NewsBulletins" asp-action="Index">News Bulletins</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Systems <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="TradeEngine" asp-action="Index">Trade Engines</a></li>
+                            <li><a asp-area="" asp-controller="DBLogger" asp-action="Index">DB Loggers</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2016 - GSG Limited</p>
+        </footer>
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-easing/jquery.easing.js"></script>
+        <script src="~/lib/jsrender/jsrender.js"></script>
+        <script src="~/lib/syncfusion-javascript/Scripts/ej/web/ej.web.all.min.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+        <script src="https://cdn.syncfusion.com/js/assets/external/jquery.easing.1.3.min.js"
+                asp-fallback-src="~/lib/jquery-easing/jquery.easing.js"
+                asp-fallback-test="window.jQuery.easing.jswing"></script>
+        <script src="https://cdn.syncfusion.com/js/assets/external/jsrender.js"
+                asp-fallback-src="~/lib/jsrender/jsrender.js"
+                asp-fallback-test="window.ej"></script>
+        <script src="https://cdn.syncfusion.com/14.3.0.49/js/web/ej.web.all.min.js"
+                asp-fallback-src="~/lib/syncfusion-javascript/Scripts/ej/web/ej.web.all.min.js"
+                asp-fallback-test="window.ej"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+<ej-script-manager></ej-script-manager>
