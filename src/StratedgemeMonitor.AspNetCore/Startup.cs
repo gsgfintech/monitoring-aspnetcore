@@ -82,6 +82,11 @@ namespace StratedgemeMonitor.AspNetCore
 
             services.AddSingleton((serviceProvider) =>
             {
+                return new BackendPnLsConnector(monitorBackendAddress);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
                 return new BackendPositionsConnector(monitorBackendAddress);
             });
 

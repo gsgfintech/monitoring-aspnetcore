@@ -8,7 +8,69 @@
 }
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-5">
+        <div class="@(Model.PnL.TotalNetRealized > 0 ? "panel panel-success" : Model.PnL.TotalNetRealized < 0 ? "panel panel-danger" : "panel panel-default")">
+            <div class="panel-heading">
+                <strong>PnL (USD)</strong>
+                <div class="pull-right hidden-xs hidden-sm">
+                    Unrealised: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
+                    Gross: @Html.DisplayFor(m => Model.PnL.TotalGrossRealized) |
+                    Fees: @Html.DisplayFor(m => Model.PnL.TotalFees) |
+                    Net: <strong style="font-size:large">@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
+                </div>
+                <div class="pull-right visible-sm-inline">
+                    Unrealised: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
+                    Net: <strong>@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
+                </div>
+                <div class="pull-right visible-xs-inline">
+                    Unr: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
+                    Net: <strong>{@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
+                </div>
+            </div>
+            @if (Model.PnL.PerCrossPnLs.Count > 0)
+            {
+                <table class="table table-condensed">
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().Cross)</th>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().TradesCount)</th>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().TotalFees)</th>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().GrossRealized)</th>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().NetRealized)</th>
+                        <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().GrossUnrealized)</th>
+                    </tr>
+                    @foreach (var item in Model.PnL.PerCrossPnLs)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.Cross)</td>
+                            <td>@Html.DisplayFor(m => item.TradesCount)</td>
+                            <td>@Html.DisplayFor(m => item.TotalFees)</td>
+                            <td class="@(item.GrossRealized > 0 ? "bg-success" : item.GrossRealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => item.GrossRealized)</td>
+                            <td class="@(item.NetRealized > 0 ? "bg-success" : item.NetRealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => item.NetRealized)</td>
+                            <td class="@(item.GrossUnrealized > 0 ? "bg-success" : item.GrossUnrealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => item.GrossUnrealized)</td>
+                        </tr>
+                    }
+                    <tr>
+                        <th>Total</th>
+                        <th>@Html.DisplayFor(m => Model.PnL.TotalTradesCount)</th>
+                        <th>@Html.DisplayFor(m => Model.PnL.TotalFees)</th>
+                        <th class="@(Model.PnL.TotalGrossRealized > 0 ? "bg-success" : Model.PnL.TotalGrossRealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => Model.PnL.TotalGrossRealized)</th>
+                        <th class="@(Model.PnL.TotalNetRealized > 0 ? "bg-success" : Model.PnL.TotalNetRealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</th>
+                        <th class="@(Model.PnL.TotalGrossUnrealized > 0 ? "bg-success" : Model.PnL.TotalGrossUnrealized < 0 ? "bg-danger" : "")">@Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized)</th>
+                    </tr>
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No PnL</p>
+                </div>
+            }
+            <div class="panel-footer">
+                <p><i><small>Last updated at @Html.DisplayFor(m => Model.PnL.LastUpdate)</small></i></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
         <div class="@(Model.AllSystemsStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.AllSystemsStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.AllSystemsStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
             <div class="panel-heading">
                 <h2>Systems <small>(@Model.SystemStatuses.Count)</small></h2>

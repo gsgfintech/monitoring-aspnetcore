@@ -13,9 +13,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly AlertsControllerUtils utils;
 
-        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector, BackendSystemServicesConnector systemServicesConnector)
+        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector, BackendSystemServicesConnector systemServicesConnector, BackendPnLsConnector pnlsConnector)
         {
-            utils = new AlertsControllerUtils(alertsConnector, statusesConnector, systemServicesConnector);
+            utils = new AlertsControllerUtils(alertsConnector, statusesConnector, systemServicesConnector, pnlsConnector);
         }
 
         public async Task<IActionResult> Index(DateTime? day)

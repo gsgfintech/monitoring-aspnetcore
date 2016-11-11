@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Data.Core.SystemData;
+﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
+using Capital.GSG.FX.Data.Core.SystemData;
 using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Microsoft.AspNetCore.Http;
@@ -16,14 +17,16 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     internal class AlertsControllerUtils
     {
         private readonly BackendAlertsConnector alertsConnector;
+        private readonly BackendPnLsConnector pnlsConnector;
         private readonly BackendSystemStatusesConnector systemStatusesConnector;
         private readonly BackendSystemServicesConnector systemServicesConnector;
 
         internal DateTime? CurrentDay { get; private set; }
 
-        public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector, BackendSystemServicesConnector systemServicesConnector)
+        public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector, BackendSystemServicesConnector systemServicesConnector, BackendPnLsConnector pnlsConnector)
         {
             this.alertsConnector = alertsConnector;
+            this.pnlsConnector = pnlsConnector;
             this.systemStatusesConnector = systemStatusesConnector;
             this.systemServicesConnector = systemServicesConnector;
         }
@@ -41,8 +44,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             List<AlertModel> openAlerts = await GetOpenAlerts(session, user);
             List<AlertModel> closedAlerts = await GetClosedAlertsForDay(day.Value, session, user);
             List<SystemStatusModel> statuses = await GetAllSystemStatuses(session, user);
+            PnLModel pnl = await GetPnLForDay(day.Value, session, user);
 
-            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<Models.SystemStatusModel>());
+            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<SystemStatusModel>(), pnl);
         }
 
         internal async Task<bool> Close(string id, ISession session, ClaimsPrincipal user)
@@ -78,6 +82,15 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             var alerts = await alertsConnector.GetByStatus(AlertStatus.OPEN, accessToken);
 
             return alerts.ToAlertModels();
+        }
+
+        private async Task<PnLModel> GetPnLForDay(DateTime day, ISession session, ClaimsPrincipal user)
+        {
+            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
+
+            var pnl = await pnlsConnector.GetForDay(day, accessToken);
+
+            return pnl.ToPnLModel();
         }
 
         private async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day, ISession session, ClaimsPrincipal user)
