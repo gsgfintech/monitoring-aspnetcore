@@ -132,9 +132,6 @@ namespace StratedgemeMonitor.AspNetCore
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            LoggingUtils.LoggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            LoggingUtils.LoggerFactory.AddDebug();
-
             app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())

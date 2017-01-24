@@ -1,5 +1,4 @@
-﻿using Capital.GSG.FX.Data.Core.ContractData;
-using Capital.GSG.FX.Data.Core.SystemData;
+﻿using Capital.GSG.FX.Data.Core.Strategy;
 using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -14,7 +13,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
         public SystemStatusModel Status { get; set; }
 
-        public TradeEngineConfigModel Config { get; set; }
+        public List<TradeEngineConfigStrategy> Strats { get; set; }
 
         public SelectList CrossesList { get; private set; }
         public SelectList TradingCrossesList { get; private set; }
@@ -28,36 +27,26 @@ namespace StratedgemeMonitor.AspNetCore.Models
         {
             Name = name;
             Status = status;
-            Config = config;
+            Strats = config.Strats;
 
-            if (!config.Strats.IsNullOrEmpty())
+            if (!Strats.IsNullOrEmpty())
             {
-                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(config.Strats.Select(s => s.Cross.ToString()).OrderBy(c => c)));
-                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(config.Strats.Where(s => s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
-                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(config.Strats.Where(s => !s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
+                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Select(s => s.Cross.ToString()).OrderBy(c => c)));
+                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
+                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => !s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
 
-                ActiveStratsList = new SelectList(config.Strats.Where(s => s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                InactiveStratsList = new SelectList(config.Strats.Where(s => !s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                TradingStratsList = new SelectList(config.Strats.Where(s => s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                NonTradingStratsList = new SelectList(config.Strats.Where(s => !s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
+                ActiveStratsList = new SelectList(Strats.Where(s => s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
+                InactiveStratsList = new SelectList(Strats.Where(s => !s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
+                TradingStratsList = new SelectList(Strats.Where(s => s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
+                NonTradingStratsList = new SelectList(Strats.Where(s => !s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
             }
         }
     }
 
-    public class TradeEngineConfigModel : ISystemConfig
+    public class TradeEngineConfigModel
     {
         public string Name { get; set; }
-        public string SystemType { get; set; }
-        public List<TradeEngineStratConfigModel> Strats { get; set; }
-    }
-
-    public class TradeEngineStratConfigModel
-    {
-        public string Name { get; set; }
-        public string Version { get; set; }
-        public Cross Cross { get; set; }
-        public bool Active { get; set; }
-        public bool Trading { get; set; }
+        public List<TradeEngineConfigStrategy> Strats { get; set; }
     }
 
     internal static class TradeEngineConfigModelExtensions
