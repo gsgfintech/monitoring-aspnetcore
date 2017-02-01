@@ -35,24 +35,20 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<ExecutionModel>> GetExecutionsForDay(DateTime day, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var executions = await connector.GetForDay(day, accessToken);
+            var executions = await connector.GetForDay(day);
 
             return executions?.AsEnumerable().OrderByDescending(e => e.ExecutionTime).ToExecutionModels();
         }
 
         internal async Task<ExecutionModel> GetById(string id, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var execution = await connector.GetById(id, accessToken);
+            var execution = await connector.GetById(id);
 
             return execution.ToExecutionModel();
         }

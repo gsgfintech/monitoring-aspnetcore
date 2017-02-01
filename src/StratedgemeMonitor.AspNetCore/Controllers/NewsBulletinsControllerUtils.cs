@@ -41,16 +41,14 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         internal async Task<bool> Close(NewsBulletinSource source, string bulletinId, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            var bulletin = await connector.Get(source, bulletinId, accessToken);
+            var bulletin = await connector.Get(source, bulletinId);
 
             if (bulletin != null)
             {
                 bulletin.Status = NewsBulletinStatus.CLOSED;
                 bulletin.ClosedTimestamp = DateTimeOffset.Now;
 
-                return await connector.AddOrUpdate(bulletin, accessToken);
+                return await connector.AddOrUpdate(bulletin);
             }
             else
                 return false;
@@ -58,34 +56,26 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<NewsBulletinModel>> GetOpenBulletins(ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            var bulletins = await connector.GetByStatus(NewsBulletinStatus.OPEN, accessToken);
+            var bulletins = await connector.GetByStatus(NewsBulletinStatus.OPEN);
 
             return bulletins.ToNewsBulletinModels();
         }
 
         private async Task<List<NewsBulletinModel>> GetBulletinsClosedOnDay(DateTime day, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            var bulletins = await connector.GetForDay(day, accessToken);
+            var bulletins = await connector.GetForDay(day);
 
             return bulletins?.Where(b => b.Status == NewsBulletinStatus.CLOSED).ToNewsBulletinModels();
         }
 
         internal async Task<NewsBulletinModel> Get(NewsBulletinSource source, string id, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return (await connector.Get(source, id, accessToken)).ToNewsBulletinModel();
+            return (await connector.Get(source, id)).ToNewsBulletinModel();
         }
 
         internal async Task<bool> CloseAll(ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await connector.CloseAll(accessToken);
+            return await connector.CloseAll();
         }
     }
 }

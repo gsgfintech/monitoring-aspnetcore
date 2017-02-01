@@ -42,9 +42,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            IEnumerable<TradeEngineConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("TradeEngine", accessToken)).ToTradeEngineConfigModels();
+            IEnumerable<TradeEngineConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("TradeEngine")).ToTradeEngineConfigModels();
 
             if (configs.IsNullOrEmpty())
                 return new Dictionary<string, TradeEngineModel>();
@@ -54,7 +52,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
                 foreach (var config in configs)
                 {
-                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name, accessToken)).ToSystemStatusModel();
+                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name)).ToSystemStatusModel();
                     tradeEngines.Add(config.Name, new TradeEngineModel(config.Name, status, config));
                 }
 
@@ -124,9 +122,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await tradeEngineConnector.StartTrading(tradeEngineName, cross, accessToken, cts.Token);
+            return await tradeEngineConnector.StartTrading(tradeEngineName, cross, cts.Token);
         }
 
         private async Task<GenericActionResult> StopTrading(string tradeEngineName, string cross, ISession session, ClaimsPrincipal user)
@@ -137,9 +133,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await tradeEngineConnector.StopTrading(tradeEngineName, cross, accessToken, cts.Token);
+            return await tradeEngineConnector.StopTrading(tradeEngineName, cross, cts.Token);
         }
 
         private async Task<GenericActionResult> ClosePosition(string tradeEngineName, string cross, ISession session, ClaimsPrincipal user)
@@ -150,9 +144,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await tradeEngineConnector.ClosePosition(tradeEngineName, cross, accessToken, cts.Token);
+            return await tradeEngineConnector.ClosePosition(tradeEngineName, cross, cts.Token);
         }
 
         private async Task<GenericActionResult> CancelOrders(string tradeEngineName, string cross, ISession session, ClaimsPrincipal user)
@@ -163,9 +155,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await tradeEngineConnector.CancelOrders(tradeEngineName, cross, accessToken, cts.Token);
+            return await tradeEngineConnector.CancelOrders(tradeEngineName, cross, cts.Token);
         }
 
         private async Task<GenericActionResult> ActivateStrategy(string tradeEngineName, string strat, ISession session, ClaimsPrincipal user)
@@ -176,12 +166,10 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             string stratName = strat.Split('-')[0];
             string stratVersion = strat.Split('-')[0];
 
-            return await tradeEngineConnector.ActivateStrategy(tradeEngineName, stratName, stratVersion, accessToken, cts.Token);
+            return await tradeEngineConnector.ActivateStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
 
         private async Task<GenericActionResult> DeactivateStrategy(string tradeEngineName, string strat, ISession session, ClaimsPrincipal user)
@@ -192,12 +180,10 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             string stratName = strat.Split('-')[0];
             string stratVersion = strat.Split('-')[0];
 
-            return await tradeEngineConnector.DeactivateStrategy(tradeEngineName, stratName, stratVersion, accessToken, cts.Token);
+            return await tradeEngineConnector.DeactivateStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
 
         private async Task<GenericActionResult> StartTradingStrategy(string tradeEngineName, string strat, ISession session, ClaimsPrincipal user)
@@ -208,12 +194,10 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             string stratName = strat.Split('-')[0];
             string stratVersion = strat.Split('-')[0];
 
-            return await tradeEngineConnector.StartTradingStrategy(tradeEngineName, stratName, stratVersion, accessToken, cts.Token);
+            return await tradeEngineConnector.StartTradingStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
 
         private async Task<GenericActionResult> StopTradingStrategy(string tradeEngineName, string strat, ISession session, ClaimsPrincipal user)
@@ -224,12 +208,10 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             string stratName = strat.Split('-')[0];
             string stratVersion = strat.Split('-')[0];
 
-            return await tradeEngineConnector.StopTradingStrategy(tradeEngineName, stratName, stratVersion, accessToken, cts.Token);
+            return await tradeEngineConnector.StopTradingStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
 
         private enum TradeEngineControllerActionValue

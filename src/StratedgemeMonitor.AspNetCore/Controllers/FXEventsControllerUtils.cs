@@ -41,36 +41,30 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<FXEventModel>> GetFXEventsInTimeRange(DateTimeOffset start, DateTimeOffset end, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var fxEvents = await connector.GetInTimeRange(start, end, accessToken, cts.Token);
+            var fxEvents = await connector.GetInTimeRange(start, end, cts.Token);
 
             return fxEvents?.AsEnumerable().OrderBy(e => e.Timestamp).ToFXEventModels();
         }
 
         private async Task<List<FXEventModel>> GetHighImpactForToday(ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var fxEvents = await connector.GetHighImpactForToday(accessToken, cts.Token);
+            var fxEvents = await connector.GetHighImpactForToday(cts.Token);
 
             return fxEvents?.AsEnumerable().OrderBy(e => e.Timestamp).ToFXEventModels();
         }
 
         internal async Task<FXEventModel> GetById(string id, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var fxEvent = await connector.GetById(id, accessToken, cts.Token);
+            var fxEvent = await connector.GetById(id, cts.Token);
 
             return fxEvent.ToFXEventModel();
         }

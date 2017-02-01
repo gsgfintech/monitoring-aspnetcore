@@ -44,9 +44,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            IEnumerable<DBLoggerConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("InfluxDBLogger", accessToken)).ToDBLoggerConfigModels();
+            IEnumerable<DBLoggerConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("InfluxDBLogger")).ToDBLoggerConfigModels();
 
             if (configs.IsNullOrEmpty())
                 return new Dictionary<string, DBLoggerModel>();
@@ -56,7 +54,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
                 foreach (var config in configs)
                 {
-                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name, accessToken)).ToSystemStatusModel();
+                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name)).ToSystemStatusModel();
                     dbLoggers.Add(config.Name, new DBLoggerModel(config.Name, status, config));
                 }
 
@@ -102,9 +100,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await dbLoggerConnector.SubscribePairs(dbLoggerName, crosses.ToArray(), accessToken, cts.Token);
+            return await dbLoggerConnector.SubscribePairs(dbLoggerName, crosses.ToArray(), cts.Token);
         }
 
         private async Task<GenericActionResult> Unsubscribe(string dbLoggerName, IEnumerable<Cross> crosses, ISession session, ClaimsPrincipal user)
@@ -115,9 +111,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await dbLoggerConnector.UnsubscribePairs(dbLoggerName, crosses.ToArray(), accessToken, cts.Token);
+            return await dbLoggerConnector.UnsubscribePairs(dbLoggerName, crosses.ToArray(), cts.Token);
         }
 
         private enum DBLoggerControllerActionValue

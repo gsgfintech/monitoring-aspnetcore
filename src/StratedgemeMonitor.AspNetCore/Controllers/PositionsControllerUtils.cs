@@ -32,34 +32,26 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<PositionModel>> GetAllPositions(ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            var positions = await positionsConnector.GetAll(accessToken);
+            var positions = await positionsConnector.GetAll();
 
             return positions.ToPositionModels();
         }
 
         internal async Task<PositionModel> Get(Broker broker, Cross cross, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return (await positionsConnector.Get(broker, cross, accessToken)).ToPositionModel();
+            return (await positionsConnector.Get(broker, cross)).ToPositionModel();
         }
 
         private async Task<List<AccountModel>> GetAllAccounts(ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            var positions = await accountsConnector.GetAll(accessToken);
+            var positions = await accountsConnector.GetAll();
 
             return positions.ToAccountModels();
         }
 
         internal async Task<AccountModel> GetAccount(Broker broker, string accountName, ISession session, ClaimsPrincipal user)
         {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return (await accountsConnector.Get(broker, accountName, accessToken)).ToAccountModel();
+            return (await accountsConnector.Get(broker, accountName)).ToAccountModel();
         }
     }
 }

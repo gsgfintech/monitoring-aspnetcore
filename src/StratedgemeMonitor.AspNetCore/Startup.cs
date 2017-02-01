@@ -43,71 +43,76 @@ namespace StratedgemeMonitor.AspNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string clientId = Configuration["Authentication:AzureAd:ClientId"];
+            string key = Configuration["Authentication:AzureAd:ClientSecret"];
             string monitorBackendAddress = Configuration["MonitorServerBackend:Address"];
+            string monitorBackendAppUri = Configuration["MonitorServerBackend:AppIdUri"];
+
+            MonitoringServerConnector connector = new MonitoringServerConnector(clientId, key, monitorBackendAddress, monitorBackendAppUri);
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendAccountsConnector(monitorBackendAddress);
+                return connector.AccountsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendAlertsConnector(monitorBackendAddress);
+                return connector.AlertsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendDBLoggerConnector(monitorBackendAddress);
+                return connector.DBLoggerConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendExecutionsConnector(monitorBackendAddress);
+                return connector.ExecutionsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendFXEventsConnector(monitorBackendAddress);
+                return connector.FXEventsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendOrdersConnector(monitorBackendAddress);
+                return connector.OrdersConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendNewsBulletinsConnector(monitorBackendAddress);
+                return connector.NewsBulletinsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendPnLsConnector(monitorBackendAddress);
+                return connector.PnLsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendPositionsConnector(monitorBackendAddress);
+                return connector.PositionsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendSystemConfigsConnector(monitorBackendAddress);
+                return connector.SystemConfigsConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendSystemServicesConnector(monitorBackendAddress);
+                return connector.SystemServicesConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendSystemStatusesConnector(monitorBackendAddress);
+                return connector.SystemStatusesConnector;
             });
 
             services.AddSingleton((serviceProvider) =>
             {
-                return new BackendTradeEngineConnector(monitorBackendAddress);
+                return connector.TradeEngineConnector;
             });
 
             services.AddApplicationInsightsTelemetry(Configuration);
@@ -132,8 +137,6 @@ namespace StratedgemeMonitor.AspNetCore
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseApplicationInsightsRequestTelemetry();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -143,8 +146,6 @@ namespace StratedgemeMonitor.AspNetCore
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
 
