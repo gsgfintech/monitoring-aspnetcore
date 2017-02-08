@@ -1,7 +1,7 @@
 ﻿using Capital.GSG.FX.Data.Core.Strategy;
+using Capital.GSG.FX.Data.Core.SystemData;
 using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,11 +23,11 @@ namespace StratedgemeMonitor.AspNetCore.Models
         public SelectList TradingStratsList { get; private set; }
         public SelectList NonTradingStratsList { get; private set; }
 
-        public TradeEngineModel(string name, SystemStatusModel status, TradeEngineConfigModel config)
+        public TradeEngineModel(string name, SystemStatusModel status, TradeEngineTradingStatus tradingStatus)
         {
             Name = name;
             Status = status;
-            Strats = config.Strats;
+            Strats = tradingStatus.Strats;
 
             if (!Strats.IsNullOrEmpty())
             {
@@ -40,25 +40,6 @@ namespace StratedgemeMonitor.AspNetCore.Models
                 TradingStratsList = new SelectList(Strats.Where(s => s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 NonTradingStratsList = new SelectList(Strats.Where(s => !s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
             }
-        }
-    }
-
-    public class TradeEngineConfigModel
-    {
-        public string Name { get; set; }
-        public List<TradeEngineConfigStrategy> Strats { get; set; }
-    }
-
-    internal static class TradeEngineConfigModelExtensions
-    {
-        public static TradeEngineConfigModel ToTradeEngineConfigModel(this string json)
-        {
-            return JsonConvert.DeserializeObject<TradeEngineConfigModel>(json, new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Ignore });
-        }
-
-        public static IEnumerable<TradeEngineConfigModel> ToTradeEngineConfigModels(this IEnumerable<string> jsons)
-        {
-            return jsons?.Select(j => j.ToTradeEngineConfigModel());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Data.Core.WebApi;
+﻿using Capital.GSG.FX.Data.Core.SystemData;
+using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.Http;
@@ -42,18 +43,18 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            IEnumerable<TradeEngineConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("TradeEngine")).ToTradeEngineConfigModels();
+            List<TradeEngineTradingStatus> enginesList = await tradeEngineConnector.RequestTradeEnginesTradingStatus(cts.Token);
 
-            if (configs.IsNullOrEmpty())
+            if (enginesList.IsNullOrEmpty())
                 return new Dictionary<string, TradeEngineModel>();
             else
             {
                 Dictionary<string, TradeEngineModel> tradeEngines = new Dictionary<string, TradeEngineModel>();
 
-                foreach (var config in configs)
+                foreach (var tradeEngineTradingStatus in enginesList)
                 {
-                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name)).ToSystemStatusModel();
-                    tradeEngines.Add(config.Name, new TradeEngineModel(config.Name, status, config));
+                    SystemStatusModel status = (await systemStatusesConnector.Get(tradeEngineTradingStatus.EngineName)).ToSystemStatusModel();
+                    tradeEngines.Add(tradeEngineTradingStatus.EngineName, new TradeEngineModel(tradeEngineTradingStatus.EngineName, status, tradeEngineTradingStatus));
                 }
 
                 return tradeEngines;

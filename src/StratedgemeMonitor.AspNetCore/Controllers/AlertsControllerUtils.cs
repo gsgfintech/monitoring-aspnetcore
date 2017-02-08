@@ -2,7 +2,9 @@
 using Capital.GSG.FX.Data.Core.SystemData;
 using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
+using Capital.GSG.FX.Utils.Core.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using StratedgemeMonitor.AspNetCore.Models;
 using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
@@ -16,6 +18,8 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 {
     internal class AlertsControllerUtils
     {
+        private readonly ILogger logger = GSGLoggerFactory.Instance.CreateLogger<AlertsControllerUtils>();
+
         private readonly BackendAlertsConnector alertsConnector;
         private readonly BackendPnLsConnector pnlsConnector;
         private readonly BackendSystemStatusesConnector systemStatusesConnector;
@@ -51,17 +55,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         internal async Task<bool> Close(string id, ISession session, ClaimsPrincipal user)
         {
-            var alert = await alertsConnector.GetById(id);
-
-            if (alert != null)
-            {
-                alert.Status = AlertStatus.CLOSED;
-                alert.ClosedTimestamp = DateTimeOffset.Now;
-
-                return await alertsConnector.AddOrUpdate(alert);
-            }
-            else
-                return false;
+            return await alertsConnector.Close(id);
         }
 
         private async Task<List<SystemStatusModel>> GetAllSystemStatuses(ISession session, ClaimsPrincipal user)
@@ -73,6 +67,8 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private async Task<List<AlertModel>> GetOpenAlerts(ISession session, ClaimsPrincipal user)
         {
+            logger.Debug("Requesting open alerts");
+
             var alerts = await alertsConnector.GetByStatus(AlertStatus.OPEN);
 
             return alerts.ToAlertModels();

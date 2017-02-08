@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Capital.GSG.FX.Monitoring.Server.Connector;
-using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using Capital.GSG.FX.Utils.Core.Logging;
 
 namespace StratedgemeMonitor.AspNetCore
 {
@@ -136,6 +136,9 @@ namespace StratedgemeMonitor.AspNetCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            GSGLoggerFactory.Instance.AddConsole(Configuration.GetSection("Logging"));
+            GSGLoggerFactory.Instance.AddDebug();
 
             if (env.IsDevelopment())
             {
