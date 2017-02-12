@@ -53,7 +53,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<SystemStatusModel>(), pnl);
         }
 
-        internal async Task<bool> Close(string id, ISession session, ClaimsPrincipal user)
+        internal async Task<GenericActionResult> Close(string id, ISession session, ClaimsPrincipal user)
         {
             return await alertsConnector.Close(id);
         }
@@ -93,7 +93,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return (await alertsConnector.GetById(id)).ToAlertModel();
         }
 
-        internal async Task<bool> CloseAll(ISession session, ClaimsPrincipal user)
+        internal async Task<GenericActionResult> CloseAll(ISession session, ClaimsPrincipal user)
         {
             return await alertsConnector.CloseAll();
         }

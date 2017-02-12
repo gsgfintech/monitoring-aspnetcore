@@ -72,22 +72,22 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> Close(string id)
         {
-            bool result = await utils.Close(id, HttpContext.Session, User);
+            GenericActionResult result = await utils.Close(id, HttpContext.Session, User);
 
-            if (result)
+            if (result.Success)
                 return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
             else
-                return View("Error");
+                return View("Error", result.Message);
         }
 
         public async Task<IActionResult> CloseAll()
         {
-            bool result = await utils.CloseAll(HttpContext.Session, User);
+            GenericActionResult result = await utils.CloseAll(HttpContext.Session, User);
 
-            if (result)
+            if (result.Success)
                 return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
             else
-                return View("Error");
+                return View("Error", result.Message);
         }
     }
 }

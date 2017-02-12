@@ -1,4 +1,5 @@
 ﻿using Capital.GSG.FX.Data.Core.NewsBulletinData;
+using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
@@ -39,7 +40,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return new NewsBulletinsListViewModel(day.Value, openBulletins ?? new List<NewsBulletinModel>(), bulletinsClosedToday ?? new List<NewsBulletinModel>());
         }
 
-        internal async Task<bool> Close(NewsBulletinSource source, string bulletinId, ISession session, ClaimsPrincipal user)
+        internal async Task<GenericActionResult> Close(NewsBulletinSource source, string bulletinId, ISession session, ClaimsPrincipal user)
         {
             var bulletin = await connector.Get(source, bulletinId);
 
@@ -51,7 +52,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 return await connector.AddOrUpdate(bulletin);
             }
             else
-                return false;
+                return new GenericActionResult(false, "Bulletin is null");
         }
 
         private async Task<List<NewsBulletinModel>> GetOpenBulletins(ISession session, ClaimsPrincipal user)
@@ -73,7 +74,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return (await connector.Get(source, id)).ToNewsBulletinModel();
         }
 
-        internal async Task<bool> CloseAll(ISession session, ClaimsPrincipal user)
+        internal async Task<GenericActionResult> CloseAll(ISession session, ClaimsPrincipal user)
         {
             return await connector.CloseAll();
         }

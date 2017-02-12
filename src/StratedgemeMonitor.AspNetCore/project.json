@@ -32,7 +32,7 @@
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.1.1",
     "Capital.GSG.FX.Data.Core": "1.15.2",
     "Capital.GSG.FX.Utils.Core.Logging": "2.2.0",
-    "Monitoring.Server.Connector": "2.5.0" },
+    "Monitoring.Server.Connector": "3.0.0"},
   "tools": {
     "BundlerMinifier.Core": "2.2.306",
     "Microsoft.AspNetCore.Razor.Tools": "1.1.0-preview4-final",

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Data.Core.NewsBulletinData;
 using StratedgemeMonitor.AspNetCore.Models;
+using Capital.GSG.FX.Data.Core.WebApi;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
@@ -35,22 +36,22 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> Close(NewsBulletinSource source, string bulletinId)
         {
-            bool result = await utils.Close(source, bulletinId, HttpContext.Session, User);
+            GenericActionResult result = await utils.Close(source, bulletinId, HttpContext.Session, User);
 
-            if (result)
+            if (result.Success)
                 return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
             else
-                return View("Error");
+                return View("Error", result.Message);
         }
 
         public async Task<IActionResult> CloseAll()
         {
-            bool result = await utils.CloseAll(HttpContext.Session, User);
+            GenericActionResult result = await utils.CloseAll(HttpContext.Session, User);
 
-            if (result)
+            if (result.Success)
                 return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
             else
-                return View("Error");
+                return View("Error", result.Message);
         }
     }
 }
