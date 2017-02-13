@@ -14,18 +14,18 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
         public SystemStatusModel Status { get; private set; }
 
-        public DBLoggerConfigModel Config { get; private set; }
+        public List<Cross> SubscribedPairs { get; private set; }
 
-        public SelectList SubscribedPairs { get; private set; }
+        public SelectList SubscribedPairsSelect { get; private set; }
 
-        public DBLoggerModel(string name, SystemStatusModel status, DBLoggerConfigModel config)
+        public DBLoggerModel(string name, SystemStatusModel status, DBLoggerSubscriptionStatus subscriptionStatus)
         {
             Name = name;
             Status = status;
-            Config = config;
+            SubscribedPairs = subscriptionStatus.SubscribedPairs;
 
-            if (!config.Pairs.IsNullOrEmpty())
-                SubscribedPairs = new SelectList(config.Pairs.Select(c => c.ToString()).OrderBy(c => c));
+            if (!subscriptionStatus.SubscribedPairs.IsNullOrEmpty())
+                SubscribedPairsSelect = new SelectList(subscriptionStatus.SubscribedPairs.Select(c => c.ToString()).OrderBy(c => c));
         }
     }
 

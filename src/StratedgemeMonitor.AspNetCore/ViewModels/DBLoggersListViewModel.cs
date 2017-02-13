@@ -25,7 +25,7 @@ namespace StratedgemeMonitor.AspNetCore.ViewModels
                 List<Cross> allSubscribedPairs = new List<Cross>();
 
                 foreach (var dbLogger in dbLoggers)
-                    allSubscribedPairs.AddRange(dbLogger.Config.Pairs);
+                    allSubscribedPairs.AddRange(dbLogger.SubscribedPairs);
 
                 UnsubscribedPairs = new List<Cross>(CrossUtils.AllCrosses.Except(allSubscribedPairs));
             }

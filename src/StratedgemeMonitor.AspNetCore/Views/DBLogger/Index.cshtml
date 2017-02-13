@@ -36,7 +36,7 @@
                                     <div class="panel-body">
                                         <dl class="dl-horizontal">
                                             <dt>Subscribed Pairs:</dt>
-                                            <dd>@(string.Join(", ", dbLogger.SubscribedPairs.Select(c => c.Text)))</dd>
+                                            <dd>@(string.Join(", ", dbLogger.SubscribedPairs.Select(c => c.ToString())))</dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                         <form class="form-horizontal" asp-action="Index" method="post">
                                             <input hidden asp-for="Action.DBLoggerName" value="@dbLogger.Name" />
                                             <input hidden asp-for="Action.Action" value="Unsubscribe" />
-                                            <select asp-for="Action.Crosses" asp-items="@dbLogger.SubscribedPairs"></select>
+                                            <select asp-for="Action.Crosses" asp-items="@dbLogger.SubscribedPairsSelect"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Unsubscribe</button>
                                         </form>
                                     </div>

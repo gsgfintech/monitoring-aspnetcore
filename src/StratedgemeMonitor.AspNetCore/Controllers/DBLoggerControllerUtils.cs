@@ -1,4 +1,5 @@
 ﻿using Capital.GSG.FX.Data.Core.ContractData;
+using Capital.GSG.FX.Data.Core.SystemData;
 using Capital.GSG.FX.Data.Core.WebApi;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
@@ -44,18 +45,18 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            IEnumerable<DBLoggerConfigModel> configs = (await systemConfigsConnector.ListByTypeAsJson("InfluxDBLogger")).ToDBLoggerConfigModels();
+            List<DBLoggerSubscriptionStatus> dbLoggerList = await dbLoggerConnector.RequestDBLoggersSubscriptionsStatus(cts.Token);
 
-            if (configs.IsNullOrEmpty())
+            if (dbLoggerList.IsNullOrEmpty())
                 return new Dictionary<string, DBLoggerModel>();
             else
             {
                 Dictionary<string, DBLoggerModel> dbLoggers = new Dictionary<string, DBLoggerModel>();
 
-                foreach (var config in configs)
+                foreach (var dbLogger in dbLoggerList)
                 {
-                    SystemStatusModel status = (await systemStatusesConnector.Get(config.Name)).ToSystemStatusModel();
-                    dbLoggers.Add(config.Name, new DBLoggerModel(config.Name, status, config));
+                    SystemStatusModel status = (await systemStatusesConnector.Get(dbLogger.DBLoggerName)).ToSystemStatusModel();
+                    dbLoggers.Add(dbLogger.DBLoggerName, new DBLoggerModel(dbLogger.DBLoggerName, status, dbLogger));
                 }
 
                 return dbLoggers;
