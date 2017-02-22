@@ -115,7 +115,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return await systemServicesConnector.StopService(systemName);
         }
 
-        internal async Task<bool> SystemDelete(string systemName, ISession session, ClaimsPrincipal user)
+        internal async Task<GenericActionResult> SystemDelete(string systemName, ISession session, ClaimsPrincipal user)
         {
             return await systemStatusesConnector.Delete(systemName);
         }

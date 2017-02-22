@@ -63,7 +63,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> SystemDelete(string systemName)
         {
-            bool result = await utils.SystemDelete(systemName, HttpContext.Session, User);
+            var result = await utils.SystemDelete(systemName, HttpContext.Session, User);
 
             // TODO: use the result
 
