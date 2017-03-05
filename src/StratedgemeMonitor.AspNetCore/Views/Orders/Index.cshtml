@@ -131,7 +131,7 @@
                                 @Html.DisplayFor(modelItem => item.TimeInForce)
                             </td>
                             <td>
-                                @Html.ActionLink("Details", "Details", new { id = item.PermanentId })
+                                <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-id="@item.PermanentId"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }
@@ -280,7 +280,7 @@
                                 @Html.DisplayFor(modelItem => item.TimeInForce)
                             </td>
                             <td>
-                                @Html.ActionLink("Details", "Details", new { id = item.PermanentId })
+                                <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-id="@item.PermanentId"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }
