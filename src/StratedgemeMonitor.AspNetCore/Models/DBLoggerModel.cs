@@ -8,6 +8,22 @@ using System.Linq;
 
 namespace StratedgemeMonitor.AspNetCore.Models
 {
+    public class DBLoggerRegionModel
+    {
+        public Datacenter Datacenter { get; set; }
+
+        public List<DBLoggerModel> DBLoggers { get; private set; } = new List<DBLoggerModel>();
+
+        public IEnumerable<Cross> AllSubscribedPairs => DBLoggers.Select(l => l.SubscribedPairs.AsEnumerable()).Aggregate((cur, next) => cur.Concat(next)).Distinct().OrderBy(c => c.ToString());
+
+        public IEnumerable<Cross> AllUnsubscribedPairs => CrossUtils.AllCrosses.Except(AllSubscribedPairs);
+
+        public DBLoggerRegionModel(Datacenter datacenter)
+        {
+            Datacenter = datacenter;
+        }
+    }
+
     public class DBLoggerModel
     {
         public string Name { get; private set; }

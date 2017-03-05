@@ -35,12 +35,12 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         {
             string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
 
-            Dictionary<string, DBLoggerModel> dbLoggers = await LoadDBLoggers(session, user);
+            var dbLoggers = await LoadDBLoggers(session, user);
 
-            return new DBLoggersListViewModel(dbLoggers.Values);
+            return new DBLoggersListViewModel(dbLoggers);
         }
 
-        private async Task<Dictionary<string, DBLoggerModel>> LoadDBLoggers(ISession session, ClaimsPrincipal user)
+        private async Task<List<DBLoggerRegionModel>> LoadDBLoggers(ISession session, ClaimsPrincipal user)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
@@ -48,18 +48,25 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             List<DBLoggerSubscriptionStatus> dbLoggerList = await dbLoggerConnector.RequestDBLoggersSubscriptionsStatus(cts.Token);
 
             if (dbLoggerList.IsNullOrEmpty())
-                return new Dictionary<string, DBLoggerModel>();
+                return new List<DBLoggerRegionModel>();
             else
             {
-                Dictionary<string, DBLoggerModel> dbLoggers = new Dictionary<string, DBLoggerModel>();
+                Dictionary<Datacenter, DBLoggerRegionModel> dbLoggerRegions = new Dictionary<Datacenter, DBLoggerRegionModel>();
 
                 foreach (var dbLogger in dbLoggerList)
                 {
                     SystemStatusModel status = (await systemStatusesConnector.Get(dbLogger.DBLoggerName)).ToSystemStatusModel();
-                    dbLoggers.Add(dbLogger.DBLoggerName, new DBLoggerModel(dbLogger.DBLoggerName, status, dbLogger));
+
+                    if (status != null)
+                    {
+                        if (!dbLoggerRegions.ContainsKey(status.Datacenter))
+                            dbLoggerRegions[status.Datacenter] = new DBLoggerRegionModel(status.Datacenter);
+
+                        dbLoggerRegions[status.Datacenter].DBLoggers.Add(new DBLoggerModel(dbLogger.DBLoggerName, status, dbLogger));
+                    }
                 }
 
-                return dbLoggers;
+                return dbLoggerRegions.Values.ToList();
             }
         }
 

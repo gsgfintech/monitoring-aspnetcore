@@ -19,6 +19,9 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [Display(Name = "System")]
         public string Name { get; set; }
 
+        [Display(Name = "Datacenter")]
+        public Datacenter Datacenter { get; set; }
+
         [Display(Name = "Status")]
         public SystemStatusLevel? OverallStatus { get; set; }
 
@@ -55,6 +58,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
             SystemStatusModel model = new SystemStatusModel()
             {
                 Attributes = status.Attributes.ToSystemStatusAttributeModels(),
+                Datacenter = status.Datacenter,
                 IsAlive = status.IsAlive,
                 LastHeardFrom = status.LastHeardFrom.ToOffset(TimeSpan.FromHours(8)),
                 Name = status.Name,

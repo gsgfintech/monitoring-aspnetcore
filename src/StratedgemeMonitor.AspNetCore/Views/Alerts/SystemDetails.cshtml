@@ -10,7 +10,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="@(Model.OverallStatus == GREEN ? "panel panel-success" : Model.OverallStatus == YELLOW ? "panel panel-warning" : "panel panel-danger")">
             <div class="panel-heading">
-                <h2>@Html.DisplayFor(m => m.Name)</h2>
+                <h2>@Html.DisplayFor(m => m.Name) <small>@Html.DisplayFor(m => Model.Datacenter)</small></h2>
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
