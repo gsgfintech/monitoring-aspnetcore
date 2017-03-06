@@ -157,6 +157,10 @@
                         <div class="form-group-sm">
                             <input asp-for="Day" type="date" />
                             <button type="submit">Go</button>
+                            @if (Model.InactiveOrders.Count > 0)
+                            {
+                                <a class="btn btn-default btn-sm" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
+                            }
                         </div>
                     </form>
                 </div>

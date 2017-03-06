@@ -13,18 +13,23 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public ExecutionsController(BackendExecutionsConnector connector)
         {
-            utils = new ExecutionsControllerUtils(connector);
+            utils = ExecutionsControllerUtils.GetInstance(connector);
         }
 
         // GET: /<controller>/
         public async Task<IActionResult> Index(DateTime? day)
         {
-            return View(await utils.CreateListViewModel(HttpContext.Session, User, day));
+            return View(await utils.CreateListViewModel(day));
         }
 
         public async Task<IActionResult> Details(string executionid)
         {
-            return View(await utils.GetById(executionid, HttpContext.Session, User));
+            return View(await utils.GetById(executionid));
+        }
+
+        public async Task<FileResult> ExportExcel()
+        {
+            return await utils.ExportExcel();
         }
     }
 }

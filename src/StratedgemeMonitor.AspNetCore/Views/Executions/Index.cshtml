@@ -13,7 +13,11 @@
                     <form class="form-horizontal" asp-action="Index">
                         <div class="form-group-sm">
                             <input asp-for="Day" type="date" />
-                            <button type="submit">Go</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Go</button>
+                            @if (Model.Trades.Count > 0)
+                            {
+                                <a class="btn btn-default btn-sm" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
+                            }
                         </div>
                     </form>
                 </div>
@@ -50,7 +54,7 @@
                     </tr>
 
                     @foreach (var item in Model.Trades)
-                {
+                    {
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ExecutionTime)

@@ -2,14 +2,15 @@
 using Capital.GSG.FX.Data.Core.OrderData;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using StratedgemeMonitor.AspNetCore.Models;
-using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Security.Claims;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
@@ -20,42 +21,141 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         private readonly OrderStatusCode[] activeStatus = new OrderStatusCode[3] { OrderStatusCode.PendingSubmit, OrderStatusCode.PreSubmitted, OrderStatusCode.Submitted };
 
-        public OrdersControllerUtils(BackendOrdersConnector connector)
+        private DateTime currentDay = DateTimeUtils.GetLastBusinessDayInHKT();
+
+        private static OrdersControllerUtils instance;
+
+        public static OrdersControllerUtils GetInstance(BackendOrdersConnector connector)
+        {
+            if (instance == null)
+                instance = new OrdersControllerUtils(connector);
+
+            return instance;
+        }
+
+        private OrdersControllerUtils(BackendOrdersConnector connector)
         {
             this.connector = connector;
         }
 
-        internal async Task<OrdersListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
+        internal async Task<OrdersListViewModel> CreateListViewModel(DateTime? day = null)
         {
-            if (!day.HasValue)
-                day = DateTimeUtils.GetLastBusinessDayInHKT();
+            if (day.HasValue)
+                currentDay = day.Value;
 
-            List<OrderModel> activeOrders = await GetActiveOrders(session, user);
-            List<OrderModel> inactiveOrders = await GetInactiveOrdersForDay(day.Value, session, user);
+            List<OrderModel> activeOrders = await GetActiveOrders();
+            List<OrderModel> inactiveOrders = await GetInactiveOrdersForDay();
 
-            return new OrdersListViewModel(day.Value, activeOrders, inactiveOrders);
+            return new OrdersListViewModel(currentDay, activeOrders, inactiveOrders);
         }
 
-        private async Task<List<OrderModel>> GetInactiveOrdersForDay(DateTime day, ISession session, ClaimsPrincipal user)
+        private async Task<List<OrderModel>> GetInactiveOrdersForDay()
         {
-            return (await GetOrdersForDay(day, session, user))?.Where(o => !activeStatus.Contains(o.Status))?.ToList();
+            return (await GetOrders())?.Where(o => !activeStatus.Contains(o.Status))?.ToList();
         }
 
-        internal async Task<List<OrderModel>> GetOrdersForDay(DateTime day, ISession session, ClaimsPrincipal user)
+        internal async Task<List<OrderModel>> GetOrders()
         {
-            var orders = await connector.GetOrdersForDay(day);
+            var orders = await connector.GetOrdersForDay(currentDay);
 
             return orders?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
-        private async Task<List<OrderModel>> GetActiveOrders(ISession session, ClaimsPrincipal user)
+        private async Task<List<OrderModel>> GetActiveOrders()
         {
             return (await connector.GetActiveOrders())?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
-        internal async Task<OrderModel> GetByPermanentId(int permanentId, ISession session, ClaimsPrincipal user)
+        internal async Task<OrderModel> GetByPermanentId(int permanentId)
         {
             return (await connector.GetOrderByPermanentId(permanentId)).ToOrderModel();
+        }
+
+        internal async Task<FileResult> ExportExcel()
+        {
+            string fileName = $"Orders-{currentDay:yyyy-MM-dd}.xlsx";
+            string contentType = "Application/msexcel";
+
+            byte[] bytes = await CreateExcel();
+
+            MemoryStream stream = new MemoryStream(bytes);
+
+            return new FileStreamResult(stream, contentType)
+            {
+                FileDownloadName = fileName
+            };
+        }
+
+        private async Task<byte[]> CreateExcel()
+        {
+            var orders = await GetOrders();
+
+            if (orders.IsNullOrEmpty())
+                return new byte[0];
+
+            List<Dictionary<string, object>> dataset = new List<Dictionary<string, object>>();
+
+            foreach (var order in orders)
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+
+                foreach (var property in order.GetType().GetProperties())
+                {
+                    data.Add(property.Name, property.GetValue(order));
+                }
+
+                dataset.Add(data);
+            }
+
+            // Cleanup
+            foreach (var data in dataset)
+            {
+                data.Remove("IBClientID");
+                data.Remove("Contract");
+                data.Remove("TransmitOrder");
+                data.Remove("Warning");
+
+                if (data.ContainsKey("PlacedTime") && data["PlacedTime"] is DateTime)
+                    data["PlacedTime"] = ((DateTime)data["PlacedTime"]).ToLocalTime();
+            }
+
+            IEnumerable<object[]> values = dataset.Select(d => d.Values.ToArray());
+
+            string[] headers = dataset.First().Keys.ToArray();
+
+            using (ExcelPackage excel = new ExcelPackage())
+            {
+                // Create the worksheet
+                ExcelWorksheet ws = excel.Workbook.Worksheets.Add($"Orders {currentDay:yyyyMMdd}");
+
+                ws.Cells["A1"].LoadFromArrays(new string[1][] { headers });
+                ws.Cells["A2"].LoadFromArrays(values);
+
+                // Freeze top row and first column
+                ws.View.FreezePanes(2, 2);
+
+                // Make headers bold
+                using (ExcelRange row = ws.Cells[1, 1, 1, headers.Length])
+                {
+                    row.Style.Font.Bold = true;
+                }
+
+                // Change the number format of the Timestamp column
+                using (ExcelRange col = ws.Cells[2, 5, 2 + values.Count(), 5])
+                {
+                    col.Style.Numberformat.Format = "dd/mm/yyyy hh:mm:ss";
+                }
+
+                using (ExcelRange col = ws.Cells[2, 6, 2 + values.Count(), 6])
+                {
+                    col.Style.Numberformat.Format = "dd/mm/yyyy hh:mm:ss";
+                }
+
+                // Finally autofit all columns
+                //ws.Cells[1, 1, dataset.Count() + 1, headers.Length].AutoFitColumns();
+
+                return excel.GetAsByteArray();
+            }
         }
     }
 

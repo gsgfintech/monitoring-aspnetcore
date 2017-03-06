@@ -14,23 +14,28 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public OrdersController(BackendOrdersConnector connector)
         {
-            utils = new OrdersControllerUtils(connector);
+            utils = OrdersControllerUtils.GetInstance(connector);
         }
 
         // GET: /<controller>/
         public async Task<IActionResult> Index(DateTime? day)
         {
-            return View(await utils.CreateListViewModel(HttpContext.Session, User, day));
+            return View(await utils.CreateListViewModel(day));
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            OrderModel order = await utils.GetByPermanentId(id, HttpContext.Session, User);
+            OrderModel order = await utils.GetByPermanentId(id);
 
             if (order != null)
                 return View(order);
             else
                 return View("Error");
+        }
+
+        public async Task<FileResult> ExportExcel()
+        {
+            return await utils.ExportExcel();
         }
     }
 }
