@@ -46,12 +46,12 @@ namespace StratedgemeMonitor.AspNetCore.Models
                 ActionUrl = alert.ActionUrl,
                 AlertId = alert.AlertId,
                 Body = alert.Body,
-                ClosedTimestamp = alert.ClosedTimestamp,
+                ClosedTimestamp = alert.ClosedTimestamp?.ToOffset(TimeSpan.FromHours(8)),
                 Level = alert.Level,
                 Source = alert.Source,
                 Status = alert.Status,
                 Subject = alert.Subject,
-                Timestamp = alert.Timestamp
+                Timestamp = alert.Timestamp.ToOffset(TimeSpan.FromHours(8))
             };
         }
 

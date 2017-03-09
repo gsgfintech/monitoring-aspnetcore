@@ -25,7 +25,6 @@
               asp-fallback-test-class="ejinputtext" asp-fallback-test-property="border-radius" asp-fallback-test-value="4px" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
 
 @await FlushAsync();
@@ -65,7 +64,7 @@
     <div class="container body-content">
         @RenderBody()
         <footer>
-            <p>&copy; 2016-2017 - GSG Limited</p>
+            <p>&copy; 2016-@DateTime.Today.Year GSG Limited</p>
         </footer>
     </div>
 
