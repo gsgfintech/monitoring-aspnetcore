@@ -1,7 +1,7 @@
 ﻿@using static Capital.GSG.FX.Data.Core.SystemData.AlertLevel;
-@using Capital.GSG.FX.Data.Core.SystemData;
+@using static StratedgemeMonitor.AspNetCore.ViewComponents.AlertsListType;
 
-@model StratedgemeMonitor.AspNetCore.ViewModels.AlertsListViewModel
+@model StratedgemeMonitor.AspNetCore.ViewModels.AlertsViewModel
 
 @{
     ViewBag.Title = $"Home - {Model.Day.ToString("dd MMM")}";
@@ -13,122 +13,19 @@
             <div class="col-lg-6" id="pnltable">
                 @await Component.InvokeAsync("PnlTable")
             </div>
-            <div class="col-lg-6">
-                <div class="@(Model.AllSystemsStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.AllSystemsStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.AllSystemsStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
-                    <div class="panel-heading">
-                        <h2>Systems <small>(@Model.SystemStatuses.Count)</small></h2>
-                    </div>
-                    @if (Model.SystemStatuses.Count > 0)
-                    {
-                        <table class="table table-hover">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().Name)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().LastHeardFrom)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().StartTime)
-                                </th>
-                                <th></th>
-                            </tr>
-
-                            @foreach (var item in Model.SystemStatuses)
-                            {
-                                <tr class="@(!item.IsAlive ? "bg-danger" : item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastHeardFrom)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StartTime)
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
-                                            <a class="btn btn-xs btn-danger" asp-action="SystemDelete" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-trash"></span></a>
-                                        </div>
-                                        @if (item.Restartable)
-                                        {
-                                            <div class="btn-group btn-group-xs">
-                                                <a class="@(item.IsAlive ? "btn btn-xs btn-success disabled" : "btn btn-xs btn-success")" asp-acti asp-action="SystemStart" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-play"></span></a>
-                                                <a class="@(item.IsAlive ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="SystemStop" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-stop"></span></a>
-                                            </div>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="panel-body">
-                            <p>No system status</p>
-                        </div>
-                    }
-                </div>
+            <div class="col-lg-6" id="systemslist">
+                @await Component.InvokeAsync("SystemsList")
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h2 style="display:inline-block">Open Alerts <small>(@Model.OpenAlerts.Count)</small></h2>
-                        <div class="pull-right">
-                            <a class="@(Model.OpenAlerts.Count > 0 ? "btn btn-danger" : "btn btn-danger disabled")" asp-action="CloseAll">Close All</a>
-                        </div>
-                    </div>
-                    @if (Model.OpenAlerts.Count > 0)
-                    {
-                        <table class="table table-hover">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Timestamp)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Source)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Subject)
-                                </th>
-                                <th></th>
-                            </tr>
-
-                            @foreach (var item in Model.OpenAlerts)
-                            {
-                                <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Timestamp)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Source)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Subject)
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-xs">
-                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
-                                            <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId">Close</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="panel-body">
-                            <p>No open alert</p>
-                        </div>
-                    }
-                </div>
+                @await Component.InvokeAsync("AlertsList", new { listType = Open, day = Model.Day })
+            </div>
+            <div class="col-lg-12">
+                @await Component.InvokeAsync("AlertsList", new { listType = Closed, day = Model.Day })
             </div>
         </div>
-        <div class="row">
+        @*<div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -185,7 +82,7 @@
                     }
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
     <div class="col-lg-3 hidden-md hidden-sm hidden-xs">
         <div style="width:100%; height:400px">
@@ -222,6 +119,7 @@
         $(function () {
             setInterval(function () {
                 $('#pnltable').load('/Alerts/PnlTableViewComponent');
+                $('#systemslist').load('/Alerts/SystemsListViewComponent');
             }, 15000);
         });
     </script>

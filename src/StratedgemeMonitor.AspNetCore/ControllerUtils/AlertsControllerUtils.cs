@@ -35,7 +35,7 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             this.systemServicesConnector = systemServicesConnector;
         }
 
-        internal async Task<AlertsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user, DateTime? day = null)
+        internal AlertsViewModel CreateListViewModel(DateTime? day = null)
         {
             if (!CurrentDay.HasValue)
                 CurrentDay = DateTime.Today;
@@ -45,12 +45,7 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             else
                 CurrentDay = day;
 
-            List<AlertModel> openAlerts = await GetOpenAlerts(session, user);
-            List<AlertModel> closedAlerts = await GetClosedAlertsForDay(day.Value, session, user);
-            List<SystemStatusModel> statuses = await GetAllSystemStatuses(session, user);
-            //PnLModel pnl = await GetPnLForDay(day.Value);
-
-            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<SystemStatusModel>()/*, pnl*/);
+            return new AlertsViewModel(day.Value);
         }
 
         internal async Task<GenericActionResult> Close(string id, ISession session, ClaimsPrincipal user)
@@ -58,14 +53,14 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             return await alertsConnector.Close(id);
         }
 
-        private async Task<List<SystemStatusModel>> GetAllSystemStatuses(ISession session, ClaimsPrincipal user)
+        internal async Task<List<SystemStatusModel>> GetAllSystemStatuses()
         {
             var statuses = await systemStatusesConnector.GetAll();
 
             return statuses.ToSystemStatusModels();
         }
 
-        private async Task<List<AlertModel>> GetOpenAlerts(ISession session, ClaimsPrincipal user)
+        internal async Task<List<AlertModel>> GetOpenAlerts()
         {
             logger.Debug("Requesting open alerts");
 
@@ -86,7 +81,7 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             return await GetPnLForDay(CurrentDay ?? DateTime.Today);
         }
 
-        private async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day, ISession session, ClaimsPrincipal user)
+        internal async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day)
         {
             var alerts = await alertsConnector.GetForDay(day);
 

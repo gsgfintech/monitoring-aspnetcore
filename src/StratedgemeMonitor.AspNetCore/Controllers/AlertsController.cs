@@ -18,9 +18,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             this.utils = utils;
         }
 
-        public async Task<IActionResult> Index(DateTime? day)
+        public IActionResult Index(DateTime? day)
         {
-            return View(await utils.CreateListViewModel(HttpContext.Session, User, day));
+            return View(utils.CreateListViewModel());
         }
 
         public async Task<IActionResult> Details(string id)
@@ -49,7 +49,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             // TODO: use the result
 
-            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+            return View("Index", utils.CreateListViewModel(utils.CurrentDay));
         }
 
         public async Task<IActionResult> SystemStop(string systemName)
@@ -58,7 +58,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             // TODO: use the result
 
-            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+            return View("Index", utils.CreateListViewModel(utils.CurrentDay));
         }
 
         public async Task<IActionResult> SystemDelete(string systemName)
@@ -67,7 +67,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
             // TODO: use the result
 
-            return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+            return View("Index", utils.CreateListViewModel(utils.CurrentDay));
         }
 
         public async Task<IActionResult> Close(string id)
@@ -75,7 +75,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             GenericActionResult result = await utils.Close(id, HttpContext.Session, User);
 
             if (result.Success)
-                return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+                return View("Index", utils.CreateListViewModel(utils.CurrentDay));
             else
                 return View("Error", result.Message);
         }
@@ -85,7 +85,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             GenericActionResult result = await utils.CloseAll(HttpContext.Session, User);
 
             if (result.Success)
-                return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
+                return View("Index", utils.CreateListViewModel(utils.CurrentDay));
             else
                 return View("Error", result.Message);
         }
@@ -93,6 +93,11 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
         public IActionResult PnlTableViewComponent()
         {
             return ViewComponent("PnlTable");
+        }
+
+        public IActionResult SystemsListViewComponent()
+        {
+            return ViewComponent("SystemsList");
         }
     }
 }
