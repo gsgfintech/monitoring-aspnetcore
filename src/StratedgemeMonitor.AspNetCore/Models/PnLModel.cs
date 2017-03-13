@@ -41,6 +41,10 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [Display(Name = "Pair")]
         public Cross Cross { get; set; }
 
+        [Display(Name = "Position")]
+        [DisplayFormat(DataFormatString = "{0:N0}K")]
+        public double PositionSize { get; set; }
+
         [Display(Name = "RG PnL")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double GrossRealized { get; set; }
@@ -75,6 +79,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
                 GrossRealized = pnl.GrossRealized,
                 GrossUnrealized = pnl.GrossUnrealized,
                 NetRealized = pnl.NetRealized,
+                PositionSize = pnl.PositionSize / 1000,
                 TotalFees = pnl.TotalFees,
                 TradesCount = pnl.TradesCount
             };
