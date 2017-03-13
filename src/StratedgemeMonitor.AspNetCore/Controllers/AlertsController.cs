@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Capital.GSG.FX.Monitoring.Server.Connector;
 using StratedgemeMonitor.AspNetCore.Models;
 using Capital.GSG.FX.Data.Core.WebApi;
+using StratedgemeMonitor.AspNetCore.ControllerUtils;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
 {
@@ -13,9 +13,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
     {
         private readonly AlertsControllerUtils utils;
 
-        public AlertsController(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector statusesConnector, BackendSystemServicesConnector systemServicesConnector, BackendPnLsConnector pnlsConnector)
+        public AlertsController(AlertsControllerUtils utils)
         {
-            utils = new AlertsControllerUtils(alertsConnector, statusesConnector, systemServicesConnector, pnlsConnector);
+            this.utils = utils;
         }
 
         public async Task<IActionResult> Index(DateTime? day)
@@ -88,6 +88,11 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 return View("Index", await utils.CreateListViewModel(HttpContext.Session, User, utils.CurrentDay));
             else
                 return View("Error", result.Message);
+        }
+
+        public IActionResult PnlTableViewComponent()
+        {
+            return ViewComponent("PnlTable");
         }
     }
 }

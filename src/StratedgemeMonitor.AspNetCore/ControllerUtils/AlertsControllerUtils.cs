@@ -14,9 +14,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace StratedgemeMonitor.AspNetCore.Controllers
+namespace StratedgemeMonitor.AspNetCore.ControllerUtils
 {
-    internal class AlertsControllerUtils
+    public class AlertsControllerUtils
     {
         private readonly ILogger logger = GSGLoggerFactory.Instance.CreateLogger<AlertsControllerUtils>();
 
@@ -48,9 +48,9 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             List<AlertModel> openAlerts = await GetOpenAlerts(session, user);
             List<AlertModel> closedAlerts = await GetClosedAlertsForDay(day.Value, session, user);
             List<SystemStatusModel> statuses = await GetAllSystemStatuses(session, user);
-            PnLModel pnl = await GetPnLForDay(day.Value, session, user);
+            //PnLModel pnl = await GetPnLForDay(day.Value);
 
-            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<SystemStatusModel>(), pnl);
+            return new AlertsListViewModel(day.Value, openAlerts ?? new List<AlertModel>(), closedAlerts ?? new List<AlertModel>(), statuses ?? new List<SystemStatusModel>()/*, pnl*/);
         }
 
         internal async Task<GenericActionResult> Close(string id, ISession session, ClaimsPrincipal user)
@@ -74,11 +74,16 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             return alerts.ToAlertModels();
         }
 
-        private async Task<PnLModel> GetPnLForDay(DateTime day, ISession session, ClaimsPrincipal user)
+        internal async Task<PnLModel> GetPnLForDay(DateTime day)
         {
             var pnl = await pnlsConnector.GetForDay(day);
 
             return pnl.ToPnLModel();
+        }
+
+        internal async Task<PnLModel> GetPnLForDay()
+        {
+            return await GetPnLForDay(CurrentDay ?? DateTime.Today);
         }
 
         private async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day, ISession session, ClaimsPrincipal user)

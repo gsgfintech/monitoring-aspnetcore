@@ -14,7 +14,7 @@ namespace StratedgemeMonitor.AspNetCore.ViewModels
         public List<SystemStatusModel> SystemStatuses { get; set; }
         public List<AlertModel> OpenAlerts { get; set; }
         public List<AlertModel> ClosedAlerts { get; set; }
-        public PnLModel PnL { get; set; }
+        //public PnLModel PnL { get; set; }
 
         public SystemStatusLevel? AllSystemsStatus
         {
@@ -33,14 +33,14 @@ namespace StratedgemeMonitor.AspNetCore.ViewModels
         [DisplayFormat(DataFormatString = "{0:dd MMM}")]
         public DateTime Day { get; private set; }
 
-        public AlertsListViewModel(DateTime day, List<AlertModel> openAlerts, List<AlertModel> closedAlerts, List<SystemStatusModel> systemStatuses, PnLModel pnl)
+        public AlertsListViewModel(DateTime day, List<AlertModel> openAlerts, List<AlertModel> closedAlerts, List<SystemStatusModel> systemStatuses/*, PnLModel pnl*/)
         {
             Day = day;
 
             OpenAlerts = openAlerts;
             ClosedAlerts = closedAlerts;
             SystemStatuses = systemStatuses;
-            PnL = pnl;
+            //PnL = pnl;
         }
     }
 }

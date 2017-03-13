@@ -9,6 +9,7 @@ using Capital.GSG.FX.Monitoring.Server.Connector;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using Capital.GSG.FX.Utils.Core.Logging;
+using StratedgemeMonitor.AspNetCore.ControllerUtils;
 
 namespace StratedgemeMonitor.AspNetCore
 {
@@ -115,6 +116,8 @@ namespace StratedgemeMonitor.AspNetCore
                 return connector.TradeEngineConnector;
             });
 
+            services.AddControllerUtils();
+
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
@@ -182,6 +185,23 @@ namespace StratedgemeMonitor.AspNetCore
             });
 
             app.UseResponseCompression();
+        }
+    }
+
+    internal static class ServiceExtensions
+    {
+        public static void AddControllerUtils(this IServiceCollection services)
+        {
+            services.AddSingleton((serviceProvider) =>
+            {
+                var alertsConnector = serviceProvider.GetService<BackendAlertsConnector>();
+                var pnlsConnector = serviceProvider.GetService<BackendPnLsConnector>();
+                var systemStatusesConnector = serviceProvider.GetService<BackendSystemStatusesConnector>();
+                var systemServicesConnector = serviceProvider.GetService<BackendSystemServicesConnector>();
+
+                return new AlertsControllerUtils(alertsConnector, systemStatusesConnector, systemServicesConnector, pnlsConnector);
+            });
+
         }
     }
 }

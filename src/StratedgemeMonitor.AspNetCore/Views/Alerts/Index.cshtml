@@ -10,70 +10,8 @@
 <div class="row">
     <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="@(Model.PnL.TotalNetRealized > 0 ? "panel panel-success" : Model.PnL.TotalNetRealized < 0 ? "panel panel-danger" : "panel panel-default")">
-                    <div class="panel-heading">
-                        <strong>PnL (USD)</strong>
-                        <div class="pull-right hidden-xs hidden-sm">
-                            Unrealised: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
-                            Gross: @Html.DisplayFor(m => Model.PnL.TotalGrossRealized) |
-                            Fees: @Html.DisplayFor(m => Model.PnL.TotalFees) |
-                            Net: <strong style="font-size:large">@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
-                        </div>
-                        <div class="pull-right visible-sm-inline">
-                            Unrealised: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
-                            Net: <strong>@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
-                        </div>
-                        <div class="pull-right visible-xs-inline">
-                            Unr: @Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized) |
-                            Net: <strong>{@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</strong>
-                        </div>
-                    </div>
-                    @if (Model.PnL.PerCrossPnLs.Count > 0)
-                    {
-                    <table class="table table-condensed">
-                        <tr>
-                            <th>@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().Cross)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().PositionSize)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().TradesCount)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().TotalFees)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().GrossRealized)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().NetRealized)</th>
-                            <th class="text-right">@Html.DisplayNameFor(m => Model.PnL.PerCrossPnLs.First().GrossUnrealized)</th>
-                        </tr>
-                        @foreach (var item in Model.PnL.PerCrossPnLs)
-                            {
-                        <tr>
-                            <td>@Html.DisplayFor(m => item.Cross)</td>
-                            <td class="@(item.PositionSize > 0 ? "bg-success text-right" : item.PositionSize < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.PositionSize)</td>
-                            <td class="text-right">@Html.DisplayFor(m => item.TradesCount)</td>
-                            <td class="text-right">@Html.DisplayFor(m => item.TotalFees)</td>
-                            <td class="@(item.GrossRealized > 0 ? "bg-success text-right" : item.GrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.GrossRealized)</td>
-                            <td class="@(item.NetRealized > 0 ? "bg-success text-right" : item.NetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.NetRealized)</td>
-                            <td class="@(item.GrossUnrealized > 0 ? "bg-success text-right" : item.GrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.GrossUnrealized)</td>
-                        </tr>
-                            }
-                        <tr>
-                            <th>Total</th>
-                            <th></th>
-                            <th class="text-right">@Html.DisplayFor(m => Model.PnL.TotalTradesCount)</th>
-                            <th class="text-right">@Html.DisplayFor(m => Model.PnL.TotalFees)</th>
-                            <th class="@(Model.PnL.TotalGrossRealized > 0 ? "bg-success text-right" : Model.PnL.TotalGrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.PnL.TotalGrossRealized)</th>
-                            <th class="@(Model.PnL.TotalNetRealized > 0 ? "bg-success text-right" : Model.PnL.TotalNetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.PnL.TotalNetRealized)</th>
-                            <th class="@(Model.PnL.TotalGrossUnrealized > 0 ? "bg-success text-right" : Model.PnL.TotalGrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.PnL.TotalGrossUnrealized)</th>
-                        </tr>
-                    </table>
-                    }
-                    else
-                    {
-                    <div class="panel-body">
-                        <p>No PnL</p>
-                    </div>
-                    }
-                    <div class="panel-footer">
-                        <p><i><small>Last updated at @Html.DisplayFor(m => Model.PnL.LastUpdate)</small></i></p>
-                    </div>
-                </div>
+            <div class="col-lg-6" id="pnltable">
+                @await Component.InvokeAsync("PnlTable")
             </div>
             <div class="col-lg-6">
                 <div class="@(Model.AllSystemsStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.AllSystemsStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.AllSystemsStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
@@ -82,54 +20,54 @@
                     </div>
                     @if (Model.SystemStatuses.Count > 0)
                     {
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.SystemStatuses.First().Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.SystemStatuses.First().LastHeardFrom)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.SystemStatuses.First().StartTime)
-                            </th>
-                            <th></th>
-                        </tr>
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().LastHeardFrom)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.SystemStatuses.First().StartTime)
+                                </th>
+                                <th></th>
+                            </tr>
 
-                        @foreach (var item in Model.SystemStatuses)
+                            @foreach (var item in Model.SystemStatuses)
                             {
-                        <tr class="@(!item.IsAlive ? "bg-danger" : item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LastHeardFrom)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartTime)
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-xs">
-                                    <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
-                                    <a class="btn btn-xs btn-danger" asp-action="SystemDelete" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-trash"></span></a>
-                                </div>
-                                @if (item.Restartable)
+                                <tr class="@(!item.IsAlive ? "bg-danger" : item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LastHeardFrom)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartTime)
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
+                                            <a class="btn btn-xs btn-danger" asp-action="SystemDelete" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-trash"></span></a>
+                                        </div>
+                                        @if (item.Restartable)
                                         {
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="@(item.IsAlive ? "btn btn-xs btn-success disabled" : "btn btn-xs btn-success")" asp-acti asp-action="SystemStart" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-play"></span></a>
-                                        <a class="@(item.IsAlive ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="SystemStop" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-stop"></span></a>
-                                    </div>
+                                            <div class="btn-group btn-group-xs">
+                                                <a class="@(item.IsAlive ? "btn btn-xs btn-success disabled" : "btn btn-xs btn-success")" asp-acti asp-action="SystemStart" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-play"></span></a>
+                                                <a class="@(item.IsAlive ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="SystemStop" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-stop"></span></a>
+                                            </div>
                                         }
-                            </td>
-                        </tr>
+                                    </td>
+                                </tr>
                             }
-                    </table>
+                        </table>
                     }
                     else
                     {
-                    <div class="panel-body">
-                        <p>No system status</p>
-                    </div>
+                        <div class="panel-body">
+                            <p>No system status</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -145,47 +83,47 @@
                     </div>
                     @if (Model.OpenAlerts.Count > 0)
                     {
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.OpenAlerts.First().Timestamp)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.OpenAlerts.First().Source)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.OpenAlerts.First().Subject)
-                            </th>
-                            <th></th>
-                        </tr>
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Timestamp)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Source)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.OpenAlerts.First().Subject)
+                                </th>
+                                <th></th>
+                            </tr>
 
-                        @foreach (var item in Model.OpenAlerts)
+                            @foreach (var item in Model.OpenAlerts)
                             {
-                        <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Timestamp)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Source)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Subject)
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-xs">
-                                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
-                                    <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId">Close</a>
-                                </div>
-                            </td>
-                        </tr>
+                                <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Timestamp)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Source)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Subject)
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-xs">
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
+                                            <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId">Close</a>
+                                        </div>
+                                    </td>
+                                </tr>
                             }
-                    </table>
+                        </table>
                     }
                     else
                     {
-                    <div class="panel-body">
-                        <p>No open alert</p>
-                    </div>
+                        <div class="panel-body">
+                            <p>No open alert</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -206,44 +144,44 @@
                     </div>
                     @if (Model.ClosedAlerts.Count > 0)
                     {
-                    <table class="table table-hover">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Timestamp)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Source)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Subject)
-                            </th>
-                            <th></th>
-                        </tr>
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Timestamp)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Source)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Subject)
+                                </th>
+                                <th></th>
+                            </tr>
 
-                        @foreach (var item in Model.ClosedAlerts)
+                            @foreach (var item in Model.ClosedAlerts)
                             {
-                        <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Timestamp)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Source)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Subject)
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
-                            </td>
-                        </tr>
+                                <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Timestamp)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Source)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Subject)
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
+                                    </td>
+                                </tr>
                             }
-                    </table>
+                        </table>
                     }
                     else
                     {
-                    <div class="panel-body">
-                        <p>No alert</p>
-                    </div>
+                        <div class="panel-body">
+                            <p>No alert</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -254,21 +192,21 @@
             <!-- TradingView Widget BEGIN -->
             <script type="text/javascript" src="https://d33t3vvu2t2yu5.cloudfront.net/tv.js"></script>
             <script type="text/javascript">
-                    new TradingView.widget({
-                        "autosize": true,
-                        "symbol": "FX:EURUSD",
-                        "interval": "30",
-                        "timezone": "Asia/Hong_Kong",
-                        "theme": "White",
-                        "style": "1",
-                        "locale": "en",
-                        "toolbar_bg": "#f1f3f6",
-                        "allow_symbol_change": true,
-                        "hideideas": true,
-                        "show_popup_button": true,
-                        "popup_width": "1000",
-                        "popup_height": "650"
-                    });
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "FX:EURUSD",
+                    "interval": "30",
+                    "timezone": "Asia/Hong_Kong",
+                    "theme": "White",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "allow_symbol_change": true,
+                    "hideideas": true,
+                    "show_popup_button": true,
+                    "popup_width": "1000",
+                    "popup_height": "650"
+                });
             </script>
             <!-- TradingView Widget END -->
         </div>
@@ -277,3 +215,14 @@
         <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+            setInterval(function () {
+                $('#pnltable').load('/Alerts/PnlTableViewComponent');
+            }, 15000);
+        });
+    </script>
+}
