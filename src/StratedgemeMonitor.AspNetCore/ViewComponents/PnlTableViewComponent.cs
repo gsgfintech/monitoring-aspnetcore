@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StratedgemeMonitor.AspNetCore.ControllerUtils;
+using System;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.ViewComponents
@@ -17,9 +18,9 @@ namespace StratedgemeMonitor.AspNetCore.ViewComponents
             this.utils = utils;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(DateTime day)
         {
-            var pnl = await utils.GetPnLForDay();
+            var pnl = await utils.GetPnLForDay(day);
 
             return View(pnl);
         }

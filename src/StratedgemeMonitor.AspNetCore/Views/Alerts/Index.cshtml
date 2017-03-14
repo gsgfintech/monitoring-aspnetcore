@@ -1,5 +1,4 @@
-﻿@using static Capital.GSG.FX.Data.Core.SystemData.AlertLevel;
-@using static StratedgemeMonitor.AspNetCore.ViewComponents.AlertsListType;
+﻿@using static StratedgemeMonitor.AspNetCore.ViewComponents.AlertsListType;
 
 @model StratedgemeMonitor.AspNetCore.ViewModels.AlertsViewModel
 
@@ -8,81 +7,33 @@
 }
 
 <div class="row">
-    <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+    <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" id="alertspartial">
         <div class="row">
-            <div class="col-lg-6" id="pnltable">
-                @await Component.InvokeAsync("PnlTable")
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="form-group-sm">
+                            <input id="dayfield" asp-for="Day" type="date" />
+                            <button onclick="changeDay($('#dayfield').val())">Go</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="pnltable">
+                    @await Component.InvokeAsync("PnlTable", new { day = Model.Day })
+                </div>
             </div>
             <div class="col-lg-6" id="systemslist">
                 @await Component.InvokeAsync("SystemsList")
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" id="openalerts">
                 @await Component.InvokeAsync("AlertsList", new { listType = Open, day = Model.Day })
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12" id="closedalerts">
                 @await Component.InvokeAsync("AlertsList", new { listType = Closed, day = Model.Day })
             </div>
         </div>
-        @*<div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h2 style="display:inline-block">Closed Alerts - @Html.DisplayFor(m => Model.Day) <small>(@Model.ClosedAlerts.Count)</small></h2>
-                        <div class="pull-right">
-                            <form class="form-horizontal" asp-action="Index">
-                                <div class="form-group-sm">
-                                    <input asp-for="Day" type="date" />
-                                    <button type="submit">Go</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    @if (Model.ClosedAlerts.Count > 0)
-                    {
-                        <table class="table table-hover">
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Timestamp)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Source)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(m => Model.ClosedAlerts.First().Subject)
-                                </th>
-                                <th></th>
-                            </tr>
-
-                            @foreach (var item in Model.ClosedAlerts)
-                            {
-                                <tr class="@(item.Level <= INFO ? "bg-info" : item.Level <= WARNING ? "bg-warning" : "bg-danger")">
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Timestamp)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Source)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Subject)
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.AlertId">Details</a>
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="panel-body">
-                            <p>No alert</p>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>*@
     </div>
     <div class="col-lg-3 hidden-md hidden-sm hidden-xs">
         <div style="width:100%; height:400px">
@@ -119,8 +70,21 @@
         $(function () {
             setInterval(function () {
                 $('#pnltable').load('/Alerts/PnlTableViewComponent');
+                $('#openalerts').load('/Alerts/RefreshOpenAlerts');
                 $('#systemslist').load('/Alerts/SystemsListViewComponent');
             }, 15000);
         });
+
+        function changeDay(day) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Content("~/Alerts/ChangeDay")',
+                data: { day: day },
+                success: function (data) {
+                    $('#pnltable').load('/Alerts/PnlTableViewComponent');
+                    $('#closedalerts').load('/Alerts/RefreshClosedAlerts');
+                }
+            });
+        }
     </script>
 }

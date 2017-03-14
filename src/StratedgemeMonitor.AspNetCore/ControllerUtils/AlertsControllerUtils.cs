@@ -25,7 +25,7 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
         private readonly BackendSystemStatusesConnector systemStatusesConnector;
         private readonly BackendSystemServicesConnector systemServicesConnector;
 
-        internal DateTime? CurrentDay { get; private set; }
+        internal DateTime CurrentDay { get; set; }
 
         public AlertsControllerUtils(BackendAlertsConnector alertsConnector, BackendSystemStatusesConnector systemStatusesConnector, BackendSystemServicesConnector systemServicesConnector, BackendPnLsConnector pnlsConnector)
         {
@@ -35,17 +35,14 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             this.systemServicesConnector = systemServicesConnector;
         }
 
-        internal AlertsViewModel CreateListViewModel(DateTime? day = null)
+        internal AlertsViewModel CreateListViewModel(DateTime? day)
         {
-            if (!CurrentDay.HasValue)
-                CurrentDay = DateTime.Today;
-
             if (!day.HasValue)
-                day = CurrentDay;
-            else
-                CurrentDay = day;
+                day = DateTime.Today;
 
-            return new AlertsViewModel(day.Value);
+            CurrentDay = day.Value;
+
+            return new AlertsViewModel(CurrentDay);
         }
 
         internal async Task<GenericActionResult> Close(string id, ISession session, ClaimsPrincipal user)
@@ -74,11 +71,6 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
             var pnl = await pnlsConnector.GetForDay(day);
 
             return pnl.ToPnLModel();
-        }
-
-        internal async Task<PnLModel> GetPnLForDay()
-        {
-            return await GetPnLForDay(CurrentDay ?? DateTime.Today);
         }
 
         internal async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day)
