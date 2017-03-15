@@ -86,5 +86,18 @@
                 }
             });
         }
+
+        function closeAllAlerts() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Content("~/Alerts/CloseAllAlerts")',
+                data: { day: day },
+                success: function (data) {
+                    console.log(data);
+                    $('#openalerts').load('/Alerts/RefreshOpenAlerts');
+                    $('#closedalerts').load('/Alerts/RefreshClosedAlerts');
+                }
+            });
+        };
     </script>
 }

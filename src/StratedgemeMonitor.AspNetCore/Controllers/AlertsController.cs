@@ -87,7 +87,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             //    return View("Error", result.Message);
         }
 
-        public async Task CloseAll()
+        public async Task CloseAllAlerts()
         {
             GenericActionResult result = await utils.CloseAll(HttpContext.Session, User);
 
