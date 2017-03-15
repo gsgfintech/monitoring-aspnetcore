@@ -9,8 +9,7 @@
         @if (Model.ListType == Open)
         {
             <div class="pull-right">
-                @*<a id="closealertsbtn" class="@(Model.Alerts.Count > 0 ? "btn btn-sm btn-danger" : "btn btn-sm btn-danger disabled")">Close All</a>*@
-                <a class="btn btn-sm btn-danger" onclick="closeAllAlerts()">Close All</a>
+                <a class="@(Model.Alerts.Count > 0 ? "btn btn-sm btn-danger" : "btn btn-sm btn-danger disabled")" onclick="closeAllAlerts()">Close All</a>
             </div>
         }
     </div>
@@ -47,7 +46,7 @@
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.AlertId"><span class="glyphicon glyphicon-plus"></span></a>
                             @if (Model.ListType == Open)
                             {
-                                <a class="btn btn-danger" asp-action="Close" asp-route-id="@item.AlertId"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a class="btn btn-danger" onclick="closeAlert('@item.AlertId')"><span class="glyphicon glyphicon-remove"></span></a>
                             }
                         </div>
                     </td>

@@ -77,24 +77,14 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             //return View("Index", utils.CreateListViewModel(utils.CurrentDay));
         }
 
-        public async Task Close(string id)
+        public async Task<GenericActionResult> CloseAlert(string id)
         {
-            GenericActionResult result = await utils.Close(id, HttpContext.Session, User);
-
-            //if (result.Success)
-            //    return View("Index", utils.CreateListViewModel(utils.CurrentDay));
-            //else
-            //    return View("Error", result.Message);
+            return await utils.CloseAlert(id);
         }
 
-        public async Task CloseAllAlerts()
+        public async Task<GenericActionResult> CloseAllAlerts()
         {
-            GenericActionResult result = await utils.CloseAll(HttpContext.Session, User);
-
-            //if (result.Success)
-            //    return View("Index", utils.CreateListViewModel(utils.CurrentDay));
-            //else
-            //    return View("Error", result.Message);
+            return await utils.CloseAll();
         }
 
         public IActionResult PnlTableViewComponent()
