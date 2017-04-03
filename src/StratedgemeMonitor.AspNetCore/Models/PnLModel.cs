@@ -39,7 +39,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
 
         [Display(Name = "UP PnL")]
         [DisplayFormat(DataFormatString = "{0:N1}")]
-        public double TotalPipsUnrealized => !PerCrossPnLs.IsNullOrEmpty() ? PerCrossPnLs.Values.Select(p => p.PipsUnrealized).Sum() : 0;
+        public double TotalPipsUnrealized => (!PerCrossPnLs.IsNullOrEmpty() && PerCrossPnLs.Values.Count(p => p != null) > 0) ? PerCrossPnLs.Values.Where(p => p != null).Select(p => p.PipsUnrealized).Sum() : 0;
     }
 
     public class PnLPerCrossModel

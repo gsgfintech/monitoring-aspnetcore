@@ -36,19 +36,22 @@
             </tr>
             @foreach (var item in Model.PerCrossPnLs)
             {
-                <tr>
-                    <td>@Html.DisplayFor(m => item.Value.Cross)</td>
-                    <td class="@(item.Value.PositionSize > 0 ? "bg-success text-right" : item.Value.PositionSize < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PositionSize)</td>
-                    <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenTime)</td>
-                    <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenDuration)</td>
-                    <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenPrice)</td>
-                    <td class="@(item.Value.PipsUnrealized > 0 ? "bg-success text-right" : item.Value.PipsUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PipsUnrealized)</td>
-                    <td class="@(item.Value.GrossUnrealized > 0 ? "bg-success text-right" : item.Value.GrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossUnrealized)</td>
-                    <td class="@(item.Value.GrossRealized > 0 ? "bg-success text-right" : item.Value.GrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossRealized)</td>
-                    <td class="text-right">@Html.DisplayFor(m => item.Value.TradesCount)</td>
-                    <td class="text-right">@Html.DisplayFor(m => item.Value.TotalFees)</td>
-                    <td class="@(item.Value.NetRealized > 0 ? "bg-success text-right" : item.Value.NetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.NetRealized)</td>
-                </tr>
+                @if (item.Value != null)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(m => item.Value.Cross)</td>
+                        <td class="@(item.Value.PositionSize > 0 ? "bg-success text-right" : item.Value.PositionSize < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PositionSize)</td>
+                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenTime)</td>
+                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenDuration)</td>
+                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenPrice)</td>
+                        <td class="@(item.Value.PipsUnrealized > 0 ? "bg-success text-right" : item.Value.PipsUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PipsUnrealized)</td>
+                        <td class="@(item.Value.GrossUnrealized > 0 ? "bg-success text-right" : item.Value.GrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossUnrealized)</td>
+                        <td class="@(item.Value.GrossRealized > 0 ? "bg-success text-right" : item.Value.GrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossRealized)</td>
+                        <td class="text-right">@Html.DisplayFor(m => item.Value.TradesCount)</td>
+                        <td class="text-right">@Html.DisplayFor(m => item.Value.TotalFees)</td>
+                        <td class="@(item.Value.NetRealized > 0 ? "bg-success text-right" : item.Value.NetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.NetRealized)</td>
+                    </tr>
+                }
             }
             <tr>
                 <th>Total</th>
