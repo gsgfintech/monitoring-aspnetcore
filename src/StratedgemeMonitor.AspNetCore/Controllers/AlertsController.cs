@@ -50,33 +50,6 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
                 return View("Error");
         }
 
-        public async Task SystemStart(string systemName)
-        {
-            GenericActionResult result = await utils.StartSystem(systemName, HttpContext.Session, User);
-
-            // TODO: use the result
-
-            //return View("Index", utils.CreateListViewModel(utils.CurrentDay));
-        }
-
-        public async Task SystemStop(string systemName)
-        {
-            GenericActionResult result = await utils.StopSystem(systemName, HttpContext.Session, User);
-
-            // TODO: use the result
-
-            //return View("Index", utils.CreateListViewModel(utils.CurrentDay));
-        }
-
-        public async Task SystemDelete(string systemName)
-        {
-            var result = await utils.SystemDelete(systemName, HttpContext.Session, User);
-
-            // TODO: use the result
-
-            //return View("Index", utils.CreateListViewModel(utils.CurrentDay));
-        }
-
         public async Task<GenericActionResult> CloseAlert(string id)
         {
             return await utils.CloseAlert(id);

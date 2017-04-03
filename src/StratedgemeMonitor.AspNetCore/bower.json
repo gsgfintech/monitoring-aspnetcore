@@ -7,6 +7,7 @@
     "jquery-easing": "*",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
+    "tether": "^1.4.0",
     "syncfusion-javascript": "14.3.49"
   }
 }

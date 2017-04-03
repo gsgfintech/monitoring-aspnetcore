@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using Capital.GSG.FX.Utils.Core.Logging;
 using StratedgemeMonitor.AspNetCore.ControllerUtils;
+using StratedgemeMonitor.AspNetCore.Controllers.Systems;
 
 namespace StratedgemeMonitor.AspNetCore
 {
@@ -202,6 +203,13 @@ namespace StratedgemeMonitor.AspNetCore
                 return new AlertsControllerUtils(alertsConnector, systemStatusesConnector, systemServicesConnector, pnlsConnector);
             });
 
+            services.AddSingleton((serviceProvider) =>
+            {
+                var systemStatusesConnector = serviceProvider.GetService<BackendSystemStatusesConnector>();
+                var systemServicesConnector = serviceProvider.GetService<BackendSystemServicesConnector>();
+
+                return new SystemsControllerUtils(systemStatusesConnector, systemServicesConnector);
+            });
         }
     }
 }

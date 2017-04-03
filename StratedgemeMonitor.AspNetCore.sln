@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26323.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BFF220AB-511F-4F25-BEB5-DCB41FD5A113}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{75453B64-86DF-44F7-AB7E-B0C2A08A6570}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StratedgemeMonitor.AspNetCore", "src\StratedgemeMonitor.AspNetCore\StratedgemeMonitor.AspNetCore.csproj", "{2529E44A-D149-469D-9E60-23C0FEC4F44C}"
 EndProject

@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="form-group-sm">
@@ -26,7 +26,7 @@
                     @await Component.InvokeAsync("PnlTable", new { day = Model.Day })
                 </div>
             </div>
-            <div class="col-lg-6" id="systemslist">
+            <div class="col-lg-4" id="systemslist">
                 @await Component.InvokeAsync("SystemsList")
             </div>
         </div>

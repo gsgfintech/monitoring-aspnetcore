@@ -8,16 +8,13 @@
     </div>
     @if (Model.Statuses.Count > 0)
     {
-        <div style="max-height: 341px; overflow: auto">
+        <div style="max-height: 377px; overflow: auto">
             <table class="table table-hover">
                 <tr>
                     <th>
                     </th>
                     <th>
                         @Html.DisplayNameFor(m => Model.Statuses.First().LastHeardFrom)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(m => Model.Statuses.First().StartTime)
                     </th>
                     <th></th>
                 </tr>
@@ -32,20 +29,21 @@
                             @Html.DisplayFor(modelItem => item.LastHeardFrom)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.StartTime)
-                        </td>
-                        <td>
                             <div class="btn-group btn-group-xs">
                                 <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
-                                <a class="btn btn-xs btn-danger" asp-action="SystemDelete" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a class="btn btn-xs btn-danger" onclick="deleteSystem('@item.Name')"><span class="glyphicon glyphicon-trash"></span></a>
+                                @if (item.Restartable)
+                                {
+                                    @if (!item.IsAlive)
+                                    {
+                                        <button class="btn btn-xs btn-success" onclick="startSystem('@item.Name')"><span class="glyphicon glyphicon-play"></span></button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-xs btn-danger" onclick="stopSystem('@item.Name')"><span class="glyphicon glyphicon-stop"></span></button>
+                                    }
+                                }
                             </div>
-                            @if (item.Restartable)
-                            {
-                                <div class="btn-group btn-group-xs">
-                                    <a class="@(item.IsAlive ? "btn btn-xs btn-success disabled" : "btn btn-xs btn-success")" asp-acti asp-action="SystemStart" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-play"></span></a>
-                                    <a class="@(item.IsAlive ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="SystemStop" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-stop"></span></a>
-                                </div>
-                            }
                         </td>
                     </tr>
                 }

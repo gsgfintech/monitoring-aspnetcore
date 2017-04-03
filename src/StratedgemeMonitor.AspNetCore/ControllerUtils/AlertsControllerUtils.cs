@@ -94,22 +94,5 @@ namespace StratedgemeMonitor.AspNetCore.ControllerUtils
         {
             return (await systemStatusesConnector.Get(systemName)).ToSystemStatusModel();
         }
-
-        internal async Task<GenericActionResult> StartSystem(string systemName, ISession session, ClaimsPrincipal user)
-        {
-            string accessToken = await AzureADAuthenticator.RetrieveAccessToken(user, session);
-
-            return await systemServicesConnector.StartService(systemName);
-        }
-
-        internal async Task<GenericActionResult> StopSystem(string systemName, ISession session, ClaimsPrincipal user)
-        {
-            return await systemServicesConnector.StopService(systemName);
-        }
-
-        internal async Task<GenericActionResult> SystemDelete(string systemName, ISession session, ClaimsPrincipal user)
-        {
-            return await systemStatusesConnector.Delete(systemName);
-        }
     }
 }
