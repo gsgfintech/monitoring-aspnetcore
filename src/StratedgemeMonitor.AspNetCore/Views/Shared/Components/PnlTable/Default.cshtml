@@ -53,11 +53,15 @@
             <tr>
                 <th>Total</th>
                 <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th class="@(Model.TotalPipsUnrealized > 0 ? "bg-success text-right" : Model.TotalPipsUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalPipsUnrealized)</th>
+                <th class="@(Model.TotalGrossUnrealized > 0 ? "bg-success text-right" : Model.TotalGrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossUnrealized)</th>
+                <th class="@(Model.TotalGrossRealized > 0 ? "bg-success text-right" : Model.TotalGrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossRealized)</th>
                 <th class="text-right">@Html.DisplayFor(m => Model.TotalTradesCount)</th>
                 <th class="text-right">@Html.DisplayFor(m => Model.TotalFees)</th>
-                <th class="@(Model.TotalGrossRealized > 0 ? "bg-success text-right" : Model.TotalGrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossRealized)</th>
                 <th class="@(Model.TotalNetRealized > 0 ? "bg-success text-right" : Model.TotalNetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalNetRealized)</th>
-                <th class="@(Model.TotalGrossUnrealized > 0 ? "bg-success text-right" : Model.TotalGrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossUnrealized)</th>
             </tr>
         </table>
     }

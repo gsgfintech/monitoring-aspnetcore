@@ -1,5 +1,6 @@
 ﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
 using Capital.GSG.FX.Data.Core.ContractData;
+using Capital.GSG.FX.Utils.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,6 +36,10 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [Display(Name = "Trades Cnt")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public double TotalTradesCount { get; set; }
+
+        [Display(Name = "UP PnL")]
+        [DisplayFormat(DataFormatString = "{0:N1}")]
+        public double TotalPipsUnrealized => !PerCrossPnLs.IsNullOrEmpty() ? PerCrossPnLs.Values.Select(p => p.PipsUnrealized).Sum() : 0;
     }
 
     public class PnLPerCrossModel
@@ -66,7 +71,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public int TradesCount { get; set; }
 
-        [Display(Name = "Pos Open (HKT)")]
+        [Display(Name = "PO (HKT)")]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss}")]
         public DateTimeOffset? PositionOpenTime { get; set; }
 
@@ -74,7 +79,7 @@ namespace StratedgemeMonitor.AspNetCore.Models
         [DisplayFormat(DataFormatString = @"{0:hh\:mm\:ss}")]
         public TimeSpan? PositionOpenDuration => (PositionOpenTime.HasValue) ? DateTimeOffset.Now.Subtract(PositionOpenTime.Value) : (TimeSpan?)null;
 
-        [Display(Name = "Open Price")]
+        [Display(Name = "PO Price")]
         public string PositionOpenPrice { get; set; }
 
         [Display(Name = "UP PnL")]
