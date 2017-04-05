@@ -1,0 +1,23 @@
+﻿@using static Capital.GSG.FX.Data.Core.SystemData.AlertLevel;
+
+@model StratedgemeMonitor.AspNetCore.Models.AlertModel
+
+@{
+    ViewBag.Title = Model.Subject;
+}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="@(Model.Level <= INFO ? "panel panel-info" : Model.Level <= WARNING ? "panel panel-warning" : "panel panel-danger")">
+            <div class="panel-heading">
+                <h2>@Model.Subject</h2>
+            </div>
+            <div class="panel-body">
+                @Html.Partial("AlertPartial", Model)
+                <p class="pull-right">
+                    <a class="btn btn-primary" asp-action="Index">Back</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

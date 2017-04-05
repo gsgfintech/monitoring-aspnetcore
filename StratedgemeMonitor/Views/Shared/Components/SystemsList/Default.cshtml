@@ -1,0 +1,36 @@
+﻿@using Capital.GSG.FX.Data.Core.SystemData;
+
+@model StratedgemeMonitor.AspNetCore.ViewModels.SystemsListViewModel
+
+<div class="@(Model.OverallStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.OverallStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.OverallStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
+    <div class="panel-heading">
+        <h4>Systems <small>(@Model.Statuses.Count)</small></h4>
+    </div>
+    @if (Model.Statuses.Count > 0)
+    {
+        <div style="max-height: 377px; overflow: auto">
+            <table class="table table-hover">
+                @foreach (var item in Model.Statuses)
+                {
+                    <tr class="@(!item.IsAlive ? "bg-danger" : item.OverallStatus == SystemStatusLevel.GREEN ? "bg-success" : item.OverallStatus == SystemStatusLevel.YELLOW ? "bg-warning" : "bg-danger")">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastHeardFrom)
+                        </td>
+                        <td>
+                            <a class="btn btn-xs btn-primary" asp-action="SystemDetails" asp-route-systemName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="panel-body">
+            <p>No system status</p>
+        </div>
+    }
+</div>

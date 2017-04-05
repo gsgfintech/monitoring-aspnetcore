@@ -1,0 +1,182 @@
+﻿@model StratedgemeMonitor.AspNetCore.Models.ExecutionModel
+
+@{
+    ViewBag.Title = Model.ToString();
+}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="@(Model.RealizedPnL > 0 ? "panel panel-success" : Model.RealizedPnL < 0 ? "panel panel-danger" : "panel panel-default")">
+            <div class="panel-heading">
+                <h2>@Model.ToString() <small>(@Html.DisplayFor(m => m.Id))</small></h2>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Cross)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Cross)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ExecutionTime)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ExecutionTime)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OrderOrigin)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OrderOrigin)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Price)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Price)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Quantity)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RealizedPnlUsd)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.RealizedPnlUsd)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Side)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Side)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TradeDuration)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TradeDuration)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OrderId)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OrderId)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientId)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientId)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Exchange)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Exchange)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AccountNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.AccountNumber)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PermanentID)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PermanentID)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ClientOrderRef)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ClientOrderRef)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Commission)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Commission)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CommissionCcy)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CommissionCcy)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CommissionUsd)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CommissionUsd)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RealizedPnL)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.RealizedPnL)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RealizedPnlPips)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.RealizedPnlPips)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Strategy)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Strategy)
+                    </dd>
+
+                </dl>
+                <p class="pull-right">
+                    <a class="btn btn-primary" asp-action="Index">Back</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

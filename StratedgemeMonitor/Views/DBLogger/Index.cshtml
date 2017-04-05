@@ -1,0 +1,102 @@
+﻿@using static Capital.GSG.FX.Data.Core.SystemData.SystemStatusLevel;
+
+@model StratedgemeMonitor.AspNetCore.ViewModels.DBLoggersListViewModel
+
+@{
+    ViewBag.Title = "DB Loggers";
+}
+
+@foreach (var region in Model.DBLoggerRegions)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>@Html.DisplayFor(m => region.Datacenter)</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="@(region.AllUnsubscribedPairs.Count() > 0 ? "panel panel-warning" : "panel panel-success")">
+                                <div class="panel-heading">
+                                    <h4>All Unsubscribed Pairs</h4>
+                                </div>
+                                <div class="panel-body">
+                                    @(string.Join(", ", region.AllUnsubscribedPairs))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (region.DBLoggers.Count > 0)
+                    {
+                        <div class="row">
+                            @foreach (var dbLogger in region.DBLoggers)
+                            {
+                                <div class="col-lg-6">
+                                    <div class="@(dbLogger.Status?.OverallStatus == RED ? "panel panel-danger" : dbLogger.Status?.OverallStatus == YELLOW ? "panel panel-warning" : dbLogger.Status?.OverallStatus == GREEN ? "panel panel-success" : "panel panel-default")">
+                                        <div class="panel-heading">
+                                            <h2>@Html.DisplayFor(m => dbLogger.Name)</h2>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-body">
+                                                            <dl class="dl-horizontal">
+                                                                <dt>Subscribed Pairs:</dt>
+                                                                <dd>@(string.Join(", ", dbLogger.SubscribedPairs.Select(c => c.ToString())))</dd>
+                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-body">
+                                                            <form class="form-horizontal" asp-action="Index" method="post">
+                                                                <input hidden asp-for="Action.DBLoggerName" value="@dbLogger.Name" />
+                                                                <input hidden asp-for="Action.Action" value="Subscribe" />
+                                                                <select asp-for="Action.Crosses" asp-items="@(new SelectList(region.AllUnsubscribedPairs))"></select>
+                                                                <button type="submit" class="btn btn-sm btn-success">Subscribe</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="panel panel-danger">
+                                                        <div class="panel-body">
+                                                            <form class="form-horizontal" asp-action="Index" method="post">
+                                                                <input hidden asp-for="Action.DBLoggerName" value="@dbLogger.Name" />
+                                                                <input hidden asp-for="Action.Action" value="Unsubscribe" />
+                                                                <select asp-for="Action.Crosses" asp-items="@dbLogger.SubscribedPairsSelect"></select>
+                                                                <button type="submit" class="btn btn-sm btn-danger">Unsubscribe</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <p>No DB logger configured</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
