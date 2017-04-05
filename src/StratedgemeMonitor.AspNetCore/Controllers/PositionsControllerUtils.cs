@@ -1,12 +1,9 @@
 ﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
 using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Monitoring.Server.Connector;
-using Microsoft.AspNetCore.Http;
 using StratedgemeMonitor.AspNetCore.Models;
-using StratedgemeMonitor.AspNetCore.Utils;
 using StratedgemeMonitor.AspNetCore.ViewModels;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.AspNetCore.Controllers
@@ -22,34 +19,34 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
             this.positionsConnector = positionsConnector;
         }
 
-        internal async Task<PositionsListViewModel> CreateListViewModel(ISession session, ClaimsPrincipal user)
+        internal async Task<PositionsListViewModel> CreateListViewModel()
         {
-            List<AccountModel> accounts = await GetAllAccounts(session, user);
-            List<PositionModel> positions = await GetAllPositions(session, user);
+            List<AccountModel> accounts = await GetAllAccounts();
+            var positions = await GetAllPositions();
 
-            return new PositionsListViewModel(positions ?? new List<PositionModel>(), accounts ?? new List<AccountModel>());
+            return new PositionsListViewModel(positions, accounts ?? new List<AccountModel>());
         }
 
-        private async Task<List<PositionModel>> GetAllPositions(ISession session, ClaimsPrincipal user)
+        private async Task<Dictionary<string, List<PositionModel>>> GetAllPositions()
         {
             var positions = await positionsConnector.GetAll();
 
-            return positions.ToPositionModels();
+            return positions.ToPositionModelsDict();
         }
 
-        internal async Task<PositionModel> Get(Broker broker, Cross cross, ISession session, ClaimsPrincipal user)
+        internal async Task<PositionModel> Get(Broker broker, Cross cross)
         {
             return (await positionsConnector.Get(broker, cross)).ToPositionModel();
         }
 
-        private async Task<List<AccountModel>> GetAllAccounts(ISession session, ClaimsPrincipal user)
+        private async Task<List<AccountModel>> GetAllAccounts()
         {
             var positions = await accountsConnector.GetAll();
 
             return positions.ToAccountModels();
         }
 
-        internal async Task<AccountModel> GetAccount(Broker broker, string accountName, ISession session, ClaimsPrincipal user)
+        internal async Task<AccountModel> GetAccount(Broker broker, string accountName)
         {
             return (await accountsConnector.Get(broker, accountName)).ToAccountModel();
         }

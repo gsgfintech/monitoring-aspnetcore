@@ -20,12 +20,12 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await utils.CreateListViewModel(HttpContext.Session, User));
+            return View(await utils.CreateListViewModel());
         }
 
         public async Task<IActionResult> Details(Broker broker, Cross cross)
         {
-            PositionModel position = await utils.Get(broker, cross, HttpContext.Session, User);
+            PositionModel position = await utils.Get(broker, cross);
 
             if (position != null)
                 return View(position);
@@ -35,7 +35,7 @@ namespace StratedgemeMonitor.AspNetCore.Controllers
 
         public async Task<IActionResult> AccountDetails(Broker broker, string accountName)
         {
-            AccountModel account = await utils.GetAccount(broker, accountName, HttpContext.Session, User);
+            AccountModel account = await utils.GetAccount(broker, accountName);
 
             if (account != null)
                 return View(account);

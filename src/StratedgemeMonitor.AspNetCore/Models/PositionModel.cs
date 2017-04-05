@@ -1,5 +1,6 @@
 ﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
 using Capital.GSG.FX.Data.Core.ContractData;
+using Capital.GSG.FX.Utils.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -73,6 +74,21 @@ namespace StratedgemeMonitor.AspNetCore.Models
         public static List<PositionModel> ToPositionModels(this IEnumerable<Position> positions)
         {
             return positions?.Select(p => p.ToPositionModel()).ToList();
+        }
+
+        public static Dictionary<string, List<PositionModel>> ToPositionModelsDict(this IEnumerable<Position> positions)
+        {
+            if (positions.IsNullOrEmpty())
+                return new Dictionary<string, List<PositionModel>>();
+
+            positions = positions.Where(p => p.Broker != Broker.UNKNOWN && !string.IsNullOrEmpty(p.Account));
+
+            if (positions.IsNullOrEmpty())
+                return new Dictionary<string, List<PositionModel>>();
+
+            var groupings = positions.GroupBy(p => $"{p.Broker}-{p.Account}");
+
+            return groupings.ToDictionary(g => g.Key, g => g.ToPositionModels());
         }
 
         public static Position ToPosition(this PositionModel position)
