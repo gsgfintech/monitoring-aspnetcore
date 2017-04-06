@@ -9,7 +9,6 @@
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
         <link href="~/lib/syncfusion-javascript/Content/ej/web/bootstrap-theme/ej.web.all.min.css" rel="stylesheet" />
         <link href="~/lib/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css" rel="stylesheet" />
     </environment>
@@ -23,8 +22,9 @@
         <link rel="stylesheet" href="https://cdn.syncfusion.com/14.3.0.49/js/web/responsive-css/ej.responsive.css"
               asp-fallback-href="~/lib/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css"
               asp-fallback-test-class="ejinputtext" asp-fallback-test-property="border-radius" asp-fallback-test-value="4px" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 
 @await FlushAsync();
