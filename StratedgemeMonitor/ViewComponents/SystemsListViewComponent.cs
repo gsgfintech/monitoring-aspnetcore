@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StratedgemeMonitor.Controllers.Alerts;
 using StratedgemeMonitor.Models.Systems;
+using StratedgemeMonitor.ViewModels.Systems;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

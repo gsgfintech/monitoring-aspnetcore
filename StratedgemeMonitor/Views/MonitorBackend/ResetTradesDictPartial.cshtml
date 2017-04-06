@@ -1,0 +1,13 @@
+﻿@model StratedgemeMonitor.Models.MonitorBackend.ResetTradesDictModel
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="pull-left">
+            <label>@Html.DisplayNameFor(m => Model.LastTradesDictResetTime)</label>
+            <p>@Html.DisplayFor(m => Model.LastTradesDictResetTime)</p>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-default" onclick="resetTradesDict()">Reset Trades Dictionary</button>
+        </div>
+    </div>
+</div>

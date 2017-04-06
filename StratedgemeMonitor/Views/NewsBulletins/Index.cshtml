@@ -1,6 +1,6 @@
 ﻿@using static Capital.GSG.FX.Data.Core.NewsBulletinData.NewsBulletinType;
 
-@model StratedgemeMonitor.AspNetCore.ViewModels.NewsBulletinsListViewModel
+@model StratedgemeMonitor.ViewModels.NewsBulletins.NewsBulletinsListViewModel
 
 @{
     ViewBag.Title = $"News Bulletins - {Model.Day.ToString("dd MMM")}";
@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                 <div class="btn-group-sm">
-                                    <a class="btn btn-primary" asp-action="Details" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id">Details</a>
+                                    <a class="btn btn-primary" asp-action="Details" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
                                     <a class="btn btn-danger" asp-action="Close" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id">Close</a>
                                 </div>
                             </td>
@@ -117,7 +117,7 @@
                                 @Html.DisplayFor(modelItem => item.Message)
                             </td>
                             <td>
-                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id">Details</a>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }

@@ -1,6 +1,6 @@
 ﻿@using Capital.GSG.FX.Data.Core.SystemData;
 
-@model StratedgemeMonitor.AspNetCore.ViewModels.SystemsListViewModel
+@model StratedgemeMonitor.ViewModels.Systems.SystemsListViewModel
 
 <div class="@(Model.OverallStatus == SystemStatusLevel.RED ? "panel panel-danger" : Model.OverallStatus == SystemStatusLevel.YELLOW ? "panel panel-warning" : Model.OverallStatus == SystemStatusLevel.GREEN ? "panel panel-success" : "panel panel-default")">
     <div class="panel-heading">

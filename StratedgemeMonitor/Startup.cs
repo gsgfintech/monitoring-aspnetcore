@@ -21,6 +21,7 @@ using StratedgemeMonitor.Controllers.TradeEngines;
 using Capital.GSG.FX.Utils.Core.Logging;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using StratedgemeMonitor.Controllers.MonitorBackend;
 
 namespace StratedgemeMonitor
 {
@@ -216,6 +217,13 @@ namespace StratedgemeMonitor
                 var fxEventsConnector = serviceProvider.GetService<BackendFXEventsConnector>();
 
                 return new FXEventsControllerUtils(fxEventsConnector);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                var executionsConnector = serviceProvider.GetService<BackendExecutionsConnector>();
+
+                return new MonitorBackendControllerUtils(executionsConnector);
             });
 
             services.AddSingleton((serviceProvider) =>

@@ -1,4 +1,4 @@
-﻿@model StratedgemeMonitor.AspNetCore.ViewModels.PositionsListViewModel
+﻿@model StratedgemeMonitor.ViewModels.Positions.PositionsListViewModel
 
 @{
     ViewBag.Title = "Current Positions";
@@ -107,7 +107,7 @@
                                 @Html.DisplayFor(modelItem => item.LastUpdate)
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-primary" asp-action="AccountDetails" asp-route-broker="@item.Broker" asp-route-accountName="@item.Name">Details</a>
+                                <a class="btn btn-xs btn-primary" asp-action="AccountDetails" asp-route-broker="@item.Broker" asp-route-accountName="@item.Name"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }

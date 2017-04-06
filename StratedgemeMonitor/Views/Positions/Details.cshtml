@@ -1,4 +1,4 @@
-﻿@model StratedgemeMonitor.AspNetCore.Models.PositionModel
+﻿@model StratedgemeMonitor.Models.Positions.PositionModel
 
 @{
     ViewBag.Title = $"{Model.Broker} - {Model.Cross}";
@@ -53,9 +53,9 @@
                     <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
                     <dd>@Html.DisplayFor(model => model.LastUpdate)</dd>
                 </dl>
-                <p class="pull-right">
-                    <a class="btn btn-primary" asp-action="Index">Back</a>
-                </p>
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary" asp-action="Index">Back</a>
             </div>
         </div>
     </div>

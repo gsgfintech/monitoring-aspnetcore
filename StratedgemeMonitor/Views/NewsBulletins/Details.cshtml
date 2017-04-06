@@ -1,7 +1,7 @@
 ﻿@using static Capital.GSG.FX.Data.Core.NewsBulletinData.NewsBulletinType;
 @using static Capital.GSG.FX.Data.Core.NewsBulletinData.NewsBulletinStatus;
 
-@model StratedgemeMonitor.AspNetCore.Models.NewsBulletinModel
+@model StratedgemeMonitor.Models.NewsBulletins.NewsBulletinModel
 
 @{
     ViewBag.Title = Model.ToString();
@@ -64,9 +64,9 @@
                         @Html.DisplayFor(model => model.ClosedTimestamp)
                     </dd>
                 </dl>
-                <p class="pull-right">
-                    <a class="btn btn-primary" asp-action="Index">Back</a>
-                </p>
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary" asp-action="Index">Back</a>
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 ﻿@using static Capital.GSG.FX.Data.Core.OrderData.OrderStatusCode;
 
-@model StratedgemeMonitor.AspNetCore.Models.OrderModel
+@model StratedgemeMonitor.Models.Orders.OrderModel
 
 @{
     ViewBag.Title = Model.ToString();
@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
-        <div class="@(Model.Status == Filled ? "panel panel-success" : (Model.Status == Cancelled || Model.Status == ApiCanceled) ? "panel panel-danger" : "")">
+        <div class="@(Model.Status == Filled ? "panel panel-success" : (Model.Status == Cancelled || Model.Status == ApiCanceled) ? "panel panel-danger" : "panel panel-default")">
             <div class="panel-heading">
                 <h2>@Model.ToString() <small>(@Html.DisplayFor(m => m.PermanentId))</small></h2>
             </div>
@@ -202,9 +202,9 @@
                         @Html.DisplayFor(model => model.TrailingAmount)
                     </dd>
                 </dl>
-                <p class="pull-right">
-                    <a class="btn btn-primary" asp-action="Index">Back</a>
-                </p>
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary" asp-action="Index">Back</a>
             </div>
         </div>
     </div>

@@ -1,6 +1,6 @@
 ﻿@using static Capital.GSG.FX.Data.Core.MarketData.FXEventLevel
 
-@model StratedgemeMonitor.AspNetCore.ViewModels.FXEventsListViewModel
+@model StratedgemeMonitor.ViewModels.FXEvents.FXEventsListViewModel
 
 @{
     ViewBag.Title = "FX Events";
@@ -47,7 +47,7 @@
                                 @Html.DisplayFor(modelItem => item.Level)
                             </td>
                             <td>
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }
@@ -103,7 +103,7 @@
                                 @Html.DisplayFor(modelItem => item.Level)
                             </td>
                             <td>
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></a>
                             </td>
                         </tr>
                     }
