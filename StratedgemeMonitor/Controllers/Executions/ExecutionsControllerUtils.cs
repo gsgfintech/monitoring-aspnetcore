@@ -62,6 +62,11 @@ namespace StratedgemeMonitor.Controllers.Executions
             return execution.ToExecutionModel();
         }
 
+        internal async Task<int> GetTodaysTradesCount()
+        {
+            return (await connector.GetForDay(DateTime.Today))?.Count ?? 0;
+        }
+
         internal async Task<FileResult> ExportExcel()
         {
             string fileName = $"Trades-{currentDay:yyyy-MM-dd}.xlsx";

@@ -13,54 +13,7 @@
                 <h2>@Html.DisplayFor(m => Model.Title)</h2>
             </div>
             <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Currency)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Currency)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Timestamp)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Timestamp)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Level)
-                    </dt>
-                    <dd class="@(Model.Level == LOW ? "text-success" : Model.Level == MEDIUM ? "text-warning" : Model.Level == HIGH ? "text-danger" : "")">
-                        @Html.DisplayFor(model => model.Level)
-                    </dd>
-                </dl>
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Actual)
-                    </dt>
-                    <dd class="text-danger">
-                        @Html.DisplayFor(model => model.Actual)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Forecast)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Forecast)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Previous)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Previous)
-                    </dd>
-                </dl>
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Explanation)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Explanation)
-                    </dd>
-                </dl>
+                @Html.Partial("FXEventPartial", Model)
             </div>
             <div class="panel-footer">
                 <a class="btn btn-primary" asp-action="Index">Back</a>

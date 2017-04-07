@@ -56,6 +56,13 @@ namespace StratedgemeMonitor.Controllers.FXEvents
             return fxEvents?.AsEnumerable().OrderBy(e => e.Timestamp).ToFXEventModels();
         }
 
+        internal async Task<(int, FXEventModel)> GetHighImpactForTodayCount()
+        {
+            var events = await GetHighImpactForToday();
+
+            return (events?.Count ?? 0, events?.FirstOrDefault(e => e.Timestamp >= DateTimeOffset.Now));
+        }
+
         internal async Task<FXEventModel> GetById(string id)
         {
             CancellationTokenSource cts = new CancellationTokenSource();

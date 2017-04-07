@@ -79,5 +79,10 @@ namespace StratedgemeMonitor.Controllers.Alerts
         {
             return ViewComponent("AlertsList", new { listType = AlertsListType.Closed, day = utils.CurrentDay });
         }
+
+        public IActionResult RefreshActivityStats()
+        {
+            return ViewComponent("ActivityStats");
+        }
     }
 }

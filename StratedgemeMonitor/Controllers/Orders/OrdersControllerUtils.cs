@@ -56,6 +56,16 @@ namespace StratedgemeMonitor.Controllers.Orders
             return (await connector.GetActiveOrders())?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
+        internal async Task<int> GetActiveOrdersCount()
+        {
+            return (await connector.GetActiveOrders())?.Count ?? 0;
+        }
+
+        internal async Task<int> GetInactiveOrdersCount()
+        {
+            return (await connector.GetOrdersForDay(DateTime.Today))?.Count ?? 0;
+        }
+
         internal async Task<OrderModel> GetByPermanentId(int permanentId)
         {
             return (await connector.GetOrderByPermanentId(permanentId)).ToOrderModel();

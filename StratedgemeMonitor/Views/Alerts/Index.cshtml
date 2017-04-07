@@ -16,9 +16,12 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="form-group-sm">
+                        <div class="form-group-sm" style="display:inline">
                             <input id="dayfield" asp-for="Day" type="date" />
                             <button onclick="changeDay($('#dayfield').val())">Go</button>
+                        </div>
+                        <div class="pull-right hidden-sm">
+                            @Html.Partial("TimeBoxesPartial")
                         </div>
                     </div>
                 </div>
@@ -31,9 +34,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12" id="openalerts">
+            <div class="col-md-2" id="stats">
+                @await Component.InvokeAsync("ActivityStats")
+            </div>
+            <div class="col-md-10" id="openalerts">
                 @await Component.InvokeAsync("AlertsList", new { listType = Open, day = Model.Day })
             </div>
+        </div>
+        <div class="row">
             <div class="col-lg-12" id="closedalerts">
                 @await Component.InvokeAsync("AlertsList", new { listType = Closed, day = Model.Day })
             </div>
@@ -74,6 +82,7 @@
         $(function () {
             setInterval(function () {
                 $('#pnltable').load('/Alerts/PnlTableViewComponent');
+                $('#stats').load('/Alerts/RefreshActivityStats');
                 $('#openalerts').load('/Alerts/RefreshOpenAlerts');
                 $('#systemslist').load('/Alerts/SystemsListViewComponent');
             }, 20000);
