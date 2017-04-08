@@ -250,3 +250,15 @@ ModelManifest.xml
 /StratedgemeMonitor.AspNetCore/src/StratedgemeMonitor.AspNetCore/wwwroot/lib/jquery-easing
 /StratedgemeMonitor.AspNetCore/src/StratedgemeMonitor.AspNetCore/wwwroot/lib/jquery
 /StratedgemeMonitor.AspNetCore/src/StratedgemeMonitor.AspNetCore/wwwroot/lib/bootstrap
+/StratedgemeMonitor/wwwroot/lib
+/StratedgemeMonitor/wwwroot/lib/tether
+/StratedgemeMonitor/wwwroot/lib/syncfusion-javascript
+/StratedgemeMonitor/wwwroot/lib/Microsoft.jQuery.Unobtrusive.Validation
+/StratedgemeMonitor/wwwroot/lib/Microsoft.jQuery.Unobtrusive.Ajax
+/StratedgemeMonitor/wwwroot/lib/jsrender
+/StratedgemeMonitor/wwwroot/lib/jquery.validation
+/StratedgemeMonitor/wwwroot/lib/jquery-validation-unobtrusive
+/StratedgemeMonitor/wwwroot/lib/jquery-validation
+/StratedgemeMonitor/wwwroot/lib/jquery-easing
+/StratedgemeMonitor/wwwroot/lib/jquery
+/StratedgemeMonitor/wwwroot/lib/bootstrap

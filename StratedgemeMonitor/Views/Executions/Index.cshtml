@@ -1,0 +1,131 @@
+﻿@model StratedgemeMonitor.ViewModels.Executions.ExecutionsListViewModel
+
+@{
+    ViewBag.Title = $"Trades - {Model.Day.ToString("dd MMM")}";
+}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 style="display:inline-block">Trades - @Html.DisplayFor(m => Model.Day) <small>(@Model.Trades.Count)</small></h2>
+                <div class="pull-right">
+                    <form class="form-horizontal" asp-action="Index">
+                        <div class="form-group-sm">
+                            <input asp-for="Day" type="date" />
+                            <button class="btn btn-sm btn-primary" type="submit">Go</button>
+                            @if (Model.Trades.Count > 0)
+                            {
+                                <a class="btn btn-default btn-sm" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @if (Model.Trades.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().ExecutionTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().OrderOrigin)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().Side)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().Cross)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().Price)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().RealizedPnlUsd)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.Trades.First().TradeDuration)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.Trades)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExecutionTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderOrigin)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Side)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cross)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            @if (item.RealizedPnlUsd > 0)
+                            {
+                                <td class="bg-success">
+                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                </td>
+                            }
+                            else if (item.RealizedPnlUsd < 0)
+                            {
+                                <td class="bg-danger">
+                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                </td>
+                            }
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TradeDuration)
+                            </td>
+                            <td>
+                                <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-executionid="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No trade for the specified day</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>Cumulative PnL <small>(Gross)</small></h2>
+            </div>
+            <div class="panel-body">
+                @if (Model.Trades.Count > 0)
+                {
+                    <ej-chart id="pnlChart" series="@Model.PnlChartData" primary-x-axis="@Model.PnlChartXAxis" primary-y-axis="@Model.PnlChartYAxis"></ej-chart>
+                }
+                else
+                {
+                    <p>Nothing to display</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

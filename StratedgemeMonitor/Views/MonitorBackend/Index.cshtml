@@ -1,0 +1,46 @@
+﻿@model StratedgemeMonitor.Models.MonitorBackend.MonitorBackendModel
+
+@{
+    ViewBag.Title = "Monitor Backend";
+}
+
+<div class="row">
+    <div class="col-xs-12" id="alertholder">
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Monitor Backend</h4>
+            </div>
+            <div class="panel-body">
+                <div id="tradesDict" class="col-md-4 col-xs-12">
+                    @Html.Partial("ResetTradesDictPartial", Model.ResetTradesDictModel)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function resetTradesDict() {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Content("~/api/monitorbackend/reset-trades-dict")',
+                success: function (data) {
+                    console.log(data);
+                    if (data.item1) {
+                        showBootstrapAlert('success', 'Trades dictionary was reset');
+
+                        $('#tradesDict').load('/MonitorBackend/ResetTradesDictPartial');
+                    } else {
+                        showBootstrapAlert('danger', 'Failed to reset trades dictionary');
+                    }
+                }
+            });
+        }
+    </script>
+}

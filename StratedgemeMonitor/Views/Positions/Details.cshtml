@@ -1,0 +1,62 @@
+﻿@model StratedgemeMonitor.Models.Positions.PositionModel
+
+@{
+    ViewBag.Title = $"{Model.Broker} - {Model.Cross}";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>@($"{Model.Broker} - {Model.Cross}")</h2>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.Broker)</dt>
+                    <dd>@Html.DisplayFor(model => model.Broker)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Cross)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cross)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.PositionQuantity)</dt>
+                    <dd class="@(Model.PositionQuantity > 0 ? "bg-success" : Model.PositionQuantity < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(model => model.PositionQuantity)
+                    </dd>
+                    <dt>@Html.DisplayNameFor(model => model.AverageCost)</dt>
+                    <dd>@Html.DisplayFor(model => model.AverageCost)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.MarketPrice)</dt>
+                    <dd>@Html.DisplayFor(model => model.MarketPrice)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.MarketValue)</dt>
+                    <dd>@Html.DisplayFor(model => model.UnrealizedPnL)</dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.UnrealizedPnL)
+                    </dt>
+                    <dd class="@(Model.UnrealizedPnL > 0 ? "bg-success" : Model.UnrealizedPnL < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(model => model.UnrealizedPnL)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.UnrealizedPnlUsd)
+                    </dt>
+                    <dd class="@(Model.UnrealizedPnlUsd > 0 ? "bg-success" : Model.UnrealizedPnlUsd < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(model => model.UnrealizedPnlUsd)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RealizedPnL)
+                    </dt>
+                    <dd class="@(Model.RealizedPnL > 0 ? "bg-success" : Model.RealizedPnL < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(model => model.RealizedPnL)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RealizedPnlUsd)
+                    </dt>
+                    <dd class="@(Model.RealizedPnlUsd > 0 ? "bg-success" : Model.RealizedPnlUsd < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(model => model.RealizedPnlUsd)
+                    </dd>
+                    <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
+                    <dd>@Html.DisplayFor(model => model.LastUpdate)</dd>
+                </dl>
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary" asp-action="Index">Back</a>
+            </div>
+        </div>
+    </div>
+</div>

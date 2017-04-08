@@ -1,0 +1,23 @@
+﻿@using static Capital.GSG.FX.Data.Core.MarketData.FXEventLevel
+
+@model StratedgemeMonitor.Models.FXEvents.FXEventModel
+
+@{
+    ViewBag.Title = Html.DisplayFor(m => Model.Title);
+}
+
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="@(Model.Level == LOW ? "panel panel-success" : Model.Level == MEDIUM ? "panel panel-warning" : Model.Level == HIGH ? "panel panel-danger" : "panel panel-default")">
+            <div class="panel-heading">
+                <h2>@Html.DisplayFor(m => Model.Title)</h2>
+            </div>
+            <div class="panel-body">
+                @Html.Partial("FXEventPartial", Model)
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-primary" asp-action="Index">Back</a>
+            </div>
+        </div>
+    </div>
+</div>

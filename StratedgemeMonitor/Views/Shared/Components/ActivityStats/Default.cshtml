@@ -1,0 +1,63 @@
+﻿@model StratedgemeMonitor.ViewModels.Alerts.ActivityStatsViewModel
+
+<div class="panel panel-default">
+    <table class="table table-condensed">
+        <tr>
+            <td class="@(Model.ActiveOrdersCount > 14 ? "bg-danger" : "")">
+                <strong>@Html.DisplayFor(m => Model.ActiveOrdersCount)</strong> @Html.DisplayNameFor(m => Model.ActiveOrdersCount)
+                <div class="pull-right">
+                    <a class="btn btn-default btn-xs" asp-controller="Orders" asp-action="Index"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>@Html.DisplayFor(m => Model.TradesCount)</strong> @Html.DisplayNameFor(m => Model.TradesCount)
+                <div class="pull-right">
+                    <a class="btn btn-default btn-xs" asp-controller="Executions" asp-action="Index"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="@(Model.TodaysHighImpactEventsCount > 0 ? "bg-warning" : "")">
+                <strong>@Html.DisplayFor(m => Model.TodaysHighImpactEventsCount)</strong> @Html.DisplayNameFor(m => Model.TodaysHighImpactEventsCount)
+                <div class="pull-right">
+                    <a class="btn btn-default btn-xs" asp-controller="FXEvents" asp-action="Index"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </td>
+        </tr>
+        @if (Model.NextHighImpactEvent != null)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(m => Model.NextHighImpactEvent) @Model.NextHighImpactEvent.Timestamp.ToString("HH:mm")
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#fxEventModal-@Model.NextHighImpactEvent.Id"><span class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<!-- Modals -->
+@if (Model.NextHighImpactEvent != null)
+{
+    <div class="modal fade" id="fxEventModal-@Model.NextHighImpactEvent.Id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">@Model.NextHighImpactEvent.Title</h4>
+                    <div class="btn-group btn-group-sm pull-right">
+                        <a class="btn btn-primary" asp-controller="FXEvents" asp-action="Details" asp-route-id="@Model.NextHighImpactEvent.Id"><span class="glyphicon glyphicon-share"></span> Open</a>
+                    </div>
+                </div>
+                @Html.Partial("FXEventPartial", Model.NextHighImpactEvent)
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- End Modals -->

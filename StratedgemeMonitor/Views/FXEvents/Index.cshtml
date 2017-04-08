@@ -1,0 +1,121 @@
+﻿@using static Capital.GSG.FX.Data.Core.MarketData.FXEventLevel
+
+@model StratedgemeMonitor.ViewModels.FXEvents.FXEventsListViewModel
+
+@{
+    ViewBag.Title = "FX Events";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h2>Today's High Impact FX Events <small>(@Model.TodaysHighImpactFXEvents.Count)</small></h2>
+            </div>
+            @if (Model.TodaysHighImpactFXEvents.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Timestamp)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Currency)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Level)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.TodaysHighImpactFXEvents)
+                    {
+                        <tr class="@(item.Level == LOW ? "bg-success" : item.Level == MEDIUM ? "bg-warning" : item.Level == HIGH ? "bg-danger" : "")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Currency)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Level)
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No high impact FX Event today</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>FX Events - @Html.DisplayFor(m => Model.CurrentWeekStart) to @Html.DisplayFor(m => Model.CurrentWeekEnd) <small>(@Model.CurrentWeeksFXEvents.Count)</small></h2>
+            </div>
+            @if (Model.CurrentWeeksFXEvents.Count > 0)
+            {
+                <table class="table table-hover">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Timestamp)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Currency)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Level)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.CurrentWeeksFXEvents)
+                    {
+                        <tr class="@(item.Level == LOW ? "bg-success" : item.Level == MEDIUM ? "bg-warning" : item.Level == HIGH ? "bg-danger" : "")">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Currency)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Level)
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <p>No FX event in the specified period</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
