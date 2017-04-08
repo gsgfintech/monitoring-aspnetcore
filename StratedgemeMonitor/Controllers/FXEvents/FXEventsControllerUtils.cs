@@ -30,7 +30,7 @@ namespace StratedgemeMonitor.Controllers.FXEvents
             return new FXEventsListViewModel()
             {
                 CurrentWeekEnd = end,
-                CurrentWeeksFXEvents = currentWeeksFXEvents,
+                CurrentWeeksFXEvents = currentWeeksFXEvents.GroupBy(e => e.Timestamp.Date).ToDictionary(g => g.Key, g => g.ToList()),
                 CurrentWeekStart = start,
                 TodaysHighImpactFXEvents = todaysHighImpactFXEvents
             };

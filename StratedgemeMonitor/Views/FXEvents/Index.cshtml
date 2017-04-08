@@ -14,44 +14,7 @@
             </div>
             @if (Model.TodaysHighImpactFXEvents.Count > 0)
             {
-                <table class="table table-hover">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Timestamp)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Currency)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Title)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.TodaysHighImpactFXEvents.First().Level)
-                        </th>
-                        <th></th>
-                    </tr>
-
-                    @foreach (var item in Model.TodaysHighImpactFXEvents)
-                    {
-                        <tr class="@(item.Level == LOW ? "bg-success" : item.Level == MEDIUM ? "bg-warning" : item.Level == HIGH ? "bg-danger" : "")">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Timestamp)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Currency)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Level)
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
-                            </td>
-                        </tr>
-                    }
-                </table>
+                @Html.Partial("FXEventsListPartial", Model.TodaysHighImpactFXEvents)
             }
             else
             {
@@ -66,56 +29,31 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2>FX Events - @Html.DisplayFor(m => Model.CurrentWeekStart) to @Html.DisplayFor(m => Model.CurrentWeekEnd) <small>(@Model.CurrentWeeksFXEvents.Count)</small></h2>
+                <h2>FX Events - @Html.DisplayFor(m => Model.CurrentWeekStart) to @Html.DisplayFor(m => Model.CurrentWeekEnd) <small>(@Model.FXEventsCount)</small></h2>
             </div>
-            @if (Model.CurrentWeeksFXEvents.Count > 0)
-            {
-                <table class="table table-hover">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Timestamp)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Currency)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Title)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(m => Model.CurrentWeeksFXEvents.First().Level)
-                        </th>
-                        <th></th>
-                    </tr>
+            <div class="panel-body">
+                @if (Model.CurrentWeeksFXEvents.Count > 0)
+                {
+                    <div class="row">
+                        @foreach (var day in Model.CurrentWeeksFXEvents)
+                        {
+                            <div class="col-md-6 col-sm-12">
+                                <div class="@(day.Key == DateTime.Today ? "panel panel-primary" : "panel panel-default")">
+                                    <div class="panel-heading">
+                                        <h4>@day.Key.ToString("dd MMM") <small>(@day.Value.Count)</small></h4>
+                                    </div>
+                                    @Html.Partial("FXEventsListPartial", day.Value)
+                                </div>
+                            </div>
+                        }
+                    </div>
 
-                    @foreach (var item in Model.CurrentWeeksFXEvents)
-                    {
-                        <tr class="@(item.Level == LOW ? "bg-success" : item.Level == MEDIUM ? "bg-warning" : item.Level == HIGH ? "bg-danger" : "")">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Timestamp)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Currency)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Level)
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-plus"></a>
-                            </td>
-                        </tr>
-                    }
-
-                </table>
-            }
-            else
-            {
-                <div class="panel-body">
+                }
+                else
+                {
                     <p>No FX event in the specified period</p>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>
