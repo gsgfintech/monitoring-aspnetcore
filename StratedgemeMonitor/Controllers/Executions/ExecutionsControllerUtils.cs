@@ -123,7 +123,7 @@ namespace StratedgemeMonitor.Controllers.Executions
 
                     Cross cross = group.Key;
 
-                    int cumulativePosition = 0;
+                    double cumulativePosition = 0;
 
                     string pnlCcy = "";
                     string commissionCcy = "";

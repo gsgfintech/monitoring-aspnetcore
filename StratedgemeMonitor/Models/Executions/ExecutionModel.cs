@@ -22,7 +22,7 @@ namespace StratedgemeMonitor.Models.Executions
         public double Price { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}K")]
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
 
         [Display(Name = "PnL (USD)")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
