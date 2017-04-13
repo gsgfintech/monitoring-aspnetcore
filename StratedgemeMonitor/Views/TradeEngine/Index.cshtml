@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-md-2">
                                 <div class="panel panel-success">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-2">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-2">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
@@ -99,6 +99,20 @@
                                             <select asp-for="Action.Cross" asp-items="@tradeEngine.CrossesList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Cancel Active Orders</button>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="panel panel-danger">
+                                    <div class="panel-body">
+                                        <select id="reset-position-strat" asp-items="@tradeEngine.AllStratsList"></select>
+                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-title="Reset Position Status">Reset Position Status</button>
+                                        @*<form class="form-horizontal" asp-action="Index" method="post">
+                                                <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                                <input hidden asp-for="Action.Action" value="ResetPositionStatus" />
+                                                <select asp-for="Action.Cross" asp-items="@tradeEngine.AllStratsList"></select>
+                                                <button type="submit" class="btn btn-sm btn-danger">Reset Position Status</button>
+                                            </form>*@
                                     </div>
                                 </div>
                             </div>
@@ -170,4 +184,36 @@ else
             </div>
         </div>
     </div>
+}
+<!-- Modals -->
+<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warning</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modals -->
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#warningModal').on('show.bs.modal', function (event) {
+                // Get the button that triggered the modal
+                var button = $(event.relatedTarget);
+
+                // Extract value from data-* attributes
+                var titleData = button.data('title');
+                var stratData = $('#reset-position-strat').val();
+
+                $(this).find('.modal-title').text('Warning - ' + titleData + ' ' + stratData);
+            });
+        });
+    </script>
 }
