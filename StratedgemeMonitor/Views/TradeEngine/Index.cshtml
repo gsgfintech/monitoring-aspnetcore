@@ -6,6 +6,11 @@
     ViewBag.Title = "Trade Engines";
 }
 
+<div class="row">
+    <div class="col-xs-12" id="alertholder">
+    </div>
+</div>
+
 @if (Model.TradeEngines.Count > 0)
 {
     @for (int i = 0; i < Model.TradeEngines.Count; i++)
@@ -106,7 +111,7 @@
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <select id="reset-position-strat" asp-items="@Model.TradeEngines[i].AllStratsList"></select>
-                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-text="Reset Position Status">Reset Position Status</button>
+                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-trade-engine="@Model.TradeEngines[i].Name">Reset Position Status</button>
                                     </div>
                                 </div>
                             </div>
@@ -166,8 +171,8 @@
                                 <div class="@(Model.TradeEngines[i].IsTradingConnectionConnected ? "panel panel-success" : "panel panel-danger")">
                                     <div class="panel-body">
                                         <label asp-for="TradeEngines[i].IsTradingConnectionConnected"></label>
-                                        <input id="@(Model.TradeEngines[i].Name)-trading-connection-new-status" asp-for="TradeEngines[i].IsTradingConnectionConnected" data-toggle="toggle" data-on="Connected" data-off="Disconnected" data-onstyle="success" data-offstyle="danger" />
-                                        <button class="btn btn-sm" data-toggle="modal" data-target="#warningModal" data-goal="reset-trading-connection-status" data-text="Reset trading connection status to" data-trade-engine="@Model.TradeEngines[i].Name">Set</button>
+                                        <input id="@(Model.TradeEngines[i].Name)-trading-connection-new-status" type="checkbox" value="@Model.TradeEngines[i].IsTradingConnectionConnected" data-toggle="toggle" data-on="Connected" data-off="Disconnected" data-onstyle="success" data-offstyle="danger" />
+                                        <button class="btn btn-sm" data-toggle="modal" data-target="#warningModal" data-goal="reset-trading-connection-status" data-trade-engine="@Model.TradeEngines[i].Name">Set</button>
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +208,7 @@ else
             <div class="modal-footer">
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Proceed</button>
+                    <button id="btn-proceed" type="button" class="btn btn-danger" data-dismiss="modal">Proceed</button>
                 </div>
             </div>
         </div>
@@ -220,19 +225,30 @@ else
                 var button = $(event.relatedTarget);
 
                 // Extract value from data-* attributes
-                var textData = button.data('text');
                 var tradeEngine = button.data('trade-engine');
 
                 var goal = button.data('goal');
 
                 if (goal === 'reset-position-status') {
-                    var stratData = $('#reset-position-strat').val();
+                    var strat = $('#reset-position-strat').val();
 
-                    $(this).find('.modal-title').text('Warning - ' + textData + ' ' + stratData);
+                    $(this).find('.modal-body').text('Request strat ' + strat + ' of ' + tradeEngine + ' to reset its position status?');
+
+                    $('#btn-proceed').click(function () {
+                        requestStratToResetPositionStatus(tradeEngine, strat);
+
+                        $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                    });
                 } else if (goal === 'reset-trading-connection-status') {
-                    var newConnectedStatus = $('#' + tradeEngine + '-trading-connection-new-status').val();
+                    var newConnectedStatus = $('#' + tradeEngine + '-trading-connection-new-status').prop('checked');
 
-                    $(this).find('.modal-body').text(textData + ' ' + newConnectedStatus + ' for ' + tradeEngine + '?');
+                    $(this).find('.modal-body').text('Reset trading connection status to ' + newConnectedStatus + ' for ' + tradeEngine + '?');
+
+                    $('#btn-proceed').click(function () {
+                        resetTradingConnectionStatus(tradeEngine, newConnectedStatus);
+
+                        $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                    });
                 }
             });
         });

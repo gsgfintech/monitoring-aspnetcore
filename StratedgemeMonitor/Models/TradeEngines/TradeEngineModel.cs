@@ -27,10 +27,11 @@ namespace StratedgemeMonitor.Models.TradeEngines
         public SelectList NonTradingStratsList { get; private set; }
 
         [Display(Name = "Reset Trading Conn Status")]
-        public bool IsTradingConnectionConnected { get; set; }
+        public bool IsTradingConnectionConnected { get; private set; }
 
         public TradeEngineModel(string name, SystemStatusModel status, TradeEngineTradingStatus tradingStatus)
         {
+            IsTradingConnectionConnected = tradingStatus.IsTradingConnectionConnected;
             Name = name;
             Status = status;
             Strats = tradingStatus.Strats;
@@ -41,7 +42,7 @@ namespace StratedgemeMonitor.Models.TradeEngines
                 TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
                 NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => !s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
 
-                AllStratsList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s)));
+                AllStratsList = new SelectList(Strats.Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 ActiveStratsList = new SelectList(Strats.Where(s => s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 InactiveStratsList = new SelectList(Strats.Where(s => !s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 TradingStratsList = new SelectList(Strats.Where(s => s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
