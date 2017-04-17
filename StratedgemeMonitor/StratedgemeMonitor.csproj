@@ -25,6 +25,7 @@
     <Content Include="wwwroot\js\site-systems.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Include="wwwroot\js\site-tradeengines.js" />
     <Content Include="wwwroot\js\site.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -45,7 +46,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
-    <PackageReference Include="Monitoring.Server.Connector" Version="3.5.1" />
+    <PackageReference Include="Monitoring.Server.Connector" Version="3.6.0" />
     <PackageReference Include="Syncfusion.EJ.AspNet.Core" Version="15.1600.0.41" />
   </ItemGroup>
   <ItemGroup>

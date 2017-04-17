@@ -164,7 +164,7 @@ namespace StratedgemeMonitor.Controllers.TradeEngines
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
             string stratName = strat.Split('-')[0];
-            string stratVersion = strat.Split('-')[0];
+            string stratVersion = strat.Split('-')[1];
 
             return await tradeEngineConnector.ActivateStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
@@ -178,7 +178,7 @@ namespace StratedgemeMonitor.Controllers.TradeEngines
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
             string stratName = strat.Split('-')[0];
-            string stratVersion = strat.Split('-')[0];
+            string stratVersion = strat.Split('-')[1];
 
             return await tradeEngineConnector.DeactivateStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
@@ -192,7 +192,7 @@ namespace StratedgemeMonitor.Controllers.TradeEngines
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
             string stratName = strat.Split('-')[0];
-            string stratVersion = strat.Split('-')[0];
+            string stratVersion = strat.Split('-')[1];
 
             return await tradeEngineConnector.StartTradingStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
         }
@@ -206,9 +206,38 @@ namespace StratedgemeMonitor.Controllers.TradeEngines
             cts.CancelAfter(TimeSpan.FromMinutes(2));
 
             string stratName = strat.Split('-')[0];
-            string stratVersion = strat.Split('-')[0];
+            string stratVersion = strat.Split('-')[1];
 
             return await tradeEngineConnector.StopTradingStrategy(tradeEngineName, stratName, stratVersion, cts.Token);
+        }
+
+        internal async Task<(bool Success, string Message)> RequestStratToResetPositionStatus(string tradeEngineName, string strat)
+        {
+            if (tradeEngineConnector == null)
+                throw new ArgumentNullException(nameof(tradeEngineConnector));
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromMinutes(2));
+
+            string stratName = strat.Split('-')[0];
+            string stratVersion = strat.Split('-')[1];
+
+            var result = await tradeEngineConnector.RequestStratToResetPositionStatus(tradeEngineName, stratName, stratVersion, cts.Token);
+
+            return (result?.Success ?? false, result?.Message);
+        }
+
+        internal async Task<(bool Success, string Message)> ResetTradingConnectionStatus(string tradeEngineName, bool isConnected)
+        {
+            if (tradeEngineConnector == null)
+                throw new ArgumentNullException(nameof(tradeEngineConnector));
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromMinutes(2));
+
+            var result = await tradeEngineConnector.ResetTradingConnectionStatus(tradeEngineName, isConnected, cts.Token);
+
+            return (result?.Success ?? false, result?.Message);
         }
 
         private enum TradeEngineControllerActionValue

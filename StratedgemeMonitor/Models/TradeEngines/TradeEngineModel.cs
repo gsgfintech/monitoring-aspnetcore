@@ -4,6 +4,7 @@ using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StratedgemeMonitor.Models.Systems;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace StratedgemeMonitor.Models.TradeEngines
@@ -24,6 +25,9 @@ namespace StratedgemeMonitor.Models.TradeEngines
         public SelectList InactiveStratsList { get; private set; }
         public SelectList TradingStratsList { get; private set; }
         public SelectList NonTradingStratsList { get; private set; }
+
+        [Display(Name = "Reset Trading Conn Status")]
+        public bool IsTradingConnectionConnected { get; set; }
 
         public TradeEngineModel(string name, SystemStatusModel status, TradeEngineTradingStatus tradingStatus)
         {

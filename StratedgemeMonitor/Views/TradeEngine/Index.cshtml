@@ -8,13 +8,13 @@
 
 @if (Model.TradeEngines.Count > 0)
 {
-    @foreach (var tradeEngine in Model.TradeEngines)
+    @for (int i = 0; i < Model.TradeEngines.Count; i++)
     {
         <div class="row">
             <div class="col-lg-12">
-                <div class="@(tradeEngine.Status?.OverallStatus == RED ? "panel panel-danger" : tradeEngine.Status?.OverallStatus == YELLOW ? "panel panel-warning" : tradeEngine.Status?.OverallStatus == GREEN ? "panel panel-success" : "panel panel-default")">
+                <div class="@(Model.TradeEngines[i].Status?.OverallStatus == RED ? "panel panel-danger" : Model.TradeEngines[i].Status?.OverallStatus == YELLOW ? "panel panel-warning" : Model.TradeEngines[i].Status?.OverallStatus == GREEN ? "panel panel-success" : "panel panel-default")">
                     <div class="panel-heading">
-                        <h2>@Html.DisplayFor(m => tradeEngine.Name)</h2>
+                        <h2>@Html.DisplayFor(m => Model.TradeEngines[i].Name)</h2>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -26,9 +26,9 @@
                                     <div class="panel-body">
                                         <dl class="dl-horizontal">
                                             <dt>Trading Crosses:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.TradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].TradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
                                             <dt>Non-Trading Crosses:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.NonTradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -41,13 +41,13 @@
                                     <div class="panel-body">
                                         <dl class="dl-horizontal">
                                             <dt>Active Strategies:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.ActiveStratsList.Select(s => s.Text)))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].ActiveStratsList.Select(s => s.Text)))</dd>
                                             <dt>Inactive Strategies:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.InactiveStratsList.Select(s => s.Text)))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].InactiveStratsList.Select(s => s.Text)))</dd>
                                             <dt>Trading Strategies:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.TradingStratsList.Select(s => s.Text)))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].TradingStratsList.Select(s => s.Text)))</dd>
                                             <dt>Non-Trading Strategies:</dt>
-                                            <dd>@(string.Join(", ", tradeEngine.NonTradingStratsList.Select(s => s.Text)))</dd>
+                                            <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingStratsList.Select(s => s.Text)))</dd>
                                         </dl>
                                     </div>
                                 </div>
@@ -58,9 +58,9 @@
                                 <div class="panel panel-success">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="StartTrading" />
-                                            <select asp-for="Action.Cross" asp-items="@tradeEngine.NonTradingCrossesList"></select>
+                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].NonTradingCrossesList"></select>
                                             <button type="submit" class="btn btn-sm btn-success">Start Trading</button>
                                         </form>
                                     </div>
@@ -70,9 +70,9 @@
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="StopTrading" />
-                                            <select asp-for="Action.Cross" asp-items="@tradeEngine.TradingCrossesList"></select>
+                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].TradingCrossesList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Stop Trading</button>
                                         </form>
                                     </div>
@@ -82,9 +82,9 @@
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="ClosePosition" />
-                                            <select asp-for="Action.Cross" asp-items="@tradeEngine.CrossesList"></select>
+                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Close Positions</button>
                                         </form>
                                     </div>
@@ -94,9 +94,9 @@
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="CancelOrders" />
-                                            <select asp-for="Action.Cross" asp-items="@tradeEngine.CrossesList"></select>
+                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Cancel Active Orders</button>
                                         </form>
                                     </div>
@@ -105,64 +105,69 @@
                             <div class="col-md-3">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
-                                        <select id="reset-position-strat" asp-items="@tradeEngine.AllStratsList"></select>
-                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-title="Reset Position Status">Reset Position Status</button>
-                                        @*<form class="form-horizontal" asp-action="Index" method="post">
-                                                <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
-                                                <input hidden asp-for="Action.Action" value="ResetPositionStatus" />
-                                                <select asp-for="Action.Cross" asp-items="@tradeEngine.AllStratsList"></select>
-                                                <button type="submit" class="btn btn-sm btn-danger">Reset Position Status</button>
-                                            </form>*@
+                                        <select id="reset-position-strat" asp-items="@Model.TradeEngines[i].AllStratsList"></select>
+                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-text="Reset Position Status">Reset Position Status</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="panel panel-success">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="ActivateStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@tradeEngine.InactiveStratsList"></select>
+                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].InactiveStratsList"></select>
                                             <button type="submit" class="btn btn-sm btn-success">Activate Strategy</button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="DeactivateStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@tradeEngine.ActiveStratsList"></select>
+                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].ActiveStratsList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Deactivate Strategy</button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="panel panel-success">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="StartTradingStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@tradeEngine.NonTradingStratsList"></select>
+                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].NonTradingStratsList"></select>
                                             <button type="submit" class="btn btn-sm btn-success">Start Trading Strategy</button>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="panel panel-danger">
                                     <div class="panel-body">
                                         <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@tradeEngine.Name" />
+                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
                                             <input hidden asp-for="Action.Action" value="StopTradingStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@tradeEngine.TradingStratsList"></select>
+                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].TradingStratsList"></select>
                                             <button type="submit" class="btn btn-sm btn-danger">Stop Trading Strategy</button>
                                         </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="@(Model.TradeEngines[i].IsTradingConnectionConnected ? "panel panel-success" : "panel panel-danger")">
+                                    <div class="panel-body">
+                                        <label asp-for="TradeEngines[i].IsTradingConnectionConnected"></label>
+                                        <input id="@(Model.TradeEngines[i].Name)-trading-connection-new-status" asp-for="TradeEngines[i].IsTradingConnectionConnected" data-toggle="toggle" data-on="Connected" data-off="Disconnected" data-onstyle="success" data-offstyle="danger" />
+                                        <button class="btn btn-sm" data-toggle="modal" data-target="#warningModal" data-goal="reset-trading-connection-status" data-text="Reset trading connection status to" data-trade-engine="@Model.TradeEngines[i].Name">Set</button>
                                     </div>
                                 </div>
                             </div>
@@ -192,8 +197,14 @@ else
             <div class="modal-header">
                 <h4 class="modal-title">Warning</h4>
             </div>
+            <div class="modal-body">
+
+            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Proceed</button>
+                </div>
             </div>
         </div>
     </div>
@@ -209,10 +220,20 @@ else
                 var button = $(event.relatedTarget);
 
                 // Extract value from data-* attributes
-                var titleData = button.data('title');
-                var stratData = $('#reset-position-strat').val();
+                var textData = button.data('text');
+                var tradeEngine = button.data('trade-engine');
 
-                $(this).find('.modal-title').text('Warning - ' + titleData + ' ' + stratData);
+                var goal = button.data('goal');
+
+                if (goal === 'reset-position-status') {
+                    var stratData = $('#reset-position-strat').val();
+
+                    $(this).find('.modal-title').text('Warning - ' + textData + ' ' + stratData);
+                } else if (goal === 'reset-trading-connection-status') {
+                    var newConnectedStatus = $('#' + tradeEngine + '-trading-connection-new-status').val();
+
+                    $(this).find('.modal-body').text(textData + ' ' + newConnectedStatus + ' for ' + tradeEngine + '?');
+                }
             });
         });
     </script>
