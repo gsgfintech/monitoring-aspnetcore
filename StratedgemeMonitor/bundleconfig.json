@@ -13,8 +13,7 @@
     "inputFiles": [
       "wwwroot/js/site.js",
       "wwwroot/js/site-alerts.js",
-      "wwwroot/js/site-systems.js",
-      "wwwroot/js/site-tradeengine.js"
+      "wwwroot/js/site-systems.js"
     ],
     // Optionally specify minification options
     "minify": {
