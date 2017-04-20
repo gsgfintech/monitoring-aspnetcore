@@ -173,6 +173,7 @@ namespace StratedgemeMonitor.Controllers.Orders
 
             return new OrderHistoryPointModel()
             {
+                Message = point.Message,
                 Status = point.Status,
                 Timestamp = point.Timestamp.ToOffset(TimeSpan.FromHours(8))
             };
