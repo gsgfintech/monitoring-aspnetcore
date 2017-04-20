@@ -10,6 +10,8 @@ namespace StratedgemeMonitor.Models.Positions
 {
     public class PositionModel
     {
+        public string Account { get; set; }
+
         [Display(Name = "Avg Cost")]
         public double AverageCost { get; set; }
 
@@ -57,6 +59,7 @@ namespace StratedgemeMonitor.Models.Positions
 
             return new PositionModel()
             {
+                Account = position.Account,
                 AverageCost = position.AverageCost,
                 Broker = position.Broker,
                 Cross = position.Cross,
@@ -98,6 +101,7 @@ namespace StratedgemeMonitor.Models.Positions
 
             return new Position()
             {
+                Account = position.Account,
                 AverageCost = position.AverageCost,
                 Broker = position.Broker,
                 Cross = position.Cross,

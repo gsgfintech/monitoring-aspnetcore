@@ -32,12 +32,12 @@ namespace StratedgemeMonitor.Controllers.Positions
         {
             var positions = await positionsConnector.GetAll();
 
-            return positions.ToPositionModelsDict();
+            return positions.RetVal.ToPositionModelsDict();
         }
 
-        internal async Task<PositionModel> Get(Broker broker, Cross cross)
+        internal async Task<PositionModel> Get(Broker broker, string account, Cross cross)
         {
-            return (await positionsConnector.Get(broker, cross)).ToPositionModel();
+            return (await positionsConnector.Get(broker, account, cross)).RetVal.ToPositionModel();
         }
 
         private async Task<List<AccountModel>> GetAllAccounts()

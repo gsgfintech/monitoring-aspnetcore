@@ -23,9 +23,9 @@ namespace StratedgemeMonitor.Controllers.Positions
             return View(await utils.CreateListViewModel());
         }
 
-        public async Task<IActionResult> Details(Broker broker, Cross cross)
+        public async Task<IActionResult> Details(Broker broker, string account, Cross cross)
         {
-            PositionModel position = await utils.Get(broker, cross);
+            PositionModel position = await utils.Get(broker, account, cross);
 
             if (position != null)
                 return View(position);
