@@ -1,0 +1,12 @@
+﻿@model StratedgemeMonitor.ViewModels.FAConfigurations.FAConfigurationsIndexViewModel
+
+@{
+    ViewBag.Title = "FA Configurations";
+}
+
+<div class="row">
+    @foreach (var configuration in Model.Configurations)
+    {
+        @Html.Partial("FAConfigurationPartial", configuration)
+    }
+</div>

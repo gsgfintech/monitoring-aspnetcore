@@ -1,0 +1,137 @@
+﻿@model StratedgemeMonitor.Models.FAConfigurations.FAConfigurationModel
+
+<div class="col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>@Html.DisplayFor(m => Model.MasterAccount) <small>@Html.DisplayFor(m => Model.LastUpdated)</small></h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>@Html.DisplayNameFor(m => Model.AccountAliases)</h4>
+                        </div>
+                        @if (Model.AccountAliases?.Count > 0)
+                        {
+                            <table class="table">
+                                <tr>
+                                    <th>@Html.DisplayNameFor(m => Model.AccountAliases.First().Account)</th>
+                                    <th>@Html.DisplayNameFor(m => Model.AccountAliases.First().Alias)</th>
+                                </tr>
+                                @foreach (var account in Model.AccountAliases)
+                                {
+                                    <tr>
+                                        <th>@Html.DisplayFor(m => account.Account)</th>
+                                        <td>@Html.DisplayFor(m => account.Alias)</td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="panel-body">
+                                <p>No account alias for this Model</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>@Html.DisplayNameFor(m => Model.AllocationProfiles)</h4>
+                            </div>
+                            <div class="panel-body">
+                                @if (Model.AllocationProfiles?.Count > 0)
+                                {
+                                    <div class="row">
+                                        @foreach (var profile in Model.AllocationProfiles)
+                                        {
+                                            <div class="col-md-3">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <div class="panel-title">
+                                                            @Html.DisplayFor(m => profile.Name)
+                                                            <div class="pull-right">
+                                                                <i>@Html.DisplayFor(m => profile.Type)</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @if (profile.Allocations?.Count > 0)
+                                                    {
+                                                        <table class="table">
+                                                            <tr>
+                                                                <th>@Html.DisplayNameFor(m => profile.Allocations.First().Account)</th>
+                                                                <th>@Html.DisplayNameFor(m => profile.Allocations.First().Amount)</th>
+                                                            </tr>
+                                                            @foreach (var allocation in profile.Allocations)
+                                                            {
+                                                                <tr>
+                                                                    <th>@Html.DisplayFor(m => profile.Allocations.First().Account)</th>
+                                                                    <td>@Html.DisplayFor(m => profile.Allocations.First().Amount)</td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>No allocation profile in this Model</p>
+                                }
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>@Html.DisplayNameFor(m => Model.Groups)</h4>
+                            </div>
+                            <div class="panel-body">
+                                @if (Model.Groups?.Count > 0)
+                                {
+                                    <div class="row">
+                                        @foreach (var group in Model.Groups)
+                                        {
+                                            <div class="col-md-3">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <div class="panel-title">@Html.DisplayFor(m => group.Name)</div>
+                                                    </div>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>@Html.DisplayNameFor(m => group.DefaultMethod)</th>
+                                                            <td>@Html.DisplayFor(m => group.DefaultMethod)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>@Html.DisplayNameFor(m => group.Accounts)</th>
+                                                            <td>
+                                                                @if (group.Accounts?.Count > 0)
+                                                                {
+                                                                    @foreach (var account in group.Accounts)
+                                                                    {
+                                                                        @Html.DisplayFor(m => account)<br />
+                                                                    }
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>No allocation group in this Model</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
