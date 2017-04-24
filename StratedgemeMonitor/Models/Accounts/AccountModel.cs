@@ -18,20 +18,49 @@ namespace StratedgemeMonitor.Models.Accounts
         [Display(Name = "Account")]
         public string Name { get; set; }
 
-        public List<AccountAttributeModel> Attributes { get; set; }
+        [Display(Name = "Base Currency")]
+        public Currency BaseCurrency { get; set; }
+
+        [Display(Name = "Available Funds")]
+        public AccountComplexDoubleAttributeModel AvailableFunds { get; set; }
+
+        [Display(Name = "Leverage")]
+        public AccountComplexDoubleAttributeModel Leverage { get; set; }
     }
 
-    public class AccountAttributeModel
+    public class AccountComplexDoubleAttributeModel
     {
+        [Display(Name = "Commodities")]
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public double CommoditiesValue { get; set; }
+
+        [Display(Name = "Stocks")]
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public double StocksValue { get; set; }
+
+        [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:N0}")]
+        public double TotalValue { get; set; }
+
         public Currency Currency { get; set; }
-
-        public string Key { get; set; }
-
-        public string Value { get; set; }
     }
 
     internal static class AccountModelExtensions
     {
+        private static AccountComplexDoubleAttributeModel ToAccountComplexDoubleAttributeModel(this AccountComplexDoubleAttribute attribute)
+        {
+            if (attribute == null)
+                return null;
+
+            return new AccountComplexDoubleAttributeModel()
+            {
+                CommoditiesValue = attribute.CommoditiesValue,
+                Currency = attribute.Currency,
+                StocksValue = attribute.StocksValue,
+                TotalValue = attribute.TotalValue
+            };
+        }
+
         public static AccountModel ToAccountModel(this Account account)
         {
             if (account == null)
@@ -39,8 +68,10 @@ namespace StratedgemeMonitor.Models.Accounts
 
             return new AccountModel()
             {
-                Attributes = account.Attributes.ToAccountAttributeModels(),
+                AvailableFunds = account.AvailableFunds.ToAccountComplexDoubleAttributeModel(),
+                BaseCurrency = account.BaseCurrency,
                 Broker = account.Broker,
+                Leverage = account.Leverage.ToAccountComplexDoubleAttributeModel(),
                 LastUpdate = account.LastUpdate,
                 Name = account.Name
             };
@@ -49,24 +80,6 @@ namespace StratedgemeMonitor.Models.Accounts
         public static List<AccountModel> ToAccountModels(this IEnumerable<Account> accounts)
         {
             return accounts?.Select(a => a.ToAccountModel()).ToList();
-        }
-
-        private static AccountAttributeModel ToAccountAttributeModel(this AccountAttribute attribute)
-        {
-            if (attribute == null)
-                return null;
-
-            return new AccountAttributeModel()
-            {
-                Currency = attribute.Currency,
-                Key = attribute.Key,
-                Value = attribute.Value
-            };
-        }
-
-        public static List<AccountAttributeModel> ToAccountAttributeModels(this IEnumerable<AccountAttribute> attributes)
-        {
-            return attributes?.Select(a => a.ToAccountAttributeModel()).ToList();
         }
     }
 }
