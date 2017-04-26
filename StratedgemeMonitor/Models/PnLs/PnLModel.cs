@@ -29,6 +29,10 @@ namespace StratedgemeMonitor.Models.PnLs
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double TotalGrossUnrealized { get; set; }
 
+        [Display(Name = "Total Net")]
+        [DisplayFormat(DataFormatString = "{0:N2}")]
+        public double TotalNet => TotalNetRealized + TotalGrossUnrealized;
+
         [Display(Name = "RN PnL (USD)")]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double TotalNetRealized { get; set; }

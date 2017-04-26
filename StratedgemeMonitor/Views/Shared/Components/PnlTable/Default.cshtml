@@ -1,21 +1,21 @@
 ﻿@model StratedgemeMonitor.Models.PnLs.PnLModel
 
-<div class="@(Model.TotalNetRealized > 0 ? "panel panel-success" : Model.TotalNetRealized < 0 ? "panel panel-danger" : "panel panel-default")">
+<div class="@(Model.TotalNet > 0 ? "panel panel-success" : Model.TotalNet < 0 ? "panel panel-danger" : "panel panel-default")">
     <div class="panel-heading">
         <strong>PnL (USD)</strong>
         <div class="pull-right hidden-xs hidden-sm">
             Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
             Gross: @Html.DisplayFor(m => Model.TotalGrossRealized) |
             Fees: @Html.DisplayFor(m => Model.TotalFees) |
-            Net: <strong style="font-size:large">@Html.DisplayFor(m => Model.TotalNetRealized)</strong>
+            @Html.DisplayNameFor(m => Model.TotalNet): <strong style="font-size:large">@Html.DisplayFor(m => Model.TotalNet)</strong>
         </div>
         <div class="pull-right visible-sm-inline">
             Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
-            Net: <strong>@Html.DisplayFor(m => Model.TotalNetRealized)</strong>
+            @Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>
         </div>
         <div class="pull-right visible-xs-inline">
             Unr: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
-            Net: <strong>@Html.DisplayFor(m => Model.TotalNetRealized)</strong>
+            @*@Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>*@
         </div>
     </div>
     @if (Model.PerCrossPnLs.Count > 0)
