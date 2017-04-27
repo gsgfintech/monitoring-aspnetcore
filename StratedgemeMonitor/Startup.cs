@@ -187,6 +187,16 @@ namespace StratedgemeMonitor
             {
                 return connector.TradeEngineConnector;
             });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                return connector.TwsAccountsConnector;
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                return connector.TwsFAConfigurationConnector;
+            });
         }
 
         public static void AddControllerUtils(this IServiceCollection services)
