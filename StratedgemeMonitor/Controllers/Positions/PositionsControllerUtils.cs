@@ -42,14 +42,22 @@ namespace StratedgemeMonitor.Controllers.Positions
 
         private async Task<List<AccountModel>> GetAllAccounts()
         {
-            var positions = await accountsConnector.GetAll();
+            var result = await accountsConnector.GetAll();
 
-            return positions.ToAccountModels();
+            if (result.Success)
+                return result.Accounts.ToAccountModels();
+            else
+                return null;
         }
 
         internal async Task<AccountModel> GetAccount(Broker broker, string accountName)
         {
-            return (await accountsConnector.Get(broker, accountName)).ToAccountModel();
+            var result = await accountsConnector.Get(broker, accountName);
+
+            if (result.Success)
+                return result.Account.ToAccountModel();
+            else
+                return null;
         }
     }
 }
