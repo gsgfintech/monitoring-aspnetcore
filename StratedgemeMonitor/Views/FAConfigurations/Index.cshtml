@@ -5,8 +5,5 @@
 }
 
 <div class="row">
-    @foreach (var configuration in Model.Configurations)
-    {
-        @Html.Partial("FAConfigurationPartial", configuration)
-    }
+    @Html.Partial("FAConfigurationPartial", Model.Configuration)
 </div>

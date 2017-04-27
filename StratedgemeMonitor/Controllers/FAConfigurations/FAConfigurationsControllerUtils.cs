@@ -20,30 +20,17 @@ namespace StratedgemeMonitor.Controllers.FAConfigurations
             this.connector = connector;
         }
 
-        internal async Task<FAConfigurationModel> Get(string masterAccount)
+        internal async Task<FAConfigurationModel> Get()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(10));
 
-            var result = await connector.Get(masterAccount, cts.Token);
+            var result = await connector.RequestFAConfiguration(cts.Token);
 
             if (!result.Success)
                 logger.Error(result.Message);
 
-            return result.Configuration.ToFAConfigurationModel();
-        }
-
-        internal async Task<List<FAConfigurationModel>> GetAll()
-        {
-            CancellationTokenSource cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(10));
-
-            var result = await connector.GetAll(cts.Token);
-
-            if (!result.Success)
-                logger.Error(result.Message);
-
-            return result.Configurations.ToFAConfigurationModels();
+            return result.FAConfiguration.ToFAConfigurationModel();
         }
     }
 }

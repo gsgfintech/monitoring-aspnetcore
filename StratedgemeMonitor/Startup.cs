@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -191,11 +187,6 @@ namespace StratedgemeMonitor
             services.AddSingleton((serviceProvider) =>
             {
                 return connector.TwsAccountsConnector;
-            });
-
-            services.AddSingleton((serviceProvider) =>
-            {
-                return connector.TwsFAConfigurationConnector;
             });
         }
 

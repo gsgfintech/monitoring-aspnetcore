@@ -20,16 +20,9 @@ namespace StratedgemeMonitor.Controllers.FAConfigurations
 
         public async Task<IActionResult> Index()
         {
-            var configurations = await utils.GetAll();
+            var configuration = await utils.Get();
 
-            return View(new FAConfigurationsIndexViewModel(configurations));
-        }
-
-        public async Task<IActionResult> Details(string masterAccount)
-        {
-            var configuration = await utils.Get(masterAccount);
-
-            return View(configuration);
+            return View(new FAConfigurationsIndexViewModel(configuration));
         }
     }
 }
