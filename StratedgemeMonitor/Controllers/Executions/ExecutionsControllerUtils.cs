@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Data.Core.ContractData;
+﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
+using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Data.Core.ExecutionData;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
@@ -24,6 +25,7 @@ namespace StratedgemeMonitor.Controllers.Executions
         private readonly ILogger logger = GSGLoggerFactory.Instance.CreateLogger<ExecutionsControllerUtils>();
 
         private readonly BackendExecutionsConnector connector;
+        private readonly Broker broker = Broker.IB; // TODO
 
         private DateTime currentDay = DateTimeUtils.GetLastBusinessDayInHKT();
 
@@ -47,9 +49,12 @@ namespace StratedgemeMonitor.Controllers.Executions
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var executions = await connector.GetForDay(currentDay);
+            var result = await connector.GetForDay(broker, currentDay);
 
-            return executions?.AsEnumerable().OrderByDescending(e => e.ExecutionTime).ToExecutionModels();
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Trades?.AsEnumerable().OrderByDescending(e => e.ExecutionTime).ToExecutionModels();
         }
 
         internal async Task<ExecutionModel> GetById(string id)
@@ -57,14 +62,17 @@ namespace StratedgemeMonitor.Controllers.Executions
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var execution = await connector.GetById(id);
+            var result = await connector.GetById(broker, id);
 
-            return execution.ToExecutionModel();
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Trade.ToExecutionModel();
         }
 
         internal async Task<int> GetTodaysTradesCount()
         {
-            return (await connector.GetForDay(DateTime.Today))?.Count ?? 0;
+            return (await connector.GetForDay(broker, DateTime.Today)).Trades?.Count ?? 0;
         }
 
         internal async Task<FileResult> ExportExcel()

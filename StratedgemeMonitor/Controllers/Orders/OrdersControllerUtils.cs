@@ -1,8 +1,13 @@
-﻿using Capital.GSG.FX.Data.Core.ContractData;
+﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
+using Capital.GSG.FX.Data.Core.ContractData;
+using Capital.GSG.FX.Data.Core.FinancialAdvisorsData;
 using Capital.GSG.FX.Data.Core.OrderData;
 using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core;
+using Capital.GSG.FX.Utils.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using StratedgemeMonitor.Models.Orders;
 using StratedgemeMonitor.ViewModels.Orders;
@@ -17,7 +22,10 @@ namespace StratedgemeMonitor.Controllers.Orders
 {
     public class OrdersControllerUtils
     {
+        private readonly ILogger logger = GSGLoggerFactory.Instance.CreateLogger<OrdersControllerUtils>();
+
         private readonly BackendOrdersConnector connector;
+        private readonly Broker broker = Broker.IB; // TODO
 
         private readonly OrderStatusCode[] activeStatus = new OrderStatusCode[3] { OrderStatusCode.PendingSubmit, OrderStatusCode.PreSubmitted, OrderStatusCode.Submitted };
 
@@ -46,29 +54,52 @@ namespace StratedgemeMonitor.Controllers.Orders
 
         internal async Task<List<OrderModel>> GetOrders()
         {
-            var orders = await connector.GetOrdersForDay(currentDay);
+            var result = await connector.GetOrdersForDay(currentDay);
 
-            return orders?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Orders?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
         private async Task<List<OrderModel>> GetActiveOrders()
         {
-            return (await connector.GetActiveOrders())?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
+            var result = await connector.GetActiveOrders();
+
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Orders?.AsEnumerable().OrderByDescending(o => o.PlacedTime).ToOrderModels();
         }
 
         internal async Task<int> GetActiveOrdersCount()
         {
-            return (await connector.GetActiveOrders())?.Count ?? 0;
+            var result = await connector.GetActiveOrders();
+
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Orders?.Count ?? 0;
         }
 
         internal async Task<int> GetInactiveOrdersCount()
         {
-            return (await connector.GetOrdersForDay(DateTime.Today))?.Count ?? 0;
+            var result = await connector.GetOrdersForDay(DateTime.Today);
+
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Orders?.Count ?? 0;
         }
 
         internal async Task<OrderModel> GetByPermanentId(int permanentId)
         {
-            return (await connector.GetOrderByPermanentId(permanentId)).ToOrderModel();
+            var result = await connector.Get(broker, permanentId);
+
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Order?.ToOrderModel();
         }
 
         internal async Task<FileResult> ExportExcel()
@@ -191,7 +222,9 @@ namespace StratedgemeMonitor.Controllers.Orders
 
             return new OrderModel()
             {
-                ClientId = order.ClientID,
+                Account = order.Account,
+                AllocationInfo = ComputeAllocationInfo(order),
+                Broker = order.Broker,
                 Cross = order.Cross,
                 EstimatedCommission = order.EstimatedCommission,
                 EstimatedCommissionCcy = order.EstimatedCommissionCcy,
@@ -219,6 +252,28 @@ namespace StratedgemeMonitor.Controllers.Orders
                 Type = order.Type,
                 UsdQuantity = order.UsdQuantity
             };
+        }
+
+        private static object ComputeAllocationInfo(Order order)
+        {
+            if (string.IsNullOrEmpty(order.AllocationInfo))
+                return "Unknown";
+
+            // 1. Try parse allocation profile
+            FAAllocationProfile allocationProfile = null;
+            try { allocationProfile = JsonConvert.DeserializeObject<FAAllocationProfile>(order.AllocationInfo); } catch { }
+
+            if (allocationProfile != null)
+                return allocationProfile;
+
+            // 2. Try parse FA Group
+            FAGroup group = null;
+            try { group = JsonConvert.DeserializeObject<FAGroup>(order.AllocationInfo); } catch { }
+
+            if (group != null)
+                return group;
+
+            return order.AllocationInfo;
         }
 
         private static double? CalculateSlippage(Order order)

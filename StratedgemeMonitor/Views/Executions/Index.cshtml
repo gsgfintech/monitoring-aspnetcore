@@ -53,50 +53,50 @@
                         <th></th>
                     </tr>
 
-                    @foreach (var item in Model.Trades)
+                    @foreach (var trade in Model.Trades)
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ExecutionTime)
+                                @Html.DisplayFor(modelItem => trade.ExecutionTime)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.OrderOrigin)
+                                @Html.DisplayFor(modelItem => trade.OrderOrigin)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Side)
+                                @Html.DisplayFor(modelItem => trade.Side)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Quantity)
+                                @Html.DisplayFor(modelItem => trade.Quantity)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Cross)
+                                @Html.DisplayFor(modelItem => trade.Cross)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Price)
+                                @Html.DisplayFor(modelItem => trade.Price)
                             </td>
-                            @if (item.RealizedPnlUsd > 0)
+                            @if (trade.RealizedPnlUsd > 0)
                             {
                                 <td class="bg-success">
-                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                    @Html.DisplayFor(modelItem => trade.RealizedPnlUsd)
                                 </td>
                             }
-                            else if (item.RealizedPnlUsd < 0)
+                            else if (trade.RealizedPnlUsd < 0)
                             {
                                 <td class="bg-danger">
-                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                    @Html.DisplayFor(modelItem => trade.RealizedPnlUsd)
                                 </td>
                             }
                             else
                             {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.RealizedPnlUsd)
+                                    @Html.DisplayFor(modelItem => trade.RealizedPnlUsd)
                                 </td>
                             }
                             <td>
-                                @Html.DisplayFor(modelItem => item.TradeDuration)
+                                @Html.DisplayFor(modelItem => trade.TradeDuration)
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-executionid="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
+                                <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-executionid="@trade.Id"><span class="glyphicon glyphicon-plus"></span></a>
                             </td>
                         </tr>
                     }

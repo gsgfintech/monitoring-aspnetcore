@@ -1,4 +1,5 @@
 ﻿@using static Capital.GSG.FX.Data.Core.OrderData.OrderStatusCode;
+@using Capital.GSG.FX.Data.Core.FinancialAdvisorsData;
 
 @model StratedgemeMonitor.Models.Orders.OrderModel
 
@@ -7,13 +8,16 @@
 }
 
 <div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-6">
         <div class="@(Model.Status == Filled ? "panel panel-success" : (Model.Status == Cancelled || Model.Status == ApiCanceled) ? "panel panel-danger" : "panel panel-default")">
             <div class="panel-heading">
                 <h2>@Model.ToString() <small>(@Html.DisplayFor(m => m.PermanentId))</small></h2>
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(m => Model.Broker)</dt>
+                    <dd>@Html.DisplayFor(m => Model.Broker)</dd>
+
                     <dt>
                         @Html.DisplayNameFor(model => model.Cross)
                     </dt>
@@ -68,15 +72,15 @@
 
                     @if (Model.UsdQuantity.HasValue && Model.UsdQuantity.Value / 1000 != Model.Quantity)
                     {
-                        <dd>
-                            @Html.DisplayFor(model => model.Quantity) <small>(@Html.DisplayFor(m => Model.UsdQuantity) USD)</small>
-                        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Quantity) <small>(@Html.DisplayFor(m => Model.UsdQuantity) USD)</small>
+                    </dd>
                     }
                     else
                     {
-                        <dd>
-                            @Html.DisplayFor(model => model.Quantity)
-                        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Quantity)
+                    </dd>
                     }
 
                     <dt>
@@ -107,12 +111,6 @@
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.Strategy)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.ClientId)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.ClientId)
                     </dd>
 
                     <dt>
@@ -208,9 +206,54 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Allocations</h4>
+            </div>
+            <div class="panel-body">
+                @if (Model.AllocationInfo is FAAllocationProfile)
+                {
+                    <dl class="dl-horizontal">
+                        <dt>Allocation Profile</dt>
+                        <dd>@Html.DisplayFor(m => ((FAAllocationProfile)Model.AllocationInfo).Name)</dd>
+
+                        <dt>Type</dt>
+                        <dd>@Html.DisplayFor(m => ((FAAllocationProfile)Model.AllocationInfo).Type)</dd>
+
+                        <dt>Accounts</dt>
+                        <dd>
+                            @foreach (var allocation in ((FAAllocationProfile)Model.AllocationInfo).Allocations)
+                            {
+                                @($"{allocation.Account}:\t{allocation.Amount:N0}")<br />
+                            }
+                        </dd>
+                    </dl>
+                }
+                else if (Model.AllocationInfo is FAGroup)
+                {
+                    <dl>
+                        <dt>FA Group</dt>
+                        <dd>@Html.DisplayFor(m => ((FAGroup)Model.AllocationInfo).Name)</dd>
+
+                        <dt>Method</dt>
+                        <dd>@Html.DisplayFor(m => ((FAGroup)Model.AllocationInfo).DefaultMethod)</dd>
+
+                        <dt>Accounts</dt>
+                        <dd>
+                            @foreach (var account in ((FAGroup)Model.AllocationInfo).Accounts)
+                            {
+                                @Html.DisplayFor(m => account)<br />
+                            }
+                        </dd>
+                    </dl>
+                }
+                else
+                {
+                    <p>@Html.DisplayFor(m => Model.AllocationInfo)</p>
+                }
+            </div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>History</h4>
@@ -219,7 +262,7 @@
             {
                 <table class="table table-condensed">
                     @foreach (var point in Model.History)
-                {
+                    {
                         <tr>
                             <td>@Html.DisplayFor(p => point.Timestamp)</td>
                             <td>@Html.DisplayFor(p => point.Status)</td>

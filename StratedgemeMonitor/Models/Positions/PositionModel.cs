@@ -23,31 +23,9 @@ namespace StratedgemeMonitor.Models.Positions
         [DisplayFormat(DataFormatString = "{0:dd/MM HH:mm:ss}")]
         public DateTimeOffset LastUpdate { get; set; }
 
-        [Display(Name = "Market Price")]
-        public double? MarketPrice { get; set; }
-
-        [Display(Name = "Market Value")]
-        public double? MarketValue { get; set; }
-
         [Display(Name = "Quantity")]
         [DisplayFormat(DataFormatString = "{0:N0}")]
         public double PositionQuantity { get; set; }
-
-        [Display(Name = "Realized PnL")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public double? RealizedPnL { get; set; }
-
-        [Display(Name = "Realized PnL (USD)")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public double? RealizedPnlUsd { get; set; }
-
-        [Display(Name = "Unrealized PnL")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public double? UnrealizedPnL { get; set; }
-
-        [Display(Name = "Unrealized PnL (USD)")]
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public double? UnrealizedPnlUsd { get; set; }
     }
 
     internal static class PositionModelExtensions
@@ -64,13 +42,7 @@ namespace StratedgemeMonitor.Models.Positions
                 Broker = position.Broker,
                 Cross = position.Cross,
                 LastUpdate = position.LastUpdate,
-                MarketPrice = position.MarketPrice,
-                MarketValue = position.MarketValue,
-                PositionQuantity = position.PositionQuantity,
-                RealizedPnL = position.RealizedPnL,
-                RealizedPnlUsd = position.RealizedPnlUsd,
-                UnrealizedPnL = position.UnrealizedPnL,
-                UnrealizedPnlUsd = position.UnrealizedPnlUsd
+                PositionQuantity = position.PositionQuantity
             };
         }
 
@@ -106,13 +78,7 @@ namespace StratedgemeMonitor.Models.Positions
                 Broker = position.Broker,
                 Cross = position.Cross,
                 LastUpdate = position.LastUpdate,
-                MarketPrice = position.MarketPrice,
-                MarketValue = position.MarketValue,
                 PositionQuantity = position.PositionQuantity,
-                RealizedPnL = position.RealizedPnL,
-                RealizedPnlUsd = position.RealizedPnlUsd,
-                UnrealizedPnL = position.UnrealizedPnL,
-                UnrealizedPnlUsd = position.UnrealizedPnlUsd
             };
         }
 

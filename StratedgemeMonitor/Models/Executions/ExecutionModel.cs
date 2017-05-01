@@ -39,6 +39,7 @@ namespace StratedgemeMonitor.Models.Executions
 
         public string Exchange { get; set; }
 
+        [Display(Name = "Account")]
         public string AccountNumber { get; set; }
 
         public int PermanentID { get; set; }

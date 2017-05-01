@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Data.Core.ContractData;
+﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
+using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Data.Core.OrderData;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,12 @@ namespace StratedgemeMonitor.Models.Orders
 {
     public class OrderModel
     {
+        public string Account { get; set; }
+
+        public object AllocationInfo { get; set; }
+
+        public Broker Broker { get; set; }
+
         [Display(Name = "Pair")]
         public Cross Cross { get; set; }
 
@@ -33,8 +40,6 @@ namespace StratedgemeMonitor.Models.Orders
         public OrderStatusCode Status { get; set; }
 
         public OrderType Type { get; set; }
-
-        public int ClientId { get; set; }
 
         [Display(Name = "Commission (est.)")]
         public double? EstimatedCommission { get; set; }
