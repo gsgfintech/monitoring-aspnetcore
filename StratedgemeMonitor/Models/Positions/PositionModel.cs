@@ -53,6 +53,8 @@ namespace StratedgemeMonitor.Models.Positions
 
         public static Dictionary<string, List<PositionModel>> ToPositionModelsDict(this IEnumerable<Position> positions)
         {
+            positions = positions.Where(p => (p.Broker == Broker.IB) ? !p.Account.Contains("F") : true); // Ignore IB institutional account as they mess up statistics
+
             if (positions.IsNullOrEmpty())
                 return new Dictionary<string, List<PositionModel>>();
 

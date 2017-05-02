@@ -1,0 +1,39 @@
+﻿@model IEnumerable<StratedgemeMonitor.Models.Positions.PositionModel>
+
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>@Html.DisplayFor(m => Model.First().Account)</h4>
+        </div>
+        <table class="table table-hover">
+            <tr>
+                <th>@Html.DisplayNameFor(m => Model.First().Cross)</th>
+                <th>@Html.DisplayNameFor(m => Model.First().PositionQuantity)</th>
+                <th>@Html.DisplayNameFor(m => Model.First().AverageCost)</th>
+                <th>@Html.DisplayNameFor(m => Model.First().LastUpdate)</th>
+                <th></th>
+            </tr>
+
+            @foreach (var position in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => position.Cross)
+                    </td>
+                    <td class="@(position.PositionQuantity > 0 ? "bg-success" : position.PositionQuantity < 0 ? "bg-danger" : "")">
+                        @Html.DisplayFor(modelItem => position.PositionQuantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => position.AverageCost)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => position.LastUpdate)
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-broker="@position.Broker" asp-route-account="@position.Account" asp-route-cross="@position.Cross"><span class="glyphicon glyphicon-plus"></span></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
