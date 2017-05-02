@@ -1,6 +1,8 @@
 ﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
 using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Monitoring.Server.Connector;
+using Capital.GSG.FX.Utils.Core.Logging;
+using Microsoft.Extensions.Logging;
 using StratedgemeMonitor.Models.Accounts;
 using StratedgemeMonitor.Models.Positions;
 using StratedgemeMonitor.ViewModels.Positions;
@@ -11,6 +13,8 @@ namespace StratedgemeMonitor.Controllers.Positions
 {
     public class PositionsControllerUtils
     {
+        private readonly ILogger logger = GSGLoggerFactory.Instance.CreateLogger<PositionsControllerUtils>();
+
         private readonly BackendAccountsConnector accountsConnector;
         private readonly BackendPositionsConnector positionsConnector;
 
@@ -30,14 +34,22 @@ namespace StratedgemeMonitor.Controllers.Positions
 
         private async Task<Dictionary<string, List<PositionModel>>> GetAllPositions()
         {
-            var positions = await positionsConnector.GetAll();
+            var result = await positionsConnector.GetAll();
 
-            return positions.RetVal.ToPositionModelsDict();
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Positions.ToPositionModelsDict();
         }
 
         internal async Task<PositionModel> Get(Broker broker, string account, Cross cross)
         {
-            return (await positionsConnector.Get(broker, account, cross)).RetVal.ToPositionModel();
+            var result = await positionsConnector.Get(broker, account, cross);
+
+            if (!result.Success)
+                logger.Error(result.Message);
+
+            return result.Position.ToPositionModel();
         }
 
         private async Task<List<AccountModel>> GetAllAccounts()

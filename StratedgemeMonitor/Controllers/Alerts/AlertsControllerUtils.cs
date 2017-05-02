@@ -66,9 +66,12 @@ namespace StratedgemeMonitor.Controllers.Alerts
 
         internal async Task<PnLModel> GetPnLForDay(DateTime day)
         {
-            var pnl = await pnlsConnector.GetForDay(day);
+            var pnlResult = await pnlsConnector.GetForDay(day);
 
-            return pnl.ToPnLModel();
+            if (!pnlResult.Success)
+                logger.Error(pnlResult.Message);
+
+            return pnlResult.PnLs.ToPnLModel();
         }
 
         internal async Task<List<AlertModel>> GetClosedAlertsForDay(DateTime day)

@@ -118,6 +118,36 @@ namespace StratedgemeMonitor.Models.PnLs
             return pnls?.Select(p => p.ToPnLPerCrossModel()).ToList();
         }
 
+        public static PnLModel ToPnLModel(this IEnumerable<PnL> pnls)
+        {
+            if (pnls.IsNullOrEmpty())
+                return new PnLModel();
+
+            // Combine all pnls (temporary solution)
+            var combinedPerCross = pnls.Select(p => p.PerCrossPnLs.AsEnumerable()).Aggregate((cur, next) => cur.Concat(next)).GroupBy(p => p.Cross).Select(g => new PnLPerCross()
+            {
+                Cross = g.Key,
+                GrossRealized = g.Select(p => p.GrossRealized).Sum(),
+                GrossUnrealized = g.Select(p => p.GrossUnrealized).Sum(),
+                PipsUnrealized = g.Select(p => p.PipsUnrealized).Sum(),
+                PositionOpenPrice = g.Select(p => p.PositionOpenPrice)?.FirstOrDefault(),
+                PositionOpenTime = g.Select(p => p.PositionOpenTime)?.FirstOrDefault(),
+                PositionSize = g.Select(p => p.PositionSize).Sum(),
+                TotalFees = g.Select(p => p.TotalFees).Sum(),
+                TradesCount = g.Select(p => p.TradesCount).Sum() / g.Count() // TODO: find a nicer solution
+            }).ToList();
+
+            var combinedPnl = new PnL()
+            {
+                Account = "Total",
+                Broker = Broker.UNKNOWN,
+                LastUpdate = pnls.Select(p => p.LastUpdate).Max(),
+                PerCrossPnLs = combinedPerCross
+            };
+
+            return combinedPnl.ToPnLModel();
+        }
+
         public static PnLModel ToPnLModel(this PnL pnl)
         {
             if (pnl == null)
