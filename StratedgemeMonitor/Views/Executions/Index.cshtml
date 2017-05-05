@@ -112,7 +112,7 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <div class="panel panel-default">
+        @*<div class="panel panel-default">
             <div class="panel-heading">
                 <h2>Cumulative PnL <small>(Gross)</small></h2>
             </div>
@@ -125,6 +125,14 @@
                 {
                     <p>Nothing to display</p>
                 }
+            </div>
+        </div>*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Current Pnl <small>(Total)</small></h4>
+            </div>
+            <div class="panel-body" style="padding:0;">
+                <iframe style="width:100%; padding:0; margin:0" src="@(Model.GrafanaEndpoint)/dashboard-solo/db/pnls-qa?refresh=30s&orgId=1&panelId=1&from=@(Model.GraphStartTimeUnixTicks)&theme=light" height="600" frameborder="0"></iframe>
             </div>
         </div>
     </div>

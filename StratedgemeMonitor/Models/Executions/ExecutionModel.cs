@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Data.Core.ContractData;
+﻿using Capital.GSG.FX.Data.Core.AccountPortfolio;
+using Capital.GSG.FX.Data.Core.ContractData;
 using Capital.GSG.FX.Data.Core.ExecutionData;
 using Capital.GSG.FX.Data.Core.OrderData;
 using System;
@@ -8,6 +9,7 @@ namespace StratedgemeMonitor.Models.Executions
 {
     public class ExecutionModel
     {
+        public Broker Broker { get; set; }
         public Cross Cross { get; set; }
 
         [Display(Name = "Time (HKT)")]

@@ -26,12 +26,14 @@ namespace StratedgemeMonitor.Controllers.Executions
 
         private readonly BackendExecutionsConnector connector;
         private readonly Broker broker = Broker.IB; // TODO
+        private readonly string grafanaEndpoint;
 
         private DateTime currentDay = DateTimeUtils.GetLastBusinessDayInHKT();
 
-        public ExecutionsControllerUtils(BackendExecutionsConnector connector)
+        public ExecutionsControllerUtils(BackendExecutionsConnector connector, string grafanaEndpoint)
         {
             this.connector = connector;
+            this.grafanaEndpoint = grafanaEndpoint;
         }
 
         internal async Task<ExecutionsListViewModel> CreateListViewModel(DateTime? day = null)
@@ -41,7 +43,7 @@ namespace StratedgemeMonitor.Controllers.Executions
 
             List<ExecutionModel> trades = await GetExecutions();
 
-            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>());
+            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>(), grafanaEndpoint);
         }
 
         private async Task<List<ExecutionModel>> GetExecutions()
@@ -72,7 +74,16 @@ namespace StratedgemeMonitor.Controllers.Executions
 
         internal async Task<int> GetTodaysTradesCount()
         {
-            return (await connector.GetForDay(broker, DateTime.Today)).Trades?.Count ?? 0;
+            var todaysTradesResult = await connector.GetForDay(broker, DateTime.Today);
+
+            if (todaysTradesResult.Success && !todaysTradesResult.Trades.IsNullOrEmpty())
+            {
+                var groupings = todaysTradesResult.Trades.GroupBy(t => new { t.Broker, t.AccountNumber });
+
+                return groupings.Select(g => g.Count()).Max();
+            }
+            else
+                return 0;
         }
 
         internal async Task<FileResult> ExportExcel()
@@ -271,6 +282,7 @@ namespace StratedgemeMonitor.Controllers.Executions
             return new ExecutionModel()
             {
                 AccountNumber = execution.AccountNumber,
+                Broker = execution.Broker,
                 ClientId = execution.ClientId,
                 ClientOrderRef = execution.ClientOrderRef,
                 Commission = execution.Commission,
