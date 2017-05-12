@@ -66,6 +66,11 @@ namespace StratedgemeMonitor.Controllers.NewsBulletins
             return bulletins?.Where(b => b.Status == NewsBulletinStatus.CLOSED).ToNewsBulletinModels();
         }
 
+        internal async Task<int> GetOpenBulletinsCount()
+        {
+            return (await connector.GetByStatus(NewsBulletinStatus.OPEN))?.Count ?? 0;
+        }
+
         internal async Task<NewsBulletinModel> Get(NewsBulletinSource source, string id)
         {
             return (await connector.Get(source, id)).ToNewsBulletinModel();

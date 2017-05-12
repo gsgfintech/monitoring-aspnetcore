@@ -37,6 +37,14 @@
                 </td>
             </tr>
         }
+        <tr>
+            <td class="@(Model.OpenNewsBulletinsCount > 0 ? "bg-danger" : "")">
+                <strong>@Html.DisplayFor(m => Model.OpenNewsBulletinsCount)</strong> @Html.DisplayNameFor(m => Model.OpenNewsBulletinsCount)
+                <div class="pull-right">
+                    <a class="btn btn-default btn-xs" asp-controller="NewsBulletins" asp-action="Index"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </td>
+        </tr>
     </table>
 </div>
 

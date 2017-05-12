@@ -19,5 +19,8 @@ namespace StratedgemeMonitor.ViewModels.Alerts
 
         [Display(Name = "Next event at ")]
         public FXEventModel NextHighImpactEvent { get; set; }
+
+        [Display(Name = "Open Bulletins")]
+        public int OpenNewsBulletinsCount { get; set; }
     }
 }
