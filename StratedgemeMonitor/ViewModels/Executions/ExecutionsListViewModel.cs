@@ -21,9 +21,10 @@ namespace StratedgemeMonitor.ViewModels.Executions
         public Axis PnlChartYAxis { get; private set; }
 
         public string GrafanaEndpoint { get; private set; }
+        public string PnlDashboard { get; private set; }
         public long GraphStartTimeUnixTicks { get; private set; }
 
-        public ExecutionsListViewModel(DateTime day, List<ExecutionModel> trades, string grafanaEndpoint)
+        public ExecutionsListViewModel(DateTime day, List<ExecutionModel> trades, string grafanaEndpoint, string pnlDashboard)
         {
             Day = day;
             Trades = trades;
@@ -31,6 +32,7 @@ namespace StratedgemeMonitor.ViewModels.Executions
             //CreatePnlChart(day, trades);
 
             GrafanaEndpoint = grafanaEndpoint;
+            PnlDashboard = pnlDashboard;
             GraphStartTimeUnixTicks = DateTimeUtils.GetFivePmYesterday().ToUnixTimeMilliseconds();
         }
 

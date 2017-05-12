@@ -27,13 +27,15 @@ namespace StratedgemeMonitor.Controllers.Executions
         private readonly BackendExecutionsConnector connector;
         private readonly Broker broker = Broker.IB; // TODO
         private readonly string grafanaEndpoint;
+        private readonly string pnlDashboard;
 
         private DateTime currentDay = DateTimeUtils.GetLastBusinessDayInHKT();
 
-        public ExecutionsControllerUtils(BackendExecutionsConnector connector, string grafanaEndpoint)
+        public ExecutionsControllerUtils(BackendExecutionsConnector connector, string grafanaEndpoint, string pnlDashboard)
         {
             this.connector = connector;
             this.grafanaEndpoint = grafanaEndpoint;
+            this.pnlDashboard = pnlDashboard;
         }
 
         internal async Task<ExecutionsListViewModel> CreateListViewModel(DateTime? day = null)
@@ -43,7 +45,7 @@ namespace StratedgemeMonitor.Controllers.Executions
 
             List<ExecutionModel> trades = await GetExecutions();
 
-            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>(), grafanaEndpoint);
+            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>(), grafanaEndpoint, pnlDashboard);
         }
 
         private async Task<List<ExecutionModel>> GetExecutions()

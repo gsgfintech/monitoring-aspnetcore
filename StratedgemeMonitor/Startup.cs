@@ -216,8 +216,9 @@ namespace StratedgemeMonitor
             {
                 var executionsConnector = serviceProvider.GetService<BackendExecutionsConnector>();
                 var grafanaEndpoint = grafanaConfigSection.GetValue<string>("Endpoint");
+                var pnlDashboard = grafanaConfigSection.GetValue<string>("PnlDashboard");
 
-                return new ExecutionsControllerUtils(executionsConnector, grafanaEndpoint);
+                return new ExecutionsControllerUtils(executionsConnector, grafanaEndpoint, pnlDashboard);
             });
 
             services.AddSingleton((serviceProvider) =>
