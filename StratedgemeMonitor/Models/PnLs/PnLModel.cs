@@ -120,6 +120,9 @@ namespace StratedgemeMonitor.Models.PnLs
 
         public static PnLModel ToPnLModel(this IEnumerable<PnL> pnls)
         {
+            if (pnls.IsNullOrEmpty())
+                return new PnLModel();
+
             pnls = pnls.Where(p => (p.Broker == Broker.IB) ? !p.Account.Contains("F") : true); // Ignore IB institutional account as they mess up statistics
 
             if (pnls.IsNullOrEmpty())
