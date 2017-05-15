@@ -166,6 +166,11 @@ namespace StratedgemeMonitor
 
             services.AddSingleton((serviceProvider) =>
             {
+                return connector.StrategiesConnector;
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
                 return connector.SystemConfigsConnector;
             });
 
