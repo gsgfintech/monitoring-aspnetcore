@@ -26,14 +26,14 @@ namespace StratedgemeMonitor.Models.Orders
 
         public OrderOrigin Origin { get; set; }
 
-        public int PermanentId { get; set; }
+        public long PermanentId { get; set; }
 
         [Display(Name = "Placed Time (HKT)")]
         [DisplayFormat(DataFormatString = "{0:dd/MM HH:mm:ss}")]
         public DateTimeOffset? PlacedTime { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N0}K")]
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
 
         public OrderSide Side { get; set; }
 
