@@ -26,6 +26,7 @@ namespace StratedgemeMonitor.Models.Orders
 
         public OrderOrigin Origin { get; set; }
 
+        [Display(Name = "Perm ID")]
         public long PermanentId { get; set; }
 
         [Display(Name = "Placed Time (HKT)")]

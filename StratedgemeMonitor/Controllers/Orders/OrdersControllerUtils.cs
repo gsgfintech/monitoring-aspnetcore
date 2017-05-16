@@ -92,7 +92,7 @@ namespace StratedgemeMonitor.Controllers.Orders
             return result.Orders?.Count ?? 0;
         }
 
-        internal async Task<OrderModel> GetByPermanentId(int permanentId)
+        internal async Task<OrderModel> GetByPermanentId(long permanentId)
         {
             var result = await connector.Get(broker, permanentId);
 
