@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\stratedgeme-monitor - FTP.pubxml" />
+    <None Remove="Properties\PublishProfiles\stratedgeme-monitor-dev - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\stratedgeme-monitor-qa - FTP.pubxml" />
   </ItemGroup>
 
