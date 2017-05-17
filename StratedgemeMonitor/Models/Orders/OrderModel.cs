@@ -12,6 +12,7 @@ namespace StratedgemeMonitor.Models.Orders
         public string Account { get; set; }
 
         public object AllocationInfo { get; set; }
+        public string AllocationInfoStr => AllocationInfo?.ToString();
 
         public Broker Broker { get; set; }
 
@@ -84,6 +85,9 @@ namespace StratedgemeMonitor.Models.Orders
 
         [DisplayFormat(DataFormatString = "{0:N1} pips")]
         public double? Slippage { get; set; }
+
+        [Display(Name = "Virtual")]
+        public bool IsVirtual { get; set; }
 
         public override string ToString()
         {

@@ -92,7 +92,7 @@ namespace StratedgemeMonitor.Controllers.Orders
             return result.Orders?.Count ?? 0;
         }
 
-        internal async Task<OrderModel> GetByPermanentId(int permanentId)
+        internal async Task<OrderModel> GetByPermanentId(long permanentId)
         {
             var result = await connector.Get(broker, permanentId);
 
@@ -230,6 +230,7 @@ namespace StratedgemeMonitor.Controllers.Orders
                 EstimatedCommissionCcy = order.EstimatedCommissionCcy,
                 FillPrice = order.FillPrice,
                 History = order.History.ToOrderHistoryPointModels(),
+                IsVirtual = order.IsVirtual,
                 LastAsk = order.LastAsk,
                 LastBid = order.LastBid,
                 LastMid = order.LastMid,
@@ -257,7 +258,7 @@ namespace StratedgemeMonitor.Controllers.Orders
         private static object ComputeAllocationInfo(Order order)
         {
             if (string.IsNullOrEmpty(order.AllocationInfo))
-                return "Unknown";
+                return "No allocation information";
 
             // 1. Try parse allocation profile
             FAAllocationProfile allocationProfile = null;
