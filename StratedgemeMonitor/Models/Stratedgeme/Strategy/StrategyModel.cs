@@ -21,7 +21,16 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
 
         [Display(Name = "Creation Date")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
+
+        [Display(Name = "Parameters")]
+        public Dictionary<string, string> Config { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name}-{Version}";
+        }
     }
 
     public static class StrategyModelExtensions
@@ -34,6 +43,7 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
             return new StrategyModel()
             {
                 Available = strat.Available,
+                Config = strat.Config,
                 CreationDate = strat.CreationDate,
                 Description = strat.Description,
                 DllPath = strat.DllPath,

@@ -46,7 +46,7 @@
                                 <td>
                                     @if (item.IsVirtual)
                                     {
-                                        <span class="label label-primary">@Html.DisplayFor(m => item.IsVirtual)</span>
+                                        <span class="label label-warning">@Html.DisplayNameFor(m => item.IsVirtual)</span>
                                     }
                                 </td>
                                 <td>@Html.DisplayFor(modelItem => item.PlacedTime)</td>

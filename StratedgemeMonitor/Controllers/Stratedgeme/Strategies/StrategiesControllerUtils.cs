@@ -24,15 +24,29 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
 
         internal async Task<StrategyDetailsViewModel> Details(string name, string version)
         {
+            var result = await Get(name, version);
+
+            if (result.Success)
+                return new StrategyDetailsViewModel(result.Model);
+            else
+                return new StrategyDetailsViewModel(null, result.Message);
+        }
+
+        internal async Task<StrategyEditViewModel> Edit(string name, string version)
+        {
+            var result = await Get(name, version);
+
+            return new StrategyEditViewModel(result.Model);
+        }
+
+        internal async Task<(bool Success, string Message, StrategyModel Model)> Get(string name, string version)
+        {
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             var result = await strategyConnector.Get(name, version, cts.Token);
 
-            if (result.Success)
-                return new StrategyDetailsViewModel(result.Strat.ToStrategyModel());
-            else
-                return new StrategyDetailsViewModel(null, result.Message);
+            return (result.Success, result.Message, result.Strat.ToStrategyModel());
         }
 
         internal async Task<StrategiesListViewModel> Index()

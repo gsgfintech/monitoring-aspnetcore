@@ -1,5 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model StratedgemeMonitor.ViewModels.Stratedgeme.Strategies.StrategyDetailsViewModel
+
+    @{
+        ViewBag.Title = Model.Strategy != null ? Model.Strategy.ToString() : "Strategy";
+    }
+
+    @if (Model.Strategy != null)
+    {
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>@Html.DisplayFor(m => Model.Strategy.Name) <small>@Html.DisplayFor(m => Model.Strategy.Version)</small></h4>
+                    </div>
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.Name)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.Name)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.Version)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.Version)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.CreationDate)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.CreationDate)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.Description)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.Description)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.Available)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.Available)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.DllPath)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.DllPath)</dd>
+                            <dt>@Html.DisplayNameFor(m => Model.Strategy.StratTypeName)</dt>
+                            <dd>@Html.DisplayFor(m => Model.Strategy.StratTypeName)</dd>
+                        </dl>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-primary" asp-action="Index">Back</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>@Html.DisplayNameFor(m => Model.Strategy.Config)</h4>
+                    </div>
+                    @if (Model.Strategy.Config != null)
+                    {
+                        <table class="table table-hover">
+                            @foreach (var param in Model.Strategy.Config)
+                            {
+                                <tr>
+                                    <th>@Html.DisplayFor(m => param.Key)</th>
+                                    <td>@Html.DisplayFor(m => param.Value)</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="panel-body">
+                            <p>No parameter</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4>Error</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>@Model.Error</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }

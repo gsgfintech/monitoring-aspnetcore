@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StratedgemeMonitor.Models.Stratedgeme.Strategy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,30 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
         public async Task<IActionResult> Details(string name, string version)
         {
             return View(await utils.Details(name, version));
+        }
+
+        public async Task<IActionResult> Edit(string name, string version)
+        {
+            return View(await utils.Edit(name, version));
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> DoEdit(StrategyModel strategy)
+        {
+            return View(); // TODO
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> DoEditConfig(List<KeyValuePair<string, string>> config)
+        {
+            return View(); // TODO
+        }
+
+        public ActionResult ConfigParamAdd(KeyValuePair<string, string> value)
+        {
+            return View(); // TODO
         }
     }
 }
