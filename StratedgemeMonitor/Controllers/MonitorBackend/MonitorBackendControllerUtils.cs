@@ -22,8 +22,7 @@ namespace StratedgemeMonitor.Controllers.MonitorBackend
 
         internal async Task<MonitorBackendModel> CreateMonitorBackendModel()
         {
-            if (!LastTradesDictResetTime.HasValue)
-                LastTradesDictResetTime = await executionsConnector.GetLastTradesDictionaryResetTime();
+            LastTradesDictResetTime = await executionsConnector.GetLastTradesDictionaryResetTime();
 
             return new MonitorBackendModel()
             {

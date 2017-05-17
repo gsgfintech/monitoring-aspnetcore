@@ -21,7 +21,7 @@ namespace StratedgemeMonitor.Controllers.Orders
             return View(await utils.CreateListViewModel(day));
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(long id)
         {
             OrderModel order = await utils.GetByPermanentId(id);
 

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using StratedgemeMonitor.Controllers.MonitorBackend;
 using StratedgemeMonitor.Controllers.FAConfigurations;
+using StratedgemeMonitor.Controllers.Stratedgeme.Strategies;
 
 namespace StratedgemeMonitor
 {
@@ -267,6 +268,13 @@ namespace StratedgemeMonitor
                 var accountsConnector = serviceProvider.GetService<BackendAccountsConnector>();
 
                 return new PositionsControllerUtils(positionsConnector, accountsConnector);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                var strategiesConnector = serviceProvider.GetService<BackendStrategiesConnector>();
+
+                return new StrategiesControllerUtils(strategiesConnector);
             });
 
             services.AddSingleton((serviceProvider) =>
