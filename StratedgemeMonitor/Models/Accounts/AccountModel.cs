@@ -24,25 +24,47 @@ namespace StratedgemeMonitor.Models.Accounts
         [Display(Name = "Available Funds")]
         public AccountComplexDoubleAttributeModel AvailableFunds { get; set; }
 
+        [Display(Name = "Cash Balance")]
+        public string CashBalance { get; set; }
+
+        [Display(Name = "Full Available Funds")]
+        public AccountComplexDoubleAttributeModel FullAvailableFunds { get; set; }
+
+        [Display(Name = "Full Excess Liquidity")]
+        public AccountComplexDoubleAttributeModel FullExcessLiquidity { get; set; }
+
+        [Display(Name = "Full Init Margin Requirement")]
+        public AccountComplexDoubleAttributeModel FullInitMarginReq { get; set; }
+
+        [Display(Name = "Full Maintenance Margin Requirement")]
+        public AccountComplexDoubleAttributeModel FullMaintMarginReq { get; set; }
+
         [Display(Name = "Leverage")]
         public AccountComplexDoubleAttributeModel Leverage { get; set; }
+
+        [Display(Name = "Realized PnL")]
+        public string RealizedPnL { get; set; }
+
+        [Display(Name = "Total Cash Balance")]
+        public string TotalCashBalance { get; set; }
+
+        [Display(Name = "Total Cash Value")]
+        public AccountComplexDoubleAttributeModel TotalCashValue { get; set; }
+
+        [Display(Name = "Unrealized PnL")]
+        public string UnrealizedPnL { get; set; }
     }
 
     public class AccountComplexDoubleAttributeModel
     {
         [Display(Name = "Commodities")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
-        public double CommoditiesValue { get; set; }
+        public string CommoditiesValue { get; set; }
 
         [Display(Name = "Stocks")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
-        public double StocksValue { get; set; }
+        public string StocksValue { get; set; }
 
         [Display(Name = "Total")]
-        [DisplayFormat(DataFormatString = "{0:N0}")]
-        public double TotalValue { get; set; }
-
-        public Currency Currency { get; set; }
+        public string TotalValue { get; set; }
     }
 
     internal static class AccountModelExtensions
@@ -50,15 +72,27 @@ namespace StratedgemeMonitor.Models.Accounts
         private static AccountComplexDoubleAttributeModel ToAccountComplexDoubleAttributeModel(this AccountComplexDoubleAttribute attribute)
         {
             if (attribute == null)
-                return null;
+                return new AccountComplexDoubleAttributeModel();
+
+            string ccy = attribute.Currency != Currency.UNKNOWN ? attribute.Currency.ToString() : "";
 
             return new AccountComplexDoubleAttributeModel()
             {
-                CommoditiesValue = attribute.CommoditiesValue,
-                Currency = attribute.Currency,
-                StocksValue = attribute.StocksValue,
-                TotalValue = attribute.TotalValue
+                CommoditiesValue = $"{attribute.CommoditiesValue:N2} {ccy}",
+                StocksValue = $"{attribute.StocksValue:N2} {ccy}",
+                TotalValue = $"{attribute.TotalValue:N2} {ccy}"
             };
+        }
+
+        private static string FormatAccountLedgerAttribute(AccountLedgerAttribute attribute, Currency baseCurrency)
+        {
+            if (attribute == null)
+                return null;
+
+            if (baseCurrency == Currency.UNKNOWN || baseCurrency == Currency.USD)
+                return $"{attribute.UsdValue:N2} USD";
+            else
+                return $"{attribute.BaseCurrencyValue:N2} {baseCurrency} ({attribute.UsdValue:N2} USD)";
         }
 
         public static AccountModel ToAccountModel(this Account account)
@@ -71,9 +105,18 @@ namespace StratedgemeMonitor.Models.Accounts
                 AvailableFunds = account.AvailableFunds.ToAccountComplexDoubleAttributeModel(),
                 BaseCurrency = account.BaseCurrency,
                 Broker = account.Broker,
+                CashBalance = FormatAccountLedgerAttribute(account.CashBalance, account.BaseCurrency),
+                FullAvailableFunds = account.FullAvailableFunds.ToAccountComplexDoubleAttributeModel(),
+                FullExcessLiquidity = account.FullExcessLiquidity.ToAccountComplexDoubleAttributeModel(),
+                FullInitMarginReq = account.FullInitMarginReq.ToAccountComplexDoubleAttributeModel(),
+                FullMaintMarginReq = account.FullMaintMarginReq.ToAccountComplexDoubleAttributeModel(),
                 Leverage = account.Leverage.ToAccountComplexDoubleAttributeModel(),
                 LastUpdate = account.LastUpdate,
-                Name = account.Name
+                Name = account.Name,
+                RealizedPnL = FormatAccountLedgerAttribute(account.RealizedPnL, account.BaseCurrency),
+                TotalCashBalance = FormatAccountLedgerAttribute(account.TotalCashBalance, account.BaseCurrency),
+                TotalCashValue = account.TotalCashValue.ToAccountComplexDoubleAttributeModel(),
+                UnrealizedPnL = FormatAccountLedgerAttribute(account.UnrealizedPnL, account.BaseCurrency)
             };
         }
 

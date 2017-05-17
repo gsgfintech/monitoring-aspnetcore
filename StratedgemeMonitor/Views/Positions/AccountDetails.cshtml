@@ -1,74 +1,96 @@
-﻿@using static Capital.GSG.FX.Data.Core.ContractData.Currency;
+﻿@model StratedgemeMonitor.Models.Accounts.AccountModel
 
-@model StratedgemeMonitor.Models.Accounts.AccountModel
+    @{
+        ViewBag.Title = $"{Model.Broker} - {Model.Name}";
+    }
 
-@{
-    ViewBag.Title = $"{Model.Broker} - {Model.Name}";
-}
-
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h2>@Html.DisplayFor(m => m.Broker) - @Html.DisplayFor(m => m.Name)</h2>
-            </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Broker)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Broker)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Name)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.LastUpdate)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.LastUpdate)
-                    </dd>
-                </dl>
-            </div>
-            <div class="panel-footer">
-                <a class="btn btn-primary" asp-action="Index">Back</a>
-            </div>
-        </div>
-    </div>
-</div>
-@*<div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Attributes</h4>
-            </div>
-            @if (Model.Attributes.Count > 0)
-            {
-                <table class="table table-condensed">
-                    @foreach (var attribute in Model.Attributes)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(p => attribute.Key)</td>
-                            <td>@Html.DisplayFor(p => attribute.Value)</td>
-                            <td>@(attribute.Currency != UNKNOWN ? attribute.Currency.ToString() : "")</td>
-                        </tr>
-                    }
-                </table>
-            }
-            else
-            {
-                <div class="panel-body">
-                    <p>No attribute</p>
+    <div class="row">
+        <div class="col-md-4 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>@Html.DisplayFor(m => m.Broker) - @Html.DisplayFor(m => m.Name)</h2>
                 </div>
-            }
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(model => model.Broker)</dt>
+                        <dd>@Html.DisplayFor(model => model.Broker)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd>@Html.DisplayFor(model => model.Name)</dd>
+                        <dt>@Html.DisplayNameFor(model => model.LastUpdate)</dt>
+                        <dd>@Html.DisplayFor(model => model.LastUpdate)</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer">
+                    <a class="btn btn-primary" asp-action="Index">Back</a>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Ledger</h4>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(m => Model.CashBalance)</dt>
+                        <dd>@Html.DisplayFor(m => Model.CashBalance)</dd>
+                        <dt>@Html.DisplayNameFor(m => Model.TotalCashBalance)</dt>
+                        <dd>@Html.DisplayFor(m => Model.TotalCashBalance)</dd>
+                        <dt>@Html.DisplayNameFor(m => Model.UnrealizedPnL)</dt>
+                        <dd>@Html.DisplayFor(m => Model.UnrealizedPnL)</dd>
+                        <dt>@Html.DisplayNameFor(m => Model.RealizedPnL)</dt>
+                        <dd>@Html.DisplayFor(m => Model.RealizedPnL)</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Financials</h4>
+                </div>
+                <table class="table table-hover">
+                    <tr>
+                        <th></th>
+                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds.CommoditiesValue)</th>
+                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds.StocksValue)</th>
+                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds.TotalValue)</th>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds)</th>
+                        <td>@Html.DisplayFor(m => Model.AvailableFunds.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.AvailableFunds.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.AvailableFunds.TotalValue)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.FullAvailableFunds)</th>
+                        <td>@Html.DisplayFor(m => Model.FullAvailableFunds.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullAvailableFunds.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullAvailableFunds.TotalValue)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.FullExcessLiquidity)</th>
+                        <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.TotalValue)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.FullInitMarginReq)</th>
+                        <td>@Html.DisplayFor(m => Model.FullInitMarginReq.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullInitMarginReq.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullInitMarginReq.TotalValue)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.FullMaintMarginReq)</th>
+                        <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.TotalValue)</td>
+                    </tr>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => Model.Leverage)</th>
+                        <td>@Html.DisplayFor(m => Model.Leverage.CommoditiesValue)</td>
+                        <td>@Html.DisplayFor(m => Model.Leverage.StocksValue)</td>
+                        <td>@Html.DisplayFor(m => Model.Leverage.TotalValue)</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-</div>*@
