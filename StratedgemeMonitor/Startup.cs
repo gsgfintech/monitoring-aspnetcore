@@ -48,7 +48,7 @@ namespace StratedgemeMonitor
         {
             services.AddBackendConnectors(Configuration);
 
-            services.AddControllerUtils(Configuration.GetSection("Grafana"));
+            services.AddControllerUtils(Configuration.GetSection("Grafana"), Configuration.GetSection("App"));
 
             // Add framework services.
             services.AddMvc();
@@ -196,7 +196,7 @@ namespace StratedgemeMonitor
             });
         }
 
-        public static void AddControllerUtils(this IServiceCollection services, IConfigurationSection grafanaConfigSection)
+        public static void AddControllerUtils(this IServiceCollection services, IConfigurationSection grafanaConfigSection, IConfigurationSection appConfigSection)
         {
             services.AddSingleton((serviceProvider) =>
             {
@@ -273,8 +273,9 @@ namespace StratedgemeMonitor
             services.AddSingleton((serviceProvider) =>
             {
                 var strategiesConnector = serviceProvider.GetService<BackendStrategiesConnector>();
+                string appEndpoint = appConfigSection.GetValue<string>("Endpoint");
 
-                return new StrategiesControllerUtils(strategiesConnector);
+                return new StrategiesControllerUtils(strategiesConnector, appEndpoint);
             });
 
             services.AddSingleton((serviceProvider) =>

@@ -40,23 +40,11 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
             return View(await utils.Edit(name, version));
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DoEdit(StrategyModel strategy)
         {
-            return View(); // TODO
-        }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> DoEditConfig(List<KeyValuePair<string, string>> config)
-        {
-            return View(); // TODO
-        }
-
-        public ActionResult ConfigParamAdd(KeyValuePair<string, string> value)
-        {
-            return View(); // TODO
+            return View("Details", await utils.DoEdit(strategy));
         }
     }
 }

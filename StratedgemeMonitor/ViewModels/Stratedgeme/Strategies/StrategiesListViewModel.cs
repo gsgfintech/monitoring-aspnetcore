@@ -9,12 +9,14 @@ namespace StratedgemeMonitor.ViewModels.Stratedgeme.Strategies
     public class StrategiesListViewModel
     {
         public string Error { get; private set; }
-        public List<StrategyModel> Strategies { get; private set; }
+        public List<StrategyModel> AvailableStrategies { get; private set; }
+        public List<StrategyModel> UnavailableStrategies { get; private set; }
 
         public StrategiesListViewModel(List<StrategyModel> strategies, string error = null)
         {
             Error = error;
-            Strategies = strategies;
+            AvailableStrategies = strategies.Where(s => s.Available).ToList();
+            UnavailableStrategies = strategies.Where(s => !s.Available).ToList();
         }
     }
 }

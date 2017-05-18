@@ -25,7 +25,7 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
         public DateTime CreationDate { get; set; }
 
         [Display(Name = "Parameters")]
-        public Dictionary<string, string> Config { get; set; }
+        public List<ConfigParamModel> Config { get; set; }
 
         public override string ToString()
         {
@@ -43,7 +43,7 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
             return new StrategyModel()
             {
                 Available = strat.Available,
-                Config = strat.Config,
+                Config = strat.Config?.Select(p => new ConfigParamModel() { Key = p.Key, Value = p.Value }).ToList(),
                 CreationDate = strat.CreationDate,
                 Description = strat.Description,
                 DllPath = strat.DllPath,

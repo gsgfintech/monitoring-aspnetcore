@@ -1,0 +1,25 @@
+﻿@model IEnumerable<StratedgemeMonitor.Models.Stratedgeme.Strategy.StrategyModel>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(m => Model.First().Name)</th>
+        <th>@Html.DisplayNameFor(m => Model.First().Version)</th>
+        <th>@Html.DisplayNameFor(m => Model.First().CreationDate)</th>
+        <th>@Html.DisplayNameFor(m => Model.First().Description)</th>
+        <th></th>
+    </tr>
+    @foreach (var strategy in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(m => strategy.Name)</td>
+            <td>@Html.DisplayFor(m => strategy.Version)</td>
+            <td>@Html.DisplayFor(m => strategy.CreationDate)</td>
+            <td>@Html.DisplayFor(m => strategy.Description)</td>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a class="btn btn-primary" asp-action="Details" asp-route-name="@strategy.Name" asp-route-version="@strategy.Version"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
+            </td>
+        </tr>
+    }
+</table>

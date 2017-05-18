@@ -5,38 +5,37 @@
     }
 
     <div class="row">
-        <div class="col-lg-8 col-md-10 col-xs-12">
+        <div class="col-md-6 col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>Strategies <small>(@Model.Strategies.Count)</small></h2>
+                    <h2>Strategies Available <small>(@Model.AvailableStrategies.Count)</small></h2>
                 </div>
-                @if (Model.Strategies.Count > 0)
+                @if (Model.AvailableStrategies.Count > 0)
                 {
-                    <table class="table">
-                        <tr>
-                            <th>@Html.DisplayNameFor(m => Model.Strategies.First().Name)</th>
-                            <th>@Html.DisplayNameFor(m => Model.Strategies.First().Version)</th>
-                            <th>@Html.DisplayNameFor(m => Model.Strategies.First().CreationDate)</th>
-                            <th>@Html.DisplayNameFor(m => Model.Strategies.First().Description)</th>
-                            <th>@Html.DisplayNameFor(m => Model.Strategies.First().Available)</th>
-                            <th></th>
-                        </tr>
-                        @foreach (var strategy in Model.Strategies)
-                        {
-                            <tr>
-                                <td>@Html.DisplayFor(m => strategy.Name)</td>
-                                <td>@Html.DisplayFor(m => strategy.Version)</td>
-                                <td>@Html.DisplayFor(m => strategy.CreationDate)</td>
-                                <td>@Html.DisplayFor(m => strategy.Description)</td>
-                                <td>@Html.DisplayFor(m => strategy.Available)</td>
-                                <td>
-                                    <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-primary" asp-action="Details" asp-route-name="@strategy.Name" asp-route-version="@strategy.Version"><span class="glyphicon glyphicon-plus"></span></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </table>
+                    @Html.Partial("StrategiesListPartial", Model.AvailableStrategies)
+                }
+                else
+                {
+                    <div class="panel-body">
+                        <p>No available strategy</p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2>Strategies Unavailable <small>(@Model.UnavailableStrategies.Count)</small></h2>
+                </div>
+                @if (Model.UnavailableStrategies.Count > 0)
+                {
+                    @Html.Partial("StrategiesListPartial", Model.UnavailableStrategies)
+                }
+                else
+                {
+                    <div class="panel-body">
+                        <p>No unavailable strategy</p>
+                    </div>
                 }
             </div>
         </div>

@@ -50,7 +50,10 @@
                     <div class="panel-footer">
                         <input hidden asp-for="Strategy.Name" />
                         <input hidden asp-for="Strategy.Version" />
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        <div class="btn-group">
+                            <a class="btn btn-default" asp-action="Details" asp-route-name="@Model.Strategy.Name" asp-route-version="@Model.Strategy.Version"><span class="glyphicon glyphicon-arrow-left"></span></a>
+                            <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-floppy-save"></span></button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -61,38 +64,19 @@
                     <div class="panel-heading">
                         <h4>@Html.DisplayNameFor(m => Model.Strategy.Config)</h4>
                     </div>
-                    <div class="panel-body">
-                        <ej-grid id="ConfigGrid" datasource="Model.Config">
-                            <e-datamanager url="http://localhost:50498/api/strategies/@(Model.Strategy.Name)/@(Model.Strategy.Version)" insert-url="Strategies/ConfigParamAdd" adaptor="UrlAdaptor"></e-datamanager>
-                            <e-edit-settings allow-adding="true" allow-editing="true" allow-deleting="true" show-confirm-dialog="true"></e-edit-settings>
-                            <e-toolbar-settings show-toolbar="true" toolbar-items='@new List<string> {"add","edit","update","cancel"}' />
-                            <e-columns>
-                                <e-column field="key" is-primary-key="true"></e-column>
-                                <e-column field="value"></e-column>
-                            </e-columns>
-                        </ej-grid>
-                        @*@if (Model.Config != null)
-                        {
-                            @foreach (var param in Model.Config)
-                                {
-                                    <div class="form-group">
-                                        <label>@Html.DisplayFor(m => param.Key)</label>
-                                        @Html.EditorFor(m => param.Value)
-                                    </div>
-                                }
-                            @for (int i = 0; i < Model.Strategy.Config.Count; i++)
-                            {
-                                <div class="form-group">
-                                    <label asp-for="Strategy.Config[@Model.Strategy.Config[i].Key"></label>
-                                    <input asp-for="Strategy.Config[0].Value" />
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <p>No parameter</p>
-                        }*@
-                    </div>
+                    <ej-grid id="ConfigGrid" datasource="Model.Config">
+                        <e-datamanager url="@(Model.AppEndpoint)/api/strategies/edit/list-params/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                       insert-url="@(Model.AppEndpoint)/api/strategies/edit/add-param/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                       update-url="@(Model.AppEndpoint)/api/strategies/edit/update-param/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                       remove-url="@(Model.AppEndpoint)/api/strategies/edit/delete-param/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                       adaptor="UrlAdaptor"></e-datamanager>
+                        <e-edit-settings allow-adding="true" allow-editing="true" allow-deleting="true" show-confirm-dialog="true"></e-edit-settings>
+                        <e-toolbar-settings show-toolbar="true" toolbar-items='@new List<string> {"add","edit", "delete", "update","cancel"}' />
+                        <e-columns>
+                            <e-column field="key" header-text="Key" is-primary-key="true"></e-column>
+                            <e-column field="value" header-text="Value"></e-column>
+                        </e-columns>
+                    </ej-grid>
                 </div>
             </form>
         </div>

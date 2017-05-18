@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using StratedgemeMonitor.Models.Stratedgeme.Strategy;
+using Syncfusion.JavaScript;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/strategies")]
     public class StrategiesApiController : Controller
     {
@@ -18,26 +19,53 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
             this.utils = utils;
         }
 
-        [HttpPost("{name}/{version}")]
-        public async Task<IActionResult> Get(string name, string version)
+        [HttpPost("edit/list-params/{name}/{version}")]
+        public async Task<IActionResult> EditListParamsForDataGrid(string name, string version)
         {
             var result = await utils.Get(name, version);
 
-            var data = result.Model?.Config?.Select(c => new Tmp() { Key = c.Key, Value = c.Value }).ToList() ?? new List<Tmp>();
+            var data = result.Model?.Config?
+                .Where(p => p.Key != "StratName" && p.Key != "StratVersion")
+                .Select(p => new ConfigParamModel() { Key = p.Key.Replace("Param", ""), Value = p.Value })
+                .ToList() ?? new List<ConfigParamModel>();
 
             return Json(new { result = data, count = data.Count });
         }
-        //public async Task<List<Tmp>> Get(string name, string version)
-        //{
-        //    var result = await utils.Get(name, version);
 
-        //    return result.Model?.Config?.Select(c=>new Tmp() { Key = c.Key, Value = c.Value }).ToList() ?? new List<Tmp>();
-        //}
-    }
+        [HttpPost("edit/add-param/{name}/{version}")]
+        public async Task<IActionResult> EditAddParam([FromBody]CRUDModel<ConfigParamModel> value, string name, string version)
+        {
+            if (value == null || value.Value == null)
+                return Ok();
 
-    public class Tmp
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
+            var result = await utils.AddConfigParam(name, version, value.Value);
+
+            // TODO : use result
+
+            return await EditListParamsForDataGrid(name, version);
+        }
+
+        [HttpPost("edit/update-param/{name}/{version}")]
+        public async Task<IActionResult> EditUpdateParam([FromBody]CRUDModel<ConfigParamModel> value, string name, string version)
+        {
+            if (value == null || value.Value == null)
+                return Ok();
+
+            var result = await utils.UpdateConfigParam(name, version, value.Value);
+
+            // TODO : use result
+
+            return await EditListParamsForDataGrid(name, version);
+        }
+
+        [HttpPost("edit/delete-param/{name}/{version}")]
+        public async Task<IActionResult> EditDeleteParam([FromBody]CRUDModel key, string name, string version)
+        {
+            var result = await utils.DeleteConfigParam(name, version, key.Key.ToString());
+
+            // TODO : use result
+
+            return await EditListParamsForDataGrid(name, version);
+        }
     }
 }
