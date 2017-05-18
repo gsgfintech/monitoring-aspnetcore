@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/strategies")]
     public class StrategiesApiController : Controller
     {
@@ -19,11 +19,25 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
         }
 
         [HttpPost("{name}/{version}")]
-        public async Task<List<KeyValuePair<string, string>>> Get(string name, string version)
+        public async Task<IActionResult> Get(string name, string version)
         {
             var result = await utils.Get(name, version);
 
-            return result.Model?.Config?.ToList() ?? new List<KeyValuePair<string, string>>();
+            var data = result.Model?.Config?.Select(c => new Tmp() { Key = c.Key, Value = c.Value }).ToList() ?? new List<Tmp>();
+
+            return Json(new { result = data, count = data.Count });
         }
+        //public async Task<List<Tmp>> Get(string name, string version)
+        //{
+        //    var result = await utils.Get(name, version);
+
+        //    return result.Model?.Config?.Select(c=>new Tmp() { Key = c.Key, Value = c.Value }).ToList() ?? new List<Tmp>();
+        //}
+    }
+
+    public class Tmp
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
