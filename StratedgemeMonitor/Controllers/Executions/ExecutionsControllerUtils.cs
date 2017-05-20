@@ -28,14 +28,16 @@ namespace StratedgemeMonitor.Controllers.Executions
         private readonly Broker broker = Broker.IB; // TODO
         private readonly string grafanaEndpoint;
         private readonly string pnlDashboard;
+        private readonly string appEndpoint;
 
         private DateTime currentDay = DateTimeUtils.GetLastBusinessDayInHKT();
 
-        public ExecutionsControllerUtils(BackendExecutionsConnector connector, string grafanaEndpoint, string pnlDashboard)
+        public ExecutionsControllerUtils(BackendExecutionsConnector connector, string grafanaEndpoint, string pnlDashboard, string appEndpoint)
         {
             this.connector = connector;
             this.grafanaEndpoint = grafanaEndpoint;
             this.pnlDashboard = pnlDashboard;
+            this.appEndpoint = appEndpoint;
         }
 
         internal async Task<ExecutionsListViewModel> CreateListViewModel(DateTime? day = null)
@@ -45,15 +47,15 @@ namespace StratedgemeMonitor.Controllers.Executions
 
             List<ExecutionModel> trades = await GetExecutions();
 
-            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>(), grafanaEndpoint, pnlDashboard);
+            return new ExecutionsListViewModel(currentDay, trades ?? new List<ExecutionModel>(), grafanaEndpoint, pnlDashboard, appEndpoint);
         }
 
-        private async Task<List<ExecutionModel>> GetExecutions()
+        internal async Task<List<ExecutionModel>> GetExecutions(DateTime? day = null)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(30));
 
-            var result = await connector.GetForDay(broker, currentDay);
+            var result = await connector.GetForDay(broker, day ?? currentDay);
 
             if (!result.Success)
                 logger.Error(result.Message);
