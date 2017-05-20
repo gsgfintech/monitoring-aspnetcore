@@ -1,6 +1,4 @@
-﻿@using Syncfusion.JavaScript.Models;
-
-@model StratedgemeMonitor.ViewModels.Executions.ExecutionsListViewModel
+﻿@model StratedgemeMonitor.ViewModels.Executions.ExecutionsListViewModel
 
 @{
     ViewBag.Title = $"Trades - {Model.Day.ToString("dd MMM")}";
@@ -26,17 +24,7 @@
             </div>
             @if (Model.Trades.Count > 0)
             {
-                <ej-grid id="TradesGrid" allow-grouping="true" group-settings ="@(new GroupSettings { GroupedColumns = new List<string>() { "Cross" } })" datasource="Model.Trades">
-                    <e-columns>
-                        <e-column field="ExecutionTime" header-text="Time (HKT)" format="{0:dd/MM/yyyy HH:mm:ss}"></e-column>
-                        <e-column field="OrderOrigin" header-text="Origin"></e-column>
-                        <e-column field="Side" header-text="Side"></e-column>
-                        <e-column field="Quantity" header-text="Quantity" format="{0:N0}K"></e-column>
-                        <e-column field="Cross" header-text="Cross"></e-column>
-                    </e-columns>
-                </ej-grid>
-
-                @*<table class="table table-hover">
+                <table class="table table-hover">
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => Model.Trades.First().ExecutionTime)
@@ -113,7 +101,7 @@
                         </tr>
                     }
 
-                </table>*@
+                </table>
             }
             else
             {
