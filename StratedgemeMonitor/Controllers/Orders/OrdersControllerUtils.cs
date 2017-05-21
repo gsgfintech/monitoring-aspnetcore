@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.Controllers.Orders
@@ -115,6 +116,33 @@ namespace StratedgemeMonitor.Controllers.Orders
             {
                 FileDownloadName = fileName
             };
+        }
+
+        internal async Task<(bool Success, string Message)> MarkAsInactive(Broker broker, long permanentId)
+        {
+            var result = await connector.Get(broker, permanentId);
+
+            if (!result.Success || result.Order == null)
+            {
+                logger.Error(result.Message);
+                return (false, $"Unable to mark order {broker}-{permanentId} as inactive: failed to retrieve order");
+            }
+
+            var order = result.Order;
+
+            order.LastUpdateTime = DateTimeOffset.Now;
+            order.Status = OrderStatusCode.Inactive;
+            order.History.Add(new OrderHistoryPoint()
+            {
+                Message = "Manually marked as inactive",
+                Status = OrderStatusCode.Inactive,
+                Timestamp = DateTimeOffset.Now
+            });
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
+
+            return await connector.AddOrUpdate(order, cts.Token);
         }
 
         private async Task<byte[]> CreateExcel()
