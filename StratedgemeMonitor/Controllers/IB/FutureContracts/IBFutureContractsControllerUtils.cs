@@ -1,5 +1,6 @@
 ﻿using Capital.GSG.FX.Monitoring.Server.Connector;
 using StratedgemeMonitor.Models.IB.FutureContracts;
+using StratedgemeMonitor.ViewModels.IB.FutureContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,33 @@ using System.Threading.Tasks;
 
 namespace StratedgemeMonitor.Controllers.IB.FutureContracts
 {
-    public class FutureContractsControllerUtils
+    public class IBFutureContractsControllerUtils
     {
         private readonly BackendIBFutureContractsConnector connector;
+        private readonly string appEndpoint;
 
-        public FutureContractsControllerUtils(BackendIBFutureContractsConnector connector)
+        public IBFutureContractsControllerUtils(BackendIBFutureContractsConnector connector, string appEndpoint)
         {
             this.connector = connector;
+            this.appEndpoint = appEndpoint;
+        }
+
+        internal async Task<FutureContractsListViewModel> Index()
+        {
+            var result = await GetAll();
+
+            if (!result.Success)
+                return new FutureContractsListViewModel()
+                {
+                    AppEndpoint = appEndpoint,
+                    Error = result.Message
+                };
+            else
+                return new FutureContractsListViewModel()
+                {
+                    AppEndpoint = appEndpoint,
+                    Contracts = result.Contracts
+                };
         }
 
         internal async Task<(bool Success, string Message, List<FutureContractModel> Contracts)> GetAll()

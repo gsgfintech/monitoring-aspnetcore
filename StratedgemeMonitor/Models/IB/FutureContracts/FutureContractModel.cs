@@ -18,6 +18,8 @@ namespace StratedgemeMonitor.Models.IB.FutureContracts
 
         public string Description { get; set; }
         public string Exchange { get; set; }
+        public double Multiplier { get; set; }
+        public string StrKey { get; set; }
     }
 
     public static class FutureContractModelExtensions
@@ -33,6 +35,8 @@ namespace StratedgemeMonitor.Models.IB.FutureContracts
                 CurrentExpi = contract.CurrentExpi,
                 Description = contract.Description,
                 Exchange = contract.Exchange,
+                Multiplier = contract.Multiplier,
+                StrKey = $"{contract.Exchange}_{contract.Symbol}_{contract.Multiplier}",
                 Symbol = contract.Symbol
             };
         }
@@ -53,6 +57,7 @@ namespace StratedgemeMonitor.Models.IB.FutureContracts
                 CurrentExpi = contract.CurrentExpi,
                 Description = contract.Description,
                 Exchange = contract.Exchange,
+                Multiplier = contract.Multiplier,
                 Symbol = contract.Symbol
             };
         }

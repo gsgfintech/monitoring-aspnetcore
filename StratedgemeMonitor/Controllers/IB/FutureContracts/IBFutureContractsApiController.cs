@@ -11,11 +11,11 @@ namespace StratedgemeMonitor.Controllers.IB.FutureContracts
 {
     [Authorize]
     [Route("api/futurecontracts")]
-    public class FutureContractsApiController : Controller
+    public class IBFutureContractsApiController : Controller
     {
-        private readonly FutureContractsControllerUtils utils;
+        private readonly IBFutureContractsControllerUtils utils;
 
-        public FutureContractsApiController(FutureContractsControllerUtils utils)
+        public IBFutureContractsApiController(IBFutureContractsControllerUtils utils)
         {
             this.utils = utils;
         }
@@ -57,7 +57,13 @@ namespace StratedgemeMonitor.Controllers.IB.FutureContracts
         [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromBody]CRUDModel key)
         {
-            //var result = await utils.Delete(key.Key.ToString());
+            string[] parts = key.Key.ToString().Split('_');
+
+            string exchange = parts[0];
+            string symbol = parts[1];
+            double multiplier = double.Parse(parts[2]);
+
+            var result = await utils.Delete(exchange, symbol, multiplier);
 
             // TODO : use result
 

@@ -243,8 +243,9 @@ namespace StratedgemeMonitor
             services.AddSingleton((serviceProvider) =>
             {
                 var connector = serviceProvider.GetService<BackendIBFutureContractsConnector>();
+                string appEndpoint = appConfigSection.GetValue<string>("Endpoint");
 
-                return new FutureContractsControllerUtils(connector);
+                return new IBFutureContractsControllerUtils(connector, appEndpoint);
             });
 
             services.AddSingleton((serviceProvider) =>
