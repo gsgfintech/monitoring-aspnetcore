@@ -20,6 +20,7 @@ using System.IO.Compression;
 using StratedgemeMonitor.Controllers.MonitorBackend;
 using StratedgemeMonitor.Controllers.FAConfigurations;
 using StratedgemeMonitor.Controllers.Stratedgeme.Strategies;
+using StratedgemeMonitor.Controllers.IB.FutureContracts;
 
 namespace StratedgemeMonitor
 {
@@ -147,6 +148,11 @@ namespace StratedgemeMonitor
 
             services.AddSingleton((serviceProvider) =>
             {
+                return connector.IBFutureContractsConnector;
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
                 return connector.OrdersConnector;
             });
 
@@ -232,6 +238,13 @@ namespace StratedgemeMonitor
                 var faConfigurationsConnector = serviceProvider.GetService<BackendFAConfigurationsConnector>();
 
                 return new FAConfigurationsControllerUtils(faConfigurationsConnector);
+            });
+
+            services.AddSingleton((serviceProvider) =>
+            {
+                var connector = serviceProvider.GetService<BackendIBFutureContractsConnector>();
+
+                return new FutureContractsControllerUtils(connector);
             });
 
             services.AddSingleton((serviceProvider) =>
