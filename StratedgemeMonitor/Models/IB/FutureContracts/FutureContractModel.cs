@@ -32,7 +32,7 @@ namespace StratedgemeMonitor.Models.IB.FutureContracts
             return new FutureContractModel()
             {
                 Currency = contract.Currency.ToString(),
-                CurrentExpi = contract.CurrentExpi,
+                CurrentExpi = contract.CurrentExpi.ToLocalTime(),
                 Description = contract.Description,
                 Exchange = contract.Exchange,
                 Multiplier = contract.Multiplier,

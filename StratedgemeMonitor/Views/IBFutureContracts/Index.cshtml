@@ -1,29 +1,40 @@
 ﻿@model StratedgemeMonitor.ViewModels.IB.FutureContracts.FutureContractsListViewModel
 
-<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>IB - Future Contracts</h4>
+    @{
+        ViewBag.Title = "IB - Future Contracts";
+    }
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>IB - Future Contracts</h4>
+                </div>
+                <ej-grid id="ContractsGrid" allow-paging="true" allow-sorting="true" allow-filtering="true">
+                    <e-datamanager url="@(Model.AppEndpoint)/api/futurecontracts/list"
+                                   insert-url="@(Model.AppEndpoint)/api/futurecontracts/add"
+                                   update-url="@(Model.AppEndpoint)/api/futurecontracts/update"
+                                   remove-url="@(Model.AppEndpoint)/api/futurecontracts/delete"
+                                   adaptor="UrlAdaptor"></e-datamanager>
+                    <e-sort-settings>
+                        <e-sorted-columns>
+                            <e-sorted-column field="Exchange" direction="Ascending"></e-sorted-column>
+                            <e-sorted-column field="Symbol" direction="Ascending"></e-sorted-column>
+                        </e-sorted-columns>
+                    </e-sort-settings>
+                    <e-filter-settings filter-type="Menu" />
+                    <e-edit-settings allow-adding="true" allow-editing="true" allow-deleting="true" show-delete-confirm-dialog="true"></e-edit-settings>
+                    <e-toolbar-settings show-toolbar="true" toolbar-items='@new List<string> {"add","edit", "delete", "update","cancel"}' />
+                    <e-columns>
+                        <e-column field="strKey" header-text="StrKey" is-primary-key="true" visible="false"></e-column>
+                        <e-column field="exchange" header-text="Exchange" is-primary-key="true"></e-column>
+                        <e-column field="symbol" header-text="Symbol" is-primary-key="true"></e-column>
+                        <e-column field="multiplier" header-text="Multiplier" is-primary-key="true"></e-column>
+                        <e-column field="currency" header-text="Currency"></e-column>
+                        <e-column field="description" header-text="Description"></e-column>
+                        <e-column field="currentExpi" header-text="Next Expiration" edit-type="Datepicker" format="{0:dd/MM/yyyy}"></e-column>
+                    </e-columns>
+                </ej-grid>
             </div>
-            <ej-grid id="ContractsGrid">
-                <e-datamanager url="@(Model.AppEndpoint)/api/futurecontracts/list"
-                               insert-url="@(Model.AppEndpoint)/api/futurecontracts/add"
-                               update-url="@(Model.AppEndpoint)/api/futurecontracts/update"
-                               remove-url="@(Model.AppEndpoint)/api/futurecontracts/delete"
-                               adaptor="UrlAdaptor"></e-datamanager>
-                <e-edit-settings allow-adding="true" allow-editing="true" allow-deleting="true" show-delete-confirm-dialog="true"></e-edit-settings>
-                <e-toolbar-settings show-toolbar="true" toolbar-items='@new List<string> {"add","edit", "delete", "update","cancel"}' />
-                <e-columns>
-                    <e-column field="strKey" header-text="StrKey" is-primary-key="true" visible="false"></e-column>
-                    <e-column field="exchange" header-text="Exchange" is-primary-key="true"></e-column>
-                    <e-column field="symbol" header-text="Symbol" is-primary-key="true"></e-column>
-                    <e-column field="multiplier" header-text="Multiplier" is-primary-key="true"></e-column>
-                    <e-column field="currency" header-text="Currency"></e-column>
-                    <e-column field="description" header-text="Description"></e-column>
-                    <e-column field="currentexpi" header-text="Next Expiration" edit-type="Datepicker" format="{0:dd/MM/yyyy}"></e-column>
-                </e-columns>
-            </ej-grid>
         </div>
     </div>
-</div>
