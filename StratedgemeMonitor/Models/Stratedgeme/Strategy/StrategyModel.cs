@@ -43,7 +43,7 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
             return new StrategyModel()
             {
                 Available = strat.Available,
-                Config = strat.Config?.Select(p => new ConfigParamModel() { Key = p.Key, Value = p.Value }).ToList(),
+                Config = strat.Config?.Where(p => p.Key != "StratName" && p.Key != "StratVersion").Select(p => new ConfigParamModel() { Key = p.Key.Replace("Param", ""), Value = p.Value }).ToList(),
                 CreationDate = strat.CreationDate,
                 Description = strat.Description,
                 DllPath = strat.DllPath,

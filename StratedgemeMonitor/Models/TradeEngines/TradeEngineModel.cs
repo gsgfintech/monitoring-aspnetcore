@@ -36,12 +36,21 @@ namespace StratedgemeMonitor.Models.TradeEngines
             Status = status;
             Strats = tradingStatus.Strats;
 
+            if (!tradingStatus.Crosses.IsNullOrEmpty())
+            {
+                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Select(c => c.Cross.ToString())).OrderBy(c => c));
+                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Where(c => c.IsTrading).Select(c => c.Cross.ToString()).OrderBy(c => c)));
+                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Where(c => !c.IsTrading).Select(c => c.Cross.ToString()).OrderBy(c => c)));
+            }
+            else
+            {
+                CrossesList = new SelectList(new string[1] { "ALL" });
+                TradingCrossesList = new SelectList(new string[1] { "ALL" });
+                NonTradingCrossesList = new SelectList(new string[1] { "ALL" });
+            }
+
             if (!Strats.IsNullOrEmpty())
             {
-                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Select(s => s.Cross.ToString()).OrderBy(c => c)));
-                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
-                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(Strats.Where(s => !s.Trading).Select(s => s.Cross.ToString()).OrderBy(c => c)));
-
                 AllStratsList = new SelectList(Strats.Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 ActiveStratsList = new SelectList(Strats.Where(s => s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
                 InactiveStratsList = new SelectList(Strats.Where(s => !s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));

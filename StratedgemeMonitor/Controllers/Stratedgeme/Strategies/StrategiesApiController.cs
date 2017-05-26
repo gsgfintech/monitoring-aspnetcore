@@ -24,10 +24,7 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
         {
             var result = await utils.Get(name, version);
 
-            var data = result.Model?.Config?
-                .Where(p => p.Key != "StratName" && p.Key != "StratVersion")
-                .Select(p => new ConfigParamModel() { Key = p.Key.Replace("Param", ""), Value = p.Value })
-                .ToList() ?? new List<ConfigParamModel>();
+            var data = result.Model?.Config?.ToList() ?? new List<ConfigParamModel>();
 
             return Json(new { result = data, count = data.Count });
         }
