@@ -15,11 +15,7 @@
             <td>@Html.DisplayFor(m => strategy.Version)</td>
             <td>@Html.DisplayFor(m => strategy.CreationDate)</td>
             <td>@Html.DisplayFor(m => strategy.Description)</td>
-            <td>
-                <div class="btn-group btn-group-xs">
-                    <a class="btn btn-primary" asp-action="Details" asp-route-name="@strategy.Name" asp-route-version="@strategy.Version"><span class="glyphicon glyphicon-plus"></span></a>
-                </div>
-            </td>
+            <td><a class="btn btn-xs btn-primary" asp-action="Details" asp-route-name="@strategy.Name" asp-route-version="@strategy.Version"><span class="glyphicon glyphicon-plus"></span></a></td>
         </tr>
     }
 </table>

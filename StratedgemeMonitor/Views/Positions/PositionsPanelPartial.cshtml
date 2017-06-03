@@ -11,7 +11,6 @@
                 <th>@Html.DisplayNameFor(m => Model.First().PositionQuantity)</th>
                 <th>@Html.DisplayNameFor(m => Model.First().AverageCost)</th>
                 <th>@Html.DisplayNameFor(m => Model.First().LastUpdate)</th>
-                <th></th>
             </tr>
 
             @foreach (var position in Model)
@@ -28,9 +27,6 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => position.LastUpdate)
-                    </td>
-                    <td>
-                        <a class="btn btn-xs btn-primary" asp-action="Details" asp-route-broker="@position.Broker" asp-route-account="@position.Account" asp-route-cross="@position.Cross"><span class="glyphicon glyphicon-plus"></span></a>
                     </td>
                 </tr>
             }

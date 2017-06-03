@@ -1,80 +1,83 @@
 ﻿@model StratedgemeMonitor.Models.PnLs.PnLModel
 
-<div class="@(Model.TotalNet > 0 ? "panel panel-success" : Model.TotalNet < 0 ? "panel panel-danger" : "panel panel-default")">
-    <div class="panel-heading">
-        <strong>PnL (USD)</strong>
-        <div class="pull-right hidden-xs hidden-sm">
-            Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
-            Gross: @Html.DisplayFor(m => Model.TotalGrossRealized) |
-            Fees: @Html.DisplayFor(m => Model.TotalFees) |
-            @Html.DisplayNameFor(m => Model.TotalNet): <strong style="font-size:large">@Html.DisplayFor(m => Model.TotalNet)</strong>
+    <div class="@(Model.TotalNet > 0 ? "panel panel-success" : Model.TotalNet < 0 ? "panel panel-danger" : "panel panel-default")">
+        <div class="panel-heading">
+            <h4 style="display:inline-block">PnL (USD)</h4>
+            <div class="pull-right hidden-xs hidden-sm">
+                Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
+                Gross: @Html.DisplayFor(m => Model.TotalGrossRealized) |
+                Fees: @Html.DisplayFor(m => Model.TotalFees) |
+                @Html.DisplayNameFor(m => Model.TotalNet): <strong style="font-size:large">@Html.DisplayFor(m => Model.TotalNet)</strong>
+            </div>
+            <div class="pull-right visible-sm-inline">
+                Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
+                @Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>
+            </div>
+            <div class="pull-right visible-xs-inline">
+                Unr: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
+                @Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>
+            </div>
         </div>
-        <div class="pull-right visible-sm-inline">
-            Unrealised: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
-            @Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>
-        </div>
-        <div class="pull-right visible-xs-inline">
-            Unr: @Html.DisplayFor(m => Model.TotalGrossUnrealized) |
-            @*@Html.DisplayNameFor(m => Model.TotalNet): <strong>@Html.DisplayFor(m => Model.TotalNet)</strong>*@
-        </div>
-    </div>
-    @if (Model.PerCrossPnLs?.Count > 0)
-    {
-        <table class="table table-condensed">
-            <tr>
-                <th>@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.Cross)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionSize)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenTime)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenDuration)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenPrice)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PipsUnrealized)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.GrossUnrealized)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.GrossRealized)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.TradesCount)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.TotalFees)</th>
-                <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.NetRealized)</th>
-            </tr>
-            @foreach (var item in Model.PerCrossPnLs)
-            {
-                @if (item.Value != null)
+        @if (Model.PerCrossPnLs?.Count > 0)
+        {
+            <table class="table table-condensed">
+                <tr>
+                    <th>@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.Cross)</th>
+                    <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionSize)</th>
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenTime)</th>
+
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenDuration)</th>
+                    <th class="text-right visible-xs visible-sm">Duration</th>
+
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PositionOpenPrice)</th>
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.PipsUnrealized)</th>
+                    <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.GrossUnrealized)</th>
+                    <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.GrossRealized)</th>
+                    <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.TradesCount)</th>
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.TotalFees)</th>
+                    <th class="text-right">@Html.DisplayNameFor(m => Model.PerCrossPnLs.First().Value.NetRealized)</th>
+                </tr>
+                @foreach (var item in Model.PerCrossPnLs)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(m => item.Value.Cross)</td>
-                        <td class="@(item.Value.PositionSize > 0 ? "bg-success text-right" : item.Value.PositionSize < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PositionSize)</td>
-                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenTime)</td>
-                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenDuration)</td>
-                        <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenPrice)</td>
-                        <td class="@(item.Value.PipsUnrealized > 0 ? "bg-success text-right" : item.Value.PipsUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PipsUnrealized)</td>
-                        <td class="@(item.Value.GrossUnrealized > 0 ? "bg-success text-right" : item.Value.GrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossUnrealized)</td>
-                        <td class="@(item.Value.GrossRealized > 0 ? "bg-success text-right" : item.Value.GrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossRealized)</td>
-                        <td class="text-right">@Html.DisplayFor(m => item.Value.TradesCount)</td>
-                        <td class="text-right">@Html.DisplayFor(m => item.Value.TotalFees)</td>
-                        <td class="@(item.Value.NetRealized > 0 ? "bg-success text-right" : item.Value.NetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.NetRealized)</td>
-                    </tr>
+                    @if (item.Value != null)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => item.Value.Cross)</td>
+                            <td class="@(item.Value.PositionSize > 0 ? "bg-success text-right" : item.Value.PositionSize < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.PositionSize)</td>
+                            <td class="text-right hidden-xs hidden-sm">@Html.DisplayFor(m => item.Value.PositionOpenTime)</td>
+                            <td class="text-right">@Html.DisplayFor(m => item.Value.PositionOpenDuration)</td>
+                            <td class="text-right hidden-xs hidden-sm">@Html.DisplayFor(m => item.Value.PositionOpenPrice)</td>
+                            <td class="@(item.Value.PipsUnrealized > 0 ? "bg-success text-right hidden-xs hidden-sm" : item.Value.PipsUnrealized < 0 ? "bg-danger text-right hidden-xs hidden-sm" : "text-right hidden-xs hidden-sm")">@Html.DisplayFor(m => item.Value.PipsUnrealized)</td>
+                            <td class="@(item.Value.GrossUnrealized > 0 ? "bg-success text-right" : item.Value.GrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossUnrealized)</td>
+                            <td class="@(item.Value.GrossRealized > 0 ? "bg-success text-right" : item.Value.GrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.GrossRealized)</td>
+                            <td class="text-right">@Html.DisplayFor(m => item.Value.TradesCount)</td>
+                            <td class="text-right hidden-xs hidden-sm">@Html.DisplayFor(m => item.Value.TotalFees)</td>
+                            <td class="@(item.Value.NetRealized > 0 ? "bg-success text-right" : item.Value.NetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => item.Value.NetRealized)</td>
+                        </tr>
+                    }
                 }
-            }
-            <tr>
-                <th>Total</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th class="@(Model.TotalPipsUnrealized > 0 ? "bg-success text-right" : Model.TotalPipsUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalPipsUnrealized)</th>
-                <th class="@(Model.TotalGrossUnrealized > 0 ? "bg-success text-right" : Model.TotalGrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossUnrealized)</th>
-                <th class="@(Model.TotalGrossRealized > 0 ? "bg-success text-right" : Model.TotalGrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossRealized)</th>
-                <th class="text-right">@Html.DisplayFor(m => Model.TotalTradesCount)</th>
-                <th class="text-right">@Html.DisplayFor(m => Model.TotalFees)</th>
-                <th class="@(Model.TotalNetRealized > 0 ? "bg-success text-right" : Model.TotalNetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalNetRealized)</th>
-            </tr>
-        </table>
-    }
-    else
-    {
-        <div class="panel-body">
-            <p>No PnL</p>
+                <tr>
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th class="hidden-xs hidden-sm"></th>
+                    <th class="hidden-xs hidden-sm"></th>
+                    <th class="@(Model.TotalPipsUnrealized > 0 ? "bg-success text-right hidden-xs hidden-sm" : Model.TotalPipsUnrealized < 0 ? "bg-danger text-right hidden-xs hidden-sm" : "text-right hidden-xs hidden-sm")">@Html.DisplayFor(m => Model.TotalPipsUnrealized)</th>
+                    <th class="@(Model.TotalGrossUnrealized > 0 ? "bg-success text-right" : Model.TotalGrossUnrealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossUnrealized)</th>
+                    <th class="@(Model.TotalGrossRealized > 0 ? "bg-success text-right" : Model.TotalGrossRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalGrossRealized)</th>
+                    <th class="text-right">@Html.DisplayFor(m => Model.TotalTradesCount)</th>
+                    <th class="text-right hidden-xs hidden-sm">@Html.DisplayFor(m => Model.TotalFees)</th>
+                    <th class="@(Model.TotalNetRealized > 0 ? "bg-success text-right" : Model.TotalNetRealized < 0 ? "bg-danger text-right" : "text-right")">@Html.DisplayFor(m => Model.TotalNetRealized)</th>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <div class="panel-body">
+                <p>No PnL</p>
+            </div>
+        }
+        <div class="panel-footer hidden-xs hidden-sm">
+            <p><i><small>Last updated at @Html.DisplayFor(m => Model.LastUpdate)</small></i></p>
         </div>
-    }
-    <div class="panel-footer">
-        <p><i><small>Last updated at @Html.DisplayFor(m => Model.LastUpdate)</small></i></p>
     </div>
-</div>

@@ -8,15 +8,16 @@
     <div class="col-lg-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2 style="display:inline-block">Trades - @Html.DisplayFor(m => Model.Day) <small>(@Model.Trades.Count)</small></h2>
+                <h4 style="display:inline-block">Trades - @Html.DisplayFor(m => Model.Day) <small>(@Model.Trades.Count)</small></h4>
                 <div class="pull-right">
                     <form class="form-horizontal" asp-action="Index">
                         <div class="form-group-sm">
                             <input asp-for="Day" type="date" />
-                            <button class="btn btn-sm btn-primary" type="submit">Go</button>
+                            <button class="btn btn-sm btn-primary hidden-sm hidden-xs" type="submit">Go</button>
+                            <button class="btn btn-xs btn-primary visible-sm visible-xs" type="submit">Go</button>
                             @if (Model.Trades.Count > 0)
                             {
-                                <a class="btn btn-default btn-sm" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
+                                <a class="btn btn-default btn-sm hidden-sm hidden-xs" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
                             }
                         </div>
                     </form>
@@ -111,7 +112,7 @@
             }
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6 hidden-sm hidden-xs">
         @*<div class="panel panel-default">
             <div class="panel-heading">
                 <h2>Cumulative PnL <small>(Gross)</small></h2>

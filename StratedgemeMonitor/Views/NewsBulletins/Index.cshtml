@@ -10,9 +10,9 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2 style="display:inline-block">Open Bulletins <small>(@Model.OpenBulletins.Count)</small></h2>
+                <h4 style="display:inline-block">Open Bulletins <small>(@Model.OpenBulletins.Count)</small></h4>
                 <div class="pull-right">
-                    <a class="@(Model.OpenBulletins.Count > 0 ? "btn btn-danger" : "btn btn-danger disabled")" asp-action="CloseAll">Close All</a>
+                    <a class="@(Model.OpenBulletins.Count > 0 ? "btn btn-xs btn-danger" : "btn btn-xs btn-danger disabled")" asp-action="CloseAll">Close All</a>
                 </div>
             </div>
             @if (Model.OpenBulletins.Count > 0)
@@ -50,9 +50,9 @@
                                 @Html.DisplayFor(modelItem => item.Message)
                             </td>
                             <td>
-                                <div class="btn-group-sm">
+                                <div class="btn-group btn-group-xs">
                                     <a class="btn btn-primary" asp-action="Details" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id"><span class="glyphicon glyphicon-plus"></span></a>
-                                    <a class="btn btn-danger" asp-action="Close" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id">Close</a>
+                                    <a class="btn btn-danger" asp-action="Close" asp-route-source="@item.Source" asp-route-bulletinId="@item.Id"><span class="glyphicon glyphicon-remove"></span></a>
                                 </div>
                             </td>
                         </tr>
@@ -72,7 +72,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h2 style="display:inline-block">Closed Bulletins - @Html.DisplayFor(m => Model.Day) <small>(@Model.BulletinsClosedToday.Count)</small></h2>
+                <h4 style="display:inline-block">Closed Bulletins - @Html.DisplayFor(m => Model.Day) <small>(@Model.BulletinsClosedToday.Count)</small></h4>
                 <div class="pull-right">
                     <form class="form-horizontal" asp-action="Index">
                         <div class="form-group-sm">

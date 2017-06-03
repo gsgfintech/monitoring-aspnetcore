@@ -29,7 +29,7 @@ namespace StratedgemeMonitor.Models.Alerts
         [Display(Name = "Header")]
         public string Subject { get; set; }
 
-        [Display(Name = "Timestamp (HKT)")]
+        [Display(Name = "Time (HKT)")]
         [DisplayFormat(DataFormatString = "{0:dd/MM HH:mm:ss}")]
         public DateTimeOffset Timestamp { get; set; }
     }

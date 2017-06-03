@@ -1,6 +1,8 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-family: 'Roboto', sans-serif;
     padding-top: 50px;
-    padding-bottom: 20px;
 }
 
 /* Wrapping element */
@@ -8,7 +10,12 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
-    width: 1800px;
+}
+
+@media screen and (min-width: 1900px) {
+    .body-content {
+        width: 1800px;
+    }
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -18,22 +25,55 @@ textarea {
     max-width: 280px;
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none
+    h4 {
+        font-size: small;
+    }
+
+    .body-content {
+        font-size: x-small;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .panel, .alert {
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .panel-heading {
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-bottom: 4px;
+        padding-top: 8px;
+    }
+
+    .panel-heading h4 {
+        margin: 0;
+    }
+
+    .panel-body {
+        padding: 4px;
+    }
+
+    .btn-xs {
+        font-size: x-small;
+        line-height: 1.1;
+    }
+
+    footer p {
+        margin-top: 4px;
+        margin-left: 4px;
+    }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 4px;
     }
 }
 
@@ -58,4 +98,8 @@ textarea {
 
 .navbar-right {
     padding-right: 20px;
+}
+
+.panel-body p {
+    margin: 0;
 }

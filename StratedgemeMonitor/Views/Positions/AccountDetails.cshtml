@@ -8,7 +8,7 @@
         <div class="col-md-4 col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>@Html.DisplayFor(m => m.Broker) - @Html.DisplayFor(m => m.Name)</h2>
+                    <h4>@Html.DisplayFor(m => m.Broker) - @Html.DisplayFor(m => m.Name)</h4>
                 </div>
                 <div class="panel-body">
                     <dl class="dl-horizontal">
@@ -21,7 +21,7 @@
                     </dl>
                 </div>
                 <div class="panel-footer">
-                    <a class="btn btn-primary" asp-action="Index">Back</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Index">Back</a>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -50,44 +50,44 @@
                 <table class="table table-hover">
                     <tr>
                         <th></th>
-                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds.CommoditiesValue)</th>
-                        <th>@Html.DisplayNameFor(m => Model.AvailableFunds.StocksValue)</th>
+                        <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.AvailableFunds.CommoditiesValue)</th>
+                        <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.AvailableFunds.StocksValue)</th>
                         <th>@Html.DisplayNameFor(m => Model.AvailableFunds.TotalValue)</th>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.AvailableFunds)</th>
-                        <td>@Html.DisplayFor(m => Model.AvailableFunds.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.AvailableFunds.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.AvailableFunds.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.AvailableFunds.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.AvailableFunds.TotalValue)</td>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.FullAvailableFunds)</th>
-                        <td>@Html.DisplayFor(m => Model.FullAvailableFunds.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.FullAvailableFunds.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullAvailableFunds.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullAvailableFunds.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.FullAvailableFunds.TotalValue)</td>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.FullExcessLiquidity)</th>
-                        <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullExcessLiquidity.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullExcessLiquidity.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.FullExcessLiquidity.TotalValue)</td>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.FullInitMarginReq)</th>
-                        <td>@Html.DisplayFor(m => Model.FullInitMarginReq.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.FullInitMarginReq.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullInitMarginReq.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullInitMarginReq.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.FullInitMarginReq.TotalValue)</td>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.FullMaintMarginReq)</th>
-                        <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullMaintMarginReq.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.FullMaintMarginReq.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.FullMaintMarginReq.TotalValue)</td>
                     </tr>
                     <tr>
                         <th>@Html.DisplayNameFor(m => Model.Leverage)</th>
-                        <td>@Html.DisplayFor(m => Model.Leverage.CommoditiesValue)</td>
-                        <td>@Html.DisplayFor(m => Model.Leverage.StocksValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.Leverage.CommoditiesValue)</td>
+                        <td class="hidden-sm hidden-xs">@Html.DisplayFor(m => Model.Leverage.StocksValue)</td>
                         <td>@Html.DisplayFor(m => Model.Leverage.TotalValue)</td>
                     </tr>
                 </table>

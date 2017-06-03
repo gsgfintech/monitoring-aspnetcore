@@ -5,5 +5,18 @@
 }
 
 <div class="row">
-    @Html.Partial("FAConfigurationPartial", Model.Configuration)
+    @if (Model.Configuration != null)
+    {
+        @Html.Partial("FAConfigurationPartial", Model.Configuration)
+    }
+    else
+    {
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>No valid FA configuration found</p>
+                </div>
+            </div>
+        </div>
+    }
 </div>

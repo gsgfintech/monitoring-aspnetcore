@@ -9,7 +9,8 @@
         @if (Model.ListType == Open)
         {
             <div class="pull-right">
-                <a class="@(Model.Alerts.Count > 0 ? "btn btn-sm btn-danger" : "btn btn-sm btn-danger disabled")" onclick="closeAllAlerts()">Close All</a>
+                <a class="btn btn-sm btn-danger hidden-xs" onclick="closeAllAlerts()">Close All</a>
+                <a class="btn btn-xs btn-danger visible-xs" onclick="closeAllAlerts()">Close All</a>
             </div>
         }
     </div>

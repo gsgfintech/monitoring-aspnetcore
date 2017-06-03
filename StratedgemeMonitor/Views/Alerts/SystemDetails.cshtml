@@ -14,7 +14,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="@(Model.OverallStatus == GREEN ? "panel panel-success" : Model.OverallStatus == YELLOW ? "panel panel-warning" : "panel panel-danger")">
             <div class="panel-heading">
-                <h2>@Html.DisplayFor(m => m.Name) <small>@Html.DisplayFor(m => Model.Datacenter)</small></h2>
+                <h4>@Html.DisplayFor(m => m.Name) <small>@Html.DisplayFor(m => Model.Datacenter)</small></h4>
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
@@ -55,7 +55,7 @@
                 </dl>
             </div>
             <div class="panel-footer">
-                <div class="btn-group">
+                <div class="btn-group btn-group-sm">
                     <a class="btn btn-danger" onclick="deleteSystem('@Model.Name')"><span class="glyphicon glyphicon-trash"></span></a>
                     @if (Model.Restartable)
                     {
@@ -70,7 +70,7 @@
                     }
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-primary" asp-action="Index">Back</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Index">Back</a>
                 </div>
             </div>
         </div>

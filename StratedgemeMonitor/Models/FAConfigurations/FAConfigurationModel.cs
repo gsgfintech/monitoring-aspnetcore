@@ -69,7 +69,7 @@ namespace StratedgemeMonitor.Models.FAConfigurations
 
         private static List<FAAccountAliasModel> ToFAAccountAliasModels(this IEnumerable<FAAccountAlias> aliases)
         {
-            return aliases?.Select(a => a.ToFAAccountAliasModel()).ToList();
+            return aliases?.Select(a => a.ToFAAccountAliasModel()).ToList() ?? new List<FAAccountAliasModel>();
         }
 
         private static FAAllocationModel ToFAAllocationModel(this FAAllocation allocation)
@@ -86,7 +86,7 @@ namespace StratedgemeMonitor.Models.FAConfigurations
 
         private static List<FAAllocationModel> ToFAAllocationModels(this IEnumerable<FAAllocation> allocations)
         {
-            return allocations?.Select(a => a.ToFAAllocationModel()).ToList();
+            return allocations?.Select(a => a.ToFAAllocationModel()).ToList() ?? new List<FAAllocationModel>();
         }
 
         private static FAAllocationProfileModel ToFAAllocationProfileModel(this FAAllocationProfile profile)
@@ -137,7 +137,7 @@ namespace StratedgemeMonitor.Models.FAConfigurations
                 Groups = configuration.Groups.ToFAGroupModels(),
                 LastUpdated = configuration.LastUpdated.ToLocalTime(),
                 MasterAccount = configuration.MasterAccount
-            }; ;
+            };
         }
 
         public static List<FAConfigurationModel> ToFAConfigurationModels(this IEnumerable<FAConfiguration> configurations)
