@@ -8,8 +8,15 @@ body {
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
+    margin-top: 12px;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+@media screen and (max-width: 1899px) {
+    .body-content {
+        width: 100%;
+    }
 }
 
 @media screen and (min-width: 1900px) {
@@ -23,58 +30,6 @@ input,
 select,
 textarea {
     max-width: 280px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    h4 {
-        font-size: small;
-    }
-
-    .body-content {
-        font-size: x-small;
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    .panel, .alert {
-        border-top-width: 0;
-        border-left-width: 0;
-        border-right-width: 0;
-        -moz-border-radius: 0;
-        -webkit-border-radius: 0;
-        border-radius: 0;
-        margin-bottom: 0;
-    }
-
-    .panel-heading {
-        padding-left: 4px;
-        padding-right: 4px;
-        padding-bottom: 4px;
-        padding-top: 8px;
-    }
-
-    .panel-heading h4 {
-        margin: 0;
-    }
-
-    .panel-body {
-        padding: 4px;
-    }
-
-    .btn-xs {
-        font-size: x-small;
-        line-height: 1.1;
-    }
-
-    footer p {
-        margin-top: 4px;
-        margin-left: 4px;
-    }
-
-    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
-        padding: 4px;
-    }
 }
 
 .navbar {
@@ -100,6 +55,69 @@ textarea {
     padding-right: 20px;
 }
 
+.panel, .alert {
+    margin-bottom: 12px;
+}
+
 .panel-body p {
     margin: 0;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    h4 {
+        font-size: small;
+    }
+
+    .body-content {
+        font-size: x-small;
+        margin-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .alert {
+        padding-left: 4px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .panel, .alert {
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .panel-heading {
+        padding-left: 4px;
+        padding-right: 4px;
+        padding-bottom: 4px;
+        padding-top: 8px;
+    }
+
+        .panel-heading h4 {
+            margin: 0;
+        }
+
+    .panel-body {
+        padding: 4px;
+    }
+
+    .btn-xs {
+        font-size: x-small;
+        line-height: 1.1;
+    }
+
+    footer p {
+        margin-top: 4px;
+        margin-left: 4px;
+    }
+
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        padding: 4px;
+    }
 }

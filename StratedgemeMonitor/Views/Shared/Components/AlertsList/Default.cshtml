@@ -6,7 +6,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 style="display:inline-block">@Html.DisplayFor(m => Model.Header) <small>(@Model.Alerts.Count)</small></h4>
-        @if (Model.ListType == Open)
+        @if (Model.ListType == Open && Model.Alerts.Count > 0)
         {
             <div class="pull-right">
                 <a class="btn btn-sm btn-danger hidden-xs" onclick="closeAllAlerts()">Close All</a>

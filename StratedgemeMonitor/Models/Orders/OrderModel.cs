@@ -4,6 +4,7 @@ using Capital.GSG.FX.Data.Core.OrderData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using static StratedgemeMonitor.Utils.FormatUtils;
 
 namespace StratedgemeMonitor.Models.Orders
 {
@@ -18,6 +19,9 @@ namespace StratedgemeMonitor.Models.Orders
 
         [Display(Name = "Pair")]
         public Cross Cross { get; set; }
+
+        [Display(Name = "Pair")]
+        public string CrossShort => ShortenPair(Cross);
 
         [Display(Name = "Fill Price")]
         public double? FillPrice { get; set; }
@@ -34,14 +38,25 @@ namespace StratedgemeMonitor.Models.Orders
         [DisplayFormat(DataFormatString = "{0:dd/MM HH:mm:ss}")]
         public DateTimeOffset? PlacedTime { get; set; }
 
+        [Display(Name = "Placed")]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss}")]
+        public DateTimeOffset? PlacedTimeShort => PlacedTime;
+
         [DisplayFormat(DataFormatString = "{0:N0}K")]
         public double Quantity { get; set; }
 
+        [Display(Name = "Qty")]
+        [DisplayFormat(DataFormatString = "{0:N0}K")]
+        public double QuantityShort => Quantity;
+
         public OrderSide Side { get; set; }
+        public string SideShort => ShortenSide(Side);
 
         public OrderStatusCode Status { get; set; }
+        public string StatusShort => ShortenStatus(Status);
 
         public OrderType Type { get; set; }
+        public string TypeShort => ShortenType(Type);
 
         [Display(Name = "Commission (est.)")]
         public double? EstimatedCommission { get; set; }
@@ -62,6 +77,10 @@ namespace StratedgemeMonitor.Models.Orders
         [Display(Name = "Last Update (HKT)")]
         [DisplayFormat(DataFormatString = "{0:dd/MM HH:mm:ss}")]
         public DateTimeOffset? LastUpdateTime { get; set; }
+
+        [Display(Name = "Updated")]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss}")]
+        public DateTimeOffset? LastUpdateTimeShort => LastUpdateTime;
 
         [Display(Name = "Limit Price")]
         public double? LimitPrice { get; set; }

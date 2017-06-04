@@ -4,6 +4,7 @@ using Capital.GSG.FX.Data.Core.ExecutionData;
 using Capital.GSG.FX.Data.Core.OrderData;
 using System;
 using System.ComponentModel.DataAnnotations;
+using static StratedgemeMonitor.Utils.FormatUtils;
 
 namespace StratedgemeMonitor.Models.Executions
 {
@@ -11,15 +12,23 @@ namespace StratedgemeMonitor.Models.Executions
     {
         public Broker Broker { get; set; }
         public Cross Cross { get; set; }
+        [Display(Name = "Cross")]
+        public string CrossShort => ShortenPair(Cross);
 
         [Display(Name = "Time (HKT)")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}")]
         public DateTimeOffset ExecutionTime { get; set; }
 
+        [Display(Name = "HKT")]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss}")]
+        public DateTimeOffset ExecutionTimeShort => ExecutionTime;
+
         public string Id { get; set; }
 
         [Display(Name = "Origin")]
         public OrderOrigin OrderOrigin { get; set; }
+        [Display(Name = "Origin")]
+        public string OrderOriginShort => ShortenOrigin(OrderOrigin);
 
         public double Price { get; set; }
 
@@ -31,6 +40,8 @@ namespace StratedgemeMonitor.Models.Executions
         public double? RealizedPnlUsd { get; set; }
 
         public ExecutionSide Side { get; set; }
+        [Display(Name = "Side")]
+        public string SideShort => ShortenSide(Side);
 
         [Display(Name = "Duration")]
         public string TradeDuration { get; set; }
