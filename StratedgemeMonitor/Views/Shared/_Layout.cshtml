@@ -32,59 +32,57 @@
 @await FlushAsync()
 
 <body>
-    <div style="overflow: hidden">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Alerts" asp-action="Index" class="navbar-brand">
-                    <img src="~/images/LogoGSG_300x893_transparent_bg.png" alt="GSG" />
-                </a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Alerts" asp-action="Index">Alerts</a></li>
-                    <li><a asp-area="" asp-controller="Positions" asp-action="Index">Positions</a></li>
-                    <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
-                    <li><a asp-area="" asp-controller="Executions" asp-action="Index">Trades</a></li>
-                    <li><a asp-area="" asp-controller="FXEvents" asp-action="Index">FX Events</a></li>
-                    <li><a asp-area="" asp-controller="NewsBulletins" asp-action="Index">News Bulletins</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Clients <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="FAConfigurations" asp-action="Index">IB Allocations</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown hidden-sm hidden-xs">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">IB <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="IBFutureContracts" asp-action="Index">Futures</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Systems <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Strategies" asp-action="Index">Strategies</a></li>
-                            <li><a asp-area="" asp-controller="TradeEngine" asp-action="Index">Trade Engines</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a asp-area="" asp-controller="DBLogger" asp-action="Index">DB Loggers</a></li>
-                            <li><a asp-area="" asp-controller="MonitorBackend" asp-action="Index">Monitor Backend</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
-        </nav>
-        <div class="container body-content">
-            @RenderBody()
-            <footer>
-                <p>&copy; 2016-@DateTime.Today.Year GSG Limited</p>
-            </footer>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a asp-area="" asp-controller="Alerts" asp-action="Index" class="navbar-brand">
+                <img src="~/images/LogoGSG_300x893_transparent_bg.png" alt="GSG" />
+            </a>
         </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a asp-area="" asp-controller="Alerts" asp-action="Index">Alerts</a></li>
+                <li><a asp-area="" asp-controller="Positions" asp-action="Index">Positions</a></li>
+                <li><a asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
+                <li><a asp-area="" asp-controller="Executions" asp-action="Index">Trades</a></li>
+                <li><a asp-area="" asp-controller="FXEvents" asp-action="Index">FX Events</a></li>
+                <li><a asp-area="" asp-controller="NewsBulletins" asp-action="Index">News Bulletins</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Clients <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="" asp-controller="FAConfigurations" asp-action="Index">IB Allocations</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown hidden-sm hidden-xs">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">IB <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="" asp-controller="IBFutureContracts" asp-action="Index">Futures</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Systems <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-area="" asp-controller="Strategies" asp-action="Index">Strategies</a></li>
+                        <li><a asp-area="" asp-controller="TradeEngine" asp-action="Index">Trade Engines</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a asp-area="" asp-controller="DBLogger" asp-action="Index">DB Loggers</a></li>
+                        <li><a asp-area="" asp-controller="MonitorBackend" asp-action="Index">Monitor Backend</a></li>
+                    </ul>
+                </li>
+            </ul>
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <footer>
+            <p>&copy; 2016-@DateTime.Today.Year GSG Limited</p>
+        </footer>
     </div>
 
     <environment names="Development">

@@ -11,7 +11,7 @@
     <div class="col-lg-6 col-lg-offset-3">
         <div class="@(Model.BulletinType == EXCHANGE_AVAILABLE ? "panel panel-success" : Model.BulletinType == EXCHANGE_NOT_AVAILABLE ? "panel panel-danger" : Model.BulletinType == REGULAR ? "panel panel-info" : "panel panel-default")">
             <div class="panel-heading">
-                <h2>@Model.ToString()</h2>
+                <h4>@Model.ToString()</h4>
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
@@ -66,7 +66,7 @@
                 </dl>
             </div>
             <div class="panel-footer">
-                <a class="btn btn-primary" asp-action="Index">Back</a>
+                <a class="btn btn-sm btn-primary" asp-action="Index">Back</a>
             </div>
         </div>
     </div>

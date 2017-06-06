@@ -6,17 +6,18 @@
         ViewBag.Title = $"Orders - {Model.Day.ToString("dd MMM")}";
     }
 
+<div style="overflow: hidden">
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2>Active Orders <small>(@Model.ActiveOrders.Count)</small></h2>
+                    <h4>Active Orders <small>(@Model.ActiveOrders.Count)</small></h4>
                 </div>
                 @if (Model.ActiveOrders.Count > 0)
                 {
                     <table class="table table-hover">
                         <tr>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().PermanentId)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().PermanentId)</th>
                             <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().OrderId)</th>
                             <th></th>
                             <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().PlacedTime)</th>
@@ -27,21 +28,21 @@
                             <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().Side)</th>
                             <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().Quantity)</th>
                             <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().Cross)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().FillPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().LimitPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().StopPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().TrailingAmount)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().LastBid)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().LastAsk)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().Slippage)</th>
-                            <th>@Html.DisplayNameFor(m => Model.ActiveOrders.First().TimeInForce)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().FillPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().LimitPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().StopPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().TrailingAmount)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().LastBid)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().LastAsk)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().Slippage)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.ActiveOrders.First().TimeInForce)</th>
                             <th></th>
                         </tr>
 
                         @foreach (var item in Model.ActiveOrders)
                         {
                             <tr>
-                                <td>@Html.DisplayFor(modelItem => item.PermanentId)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.PermanentId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.OrderId)</td>
                                 <td>
                                     @if (item.IsVirtual)
@@ -57,14 +58,14 @@
                                 <td>@Html.DisplayFor(modelItem => item.Side)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Cross)</td>
-                                <td>@Html.DisplayFor(modelItem => item.FillPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LimitPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.StopPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.TrailingAmount)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LastBid)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LastAsk)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Slippage)</td>
-                                <td>@Html.DisplayFor(modelItem => item.TimeInForce)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.FillPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LimitPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.StopPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.TrailingAmount)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LastBid)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LastAsk)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Slippage)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.TimeInForce)</td>
                                 <td><a class="btn btn-xs btn-primary" asp-action="Details" asp-route-id="@item.PermanentId"><span class="glyphicon glyphicon-plus"></span></a></td>
                             </tr>
                         }
@@ -83,15 +84,16 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h2 style="display:inline-block">Inactive Orders - @Html.DisplayFor(m => Model.Day) <small>(@Model.InactiveOrders.Count)</small></h2>
+                    <h4 style="display:inline-block">Inactive Orders - @Html.DisplayFor(m => Model.Day) <small>(@Model.InactiveOrders.Count)</small></h4>
                     <div class="pull-right">
                         <form class="form-horizontal" asp-action="Index">
                             <div class="form-group-sm">
                                 <input asp-for="Day" type="date" />
-                                <button type="submit">Go</button>
+                                <button class="btn btn-sm btn-default hidden-sm hidden-xs" type="submit">Go</button>
+                                <button class="btn btn-xs btn-default visible-sm visible-xs" type="submit">Go</button>
                                 @if (Model.InactiveOrders.Count > 0)
                                 {
-                                    <a class="btn btn-default btn-sm" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
+                                    <a class="btn btn-default btn-sm hidden-sm hidden-xs" asp-action="ExportExcel">Excel <span class="glyphicon glyphicon-download-alt"></span></a>
                                 }
                             </div>
                         </form>
@@ -101,32 +103,40 @@
                 {
                     <table class="table table-hover">
                         <tr>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().PermanentId)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().PermanentId)</th>
                             <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().OrderId)</th>
                             <th></th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().PlacedTime)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastUpdateTime)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Strategy)</th>
+
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().PlacedTime)</th>
+                            <th class="visible-sm visible-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().PlacedTimeShort)</th>
+
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastUpdateTime)</th>
+                            <th class="visible-sm visible-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastUpdateTimeShort)</th>
+
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().Strategy)</th>
                             <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Status)</th>
                             <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Type)</th>
                             <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Side)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Quantity)</th>
+
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().Quantity)</th>
+                            <th class="visible-sm visible-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().QuantityShort)</th>
+
                             <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Cross)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().FillPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().LimitPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().StopPrice)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().TrailingAmount)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastBid)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastAsk)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().Slippage)</th>
-                            <th>@Html.DisplayNameFor(m => Model.InactiveOrders.First().TimeInForce)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().FillPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().LimitPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().StopPrice)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().TrailingAmount)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastBid)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().LastAsk)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().Slippage)</th>
+                            <th class="hidden-sm hidden-xs">@Html.DisplayNameFor(m => Model.InactiveOrders.First().TimeInForce)</th>
                             <th></th>
                         </tr>
 
                         @foreach (var item in Model.InactiveOrders)
                         {
                             <tr class="@(item.Status == Filled ? "bg-success" : (item.Status == Cancelled || item.Status == ApiCanceled) ? "bg-danger" : "")">
-                                <td>@Html.DisplayFor(modelItem => item.PermanentId)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.PermanentId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.OrderId)</td>
                                 <td>
                                     @if (item.IsVirtual)
@@ -134,22 +144,37 @@
                                         <span class="label label-warning">@Html.DisplayNameFor(m => item.IsVirtual)</span>
                                     }
                                 </td>
-                                <td>@Html.DisplayFor(modelItem => item.PlacedTime)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LastUpdateTime)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Strategy)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Type)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Side)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.PlacedTime)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.PlacedTimeShort)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LastUpdateTime)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.LastUpdateTimeShort)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Strategy)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Status)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.StatusShort)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Type)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.TypeShort)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Side)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.SideShort)</td>
+
                                 <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Cross)</td>
-                                <td>@Html.DisplayFor(modelItem => item.FillPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LimitPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.StopPrice)</td>
-                                <td>@Html.DisplayFor(modelItem => item.TrailingAmount)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LastBid)</td>
-                                <td>@Html.DisplayFor(modelItem => item.LastAsk)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Slippage)</td>
-                                <td>@Html.DisplayFor(modelItem => item.TimeInForce)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Cross)</td>
+                                <td class="visible-sm visible-xs">@Html.DisplayFor(modelItem => item.CrossShort)</td>
+
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.FillPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LimitPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.StopPrice)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.TrailingAmount)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LastBid)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.LastAsk)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.Slippage)</td>
+                                <td class="hidden-sm hidden-xs">@Html.DisplayFor(modelItem => item.TimeInForce)</td>
                                 <td><a class="btn btn-xs btn-primary" asp-action="Details" asp-route-id="@item.PermanentId"><span class="glyphicon glyphicon-plus"></span></a></td>
                             </tr>
                         }
@@ -165,3 +190,4 @@
             </div>
         </div>
     </div>
+</div>
