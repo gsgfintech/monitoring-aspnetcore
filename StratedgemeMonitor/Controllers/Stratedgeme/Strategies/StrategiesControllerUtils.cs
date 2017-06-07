@@ -1,4 +1,5 @@
-﻿using Capital.GSG.FX.Monitoring.Server.Connector;
+﻿using Capital.GSG.FX.Data.Core.ContractData;
+using Capital.GSG.FX.Monitoring.Server.Connector;
 using Capital.GSG.FX.Utils.Core.Logging;
 using Microsoft.Extensions.Logging;
 using StratedgemeMonitor.Models.Stratedgeme.Strategy;
@@ -189,6 +190,70 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
             cts.CancelAfter(TimeSpan.FromSeconds(10));
 
             return await strategyConnector.Delete(name, version, cts.Token);
+        }
+
+        private async Task<(bool Success, string Message)> AddOrUpdateCross(StrategyModel strat, List<CrossConfigModel> config)
+        {
+            strat.CrossesConfig = config;
+
+            strats.AddOrUpdate((strat.Name, strat.Version), strat, (key, oldValue) =>
+            {
+                oldValue.CrossesConfig = config;
+                return oldValue;
+            });
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
+
+            return await strategyConnector.AddOrUpdateCrossesConfig(strat.Name, strat.Version, config.ToDictionary(p => CrossUtils.GetFromStr(p.Cross), c => c.DefaultTicketSize), cts.Token);
+        }
+
+        internal async Task<(bool Success, string Message)> AddCrossParam(string name, string version, CrossConfigModel cross)
+        {
+            var getResult = await Get(name, version);
+
+            if (!getResult.Success || getResult.Model == null)
+                return (false, $"Cannot update cross config of unknown strat {name}-{version}");
+
+            var config = getResult.Model.CrossesConfig ?? new List<CrossConfigModel>();
+
+            config.Add(cross);
+
+            return await AddOrUpdateCross(getResult.Model, config);
+        }
+
+        internal async Task<(bool Success, string Message)> UpdateCrossParam(string name, string version, CrossConfigModel updatedCross)
+        {
+            var getResult = await Get(name, version);
+
+            if (!getResult.Success || getResult.Model == null)
+                return (false, $"Cannot update cross config of unknown strat {name}-{version}");
+
+            var config = getResult.Model.CrossesConfig ?? new List<CrossConfigModel>();
+
+            var param = config.FirstOrDefault(c => c.Cross == updatedCross.Cross);
+
+            if (param != null)
+                param.DefaultTicketSize = updatedCross.DefaultTicketSize;
+
+            return await AddOrUpdateCross(getResult.Model, config);
+        }
+
+        internal async Task<(bool Success, string Message)> DeleteCrossParam(string name, string version, string cross)
+        {
+            var getResult = await Get(name, version);
+
+            if (!getResult.Success || getResult.Model == null)
+                return (false, $"Cannot update cross config of unknown strat {name}-{version}");
+
+            var config = getResult.Model.CrossesConfig ?? new List<CrossConfigModel>();
+
+            var param = config.FirstOrDefault(c => c.Cross == cross);
+
+            if (param != null)
+                config.Remove(param);
+
+            return await AddOrUpdateCross(getResult.Model, config);
         }
     }
 }

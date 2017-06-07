@@ -7,6 +7,7 @@ namespace StratedgemeMonitor.ViewModels.Stratedgeme.Strategies
     {
         public StrategyModel Strategy { get; private set; }
         public List<ConfigParamModel> Config { get; set; }
+        public List<CrossConfigModel> CrossesConfig { get; set; }
 
         public string AppEndpoint { get; private set; }
 
@@ -15,6 +16,7 @@ namespace StratedgemeMonitor.ViewModels.Stratedgeme.Strategies
             Strategy = strategy;
 
             Config = strategy.Config;
+            CrossesConfig = strategy.CrossesConfig;
 
             AppEndpoint = appEndpoint;
         }

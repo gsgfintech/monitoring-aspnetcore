@@ -57,6 +57,24 @@
                     </div>
                 </div>
             </form>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>@Html.DisplayNameFor(m => Model.Strategy.CrossesConfig)</h4>
+                </div>
+                <ej-grid id="CrossesGrid" datasource="Model.CrossesConfig">
+                    <e-datamanager url="@(Model.AppEndpoint)/api/strategies/edit/list-crosses/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                   insert-url="@(Model.AppEndpoint)/api/strategies/edit/add-cross/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                   update-url="@(Model.AppEndpoint)/api/strategies/edit/update-cross/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                   remove-url="@(Model.AppEndpoint)/api/strategies/edit/delete-cross/@(Model.Strategy.Name)/@(Model.Strategy.Version)"
+                                   adaptor="UrlAdaptor"></e-datamanager>
+                    <e-edit-settings allow-adding="true" allow-editing="true" allow-deleting="true" show-confirm-dialog="true"></e-edit-settings>
+                    <e-toolbar-settings show-toolbar="true" toolbar-items='@new List<string> {"add","edit", "delete", "update","cancel"}' />
+                    <e-columns>
+                        <e-column field="cross" header-text="Cross" is-primary-key="true"></e-column>
+                        <e-column field="defaultTicketSize" header-text="Default Ticket Size" format="{0:N0}" edit-type="Numeric"></e-column>
+                    </e-columns>
+                </ej-grid>
+            </div>
         </div>
         <div class="col-md-6 col-xs-12">
             <form asp-controller="Strategies" asp-action="DoEditConfig" method="post" class="form-horizontal">

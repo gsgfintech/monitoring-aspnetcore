@@ -64,5 +64,45 @@ namespace StratedgemeMonitor.Controllers.Stratedgeme.Strategies
 
             return await EditListParamsForDataGrid(name, version);
         }
+
+        [HttpPost("edit/list-crosses/{name}/{version}")]
+        public async Task<IActionResult> EditListCrossesForDataGrid(string name, string version)
+        {
+            var result = await utils.Get(name, version);
+
+            var data = result.Model?.CrossesConfig?.ToList() ?? new List<CrossConfigModel>();
+
+            return Json(new { result = data, count = data.Count });
+        }
+
+        [HttpPost("edit/add-cross/{name}/{version}")]
+        public async Task<IActionResult> EditAddCross([FromBody]CRUDModel<CrossConfigModel> value, string name, string version)
+        {
+            if (value == null || value.Value == null)
+                return Ok();
+
+            var result = await utils.AddCrossParam(name, version, value.Value);
+
+            return await EditListCrossesForDataGrid(name, version);
+        }
+
+        [HttpPost("edit/update-cross/{name}/{version}")]
+        public async Task<IActionResult> EditUpdateCross([FromBody]CRUDModel<CrossConfigModel> value, string name, string version)
+        {
+            if (value == null || value.Value == null)
+                return Ok();
+
+            var result = await utils.UpdateCrossParam(name, version, value.Value);
+
+            return await EditListCrossesForDataGrid(name, version);
+        }
+
+        [HttpPost("edit/delete-cross/{name}/{version}")]
+        public async Task<IActionResult> EditDeleteCross([FromBody]CRUDModel key, string name, string version)
+        {
+            var result = await utils.DeleteCrossParam(name, version, key.Key.ToString());
+
+            return await EditListCrossesForDataGrid(name, version);
+        }
     }
 }

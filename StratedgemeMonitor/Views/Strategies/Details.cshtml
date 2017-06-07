@@ -38,6 +38,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>@Html.DisplayNameFor(m => Model.Strategy.CrossesConfig)</h4>
+                    </div>
+                    @if (Model.Strategy.CrossesConfig?.Count > 0)
+                    {
+                        <table class="table table-hover">
+                            @foreach (var param in Model.Strategy.CrossesConfig)
+                            {
+                                <tr>
+                                    <th>@Html.DisplayFor(m => param.Cross)</th>
+                                    <td>@Html.DisplayFor(m => param.DefaultTicketSize)</td>
+                                </tr>
+                            }
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="panel-body">
+                            <p>No cross</p>
+                        </div>
+                    }
+                </div>
             </div>
             <div class="col-md-6 col-xs-12">
                 <div class="panel panel-default">

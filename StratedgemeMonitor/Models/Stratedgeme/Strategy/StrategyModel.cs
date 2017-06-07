@@ -27,6 +27,9 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
         [Display(Name = "Parameters")]
         public List<ConfigParamModel> Config { get; set; }
 
+        [Display(Name = "Crosses Config")]
+        public List<CrossConfigModel> CrossesConfig { get; set; }
+
         public override string ToString()
         {
             return $"{Name}-{Version}";
@@ -45,6 +48,7 @@ namespace StratedgemeMonitor.Models.Stratedgeme.Strategy
                 Available = strat.Available,
                 Config = strat.Config?.Where(p => p.Key != "StratName" && p.Key != "StratVersion").Select(p => new ConfigParamModel() { Key = p.Key.Replace("Param", ""), Value = p.Value }).ToList(),
                 CreationDate = strat.CreationDate,
+                CrossesConfig = strat.CrossesAndDefaultTicketSizes?.Select(c => new CrossConfigModel() { Cross = c.Key.ToString(), DefaultTicketSize = c.Value }).ToList(),
                 Description = strat.Description,
                 DllPath = strat.DllPath,
                 Name = strat.Name,
