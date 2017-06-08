@@ -1,5 +1,4 @@
-﻿using Capital.GSG.FX.Data.Core.Strategy;
-using Capital.GSG.FX.Data.Core.SystemData;
+﻿using Capital.GSG.FX.Data.Core.SystemData;
 using Capital.GSG.FX.Utils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StratedgemeMonitor.Models.Systems;
@@ -15,7 +14,18 @@ namespace StratedgemeMonitor.Models.TradeEngines
 
         public SystemStatusModel Status { get; set; }
 
-        public List<TradeEngineConfigStrategy> Strats { get; set; }
+        [Display(Name = "Trading Status")]
+        public List<TradeEngineStratCrossModel> TradingStatus => !Strats.IsNullOrEmpty() ? Strats.Select(s => !s.Crosses.IsNullOrEmpty() ? s.Crosses.Select(c => new TradeEngineStratCrossModel()
+        {
+            Cross = c.Cross,
+            IsTrading = c.IsTrading,
+            StratName = s.Name,
+            StratVersion = s.Version
+        }) : new List<TradeEngineStratCrossModel>()).Aggregate((cur, next) => cur.Concat(next)).ToList() : new List<TradeEngineStratCrossModel>();
+
+        public bool IsAllTrading => !TradingStatus.IsNullOrEmpty() && TradingStatus.Count(c => !c.IsTrading) == 0;
+
+        public List<TradeEngineTradingStatusStrat> Strats { get; set; }
 
         public SelectList CrossesList { get; private set; }
         public SelectList TradingCrossesList { get; private set; }
@@ -36,11 +46,14 @@ namespace StratedgemeMonitor.Models.TradeEngines
             Status = status;
             Strats = tradingStatus.Strats;
 
-            if (!tradingStatus.Crosses.IsNullOrEmpty())
+            if (!TradingStatus.IsNullOrEmpty())
             {
-                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Select(c => c.Cross.ToString())).OrderBy(c => c));
-                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Where(c => c.IsTrading).Select(c => c.Cross.ToString()).OrderBy(c => c)));
-                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingStatus.Crosses.Where(c => !c.IsTrading).Select(c => c.Cross.ToString()).OrderBy(c => c)));
+                var allCrosses = TradingStatus.Select(c => c.Cross.ToString()).Distinct();
+                var tradingCrosses = TradingStatus.Where(c => c.IsTrading).Select(c => c.Cross.ToString()).Distinct();
+
+                CrossesList = new SelectList((new string[1] { "ALL" }).Concat(allCrosses.OrderBy(c => c)));
+                TradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(tradingCrosses.OrderBy(c => c)));
+                NonTradingCrossesList = new SelectList((new string[1] { "ALL" }).Concat(allCrosses.Except(tradingCrosses).OrderBy(c => c)));
             }
             else
             {
@@ -49,13 +62,14 @@ namespace StratedgemeMonitor.Models.TradeEngines
                 NonTradingCrossesList = new SelectList(new string[1] { "ALL" });
             }
 
-            if (!Strats.IsNullOrEmpty())
+            if (!TradingStatus.IsNullOrEmpty())
             {
-                AllStratsList = new SelectList(Strats.Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                ActiveStratsList = new SelectList(Strats.Where(s => s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                InactiveStratsList = new SelectList(Strats.Where(s => !s.Active).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                TradingStratsList = new SelectList(Strats.Where(s => s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
-                NonTradingStratsList = new SelectList(Strats.Where(s => !s.Trading).Select(s => $"{s.Name}-{s.Version}").OrderBy(s => s));
+                var allStrats = TradingStatus.Select(c => $"{c.StratName}-{c.StratVersion}").Distinct();
+                var tradingStrats = TradingStatus.Where(c => c.IsTrading).Select(s => $"{s.StratName}-{s.StratVersion}").Distinct();
+
+                AllStratsList = new SelectList(allStrats.OrderBy(s => s));
+                TradingStratsList = new SelectList(tradingStrats.OrderBy(s => s));
+                NonTradingStratsList = new SelectList(allStrats.Except(tradingStrats).OrderBy(s => s));
             }
         }
     }

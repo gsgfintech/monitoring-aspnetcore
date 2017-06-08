@@ -2,288 +2,320 @@
 
 @model StratedgemeMonitor.ViewModels.TradeEngines.TradeEnginesListViewModel
 
-@{
-    ViewBag.Title = "Trade Engines";
-}
+    @{
+        ViewBag.Title = "Trade Engines";
+    }
 
-<div class="row">
-    <div class="col-xs-12" id="alertholder">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="alertholder"></div>
+        </div>
     </div>
-</div>
 
-@if (Model.TradeEngines.Count > 0)
-{
-    @for (int i = 0; i < Model.TradeEngines.Count; i++)
+    @if (Model.TradeEngines.Count > 0)
+    {
+        @for (int i = 0; i < Model.TradeEngines.Count; i++)
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="@(Model.TradeEngines[i].Status?.OverallStatus == RED ? "panel panel-danger" : Model.TradeEngines[i].Status?.OverallStatus == YELLOW ? "panel panel-warning" : Model.TradeEngines[i].Status?.OverallStatus == GREEN ? "panel panel-success" : "panel panel-default")">
+                        <div class="panel-heading">
+                            <h2>@Html.DisplayFor(m => Model.TradeEngines[i].Name)</h2>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="@(Model.TradeEngines[i].IsAllTrading ? "panel panel-success" : "panel panel-warning")">
+                                        <div class="panel-heading">
+                                            <h4>@Html.DisplayNameFor(m => Model.TradeEngines[i].TradingStatus)</h4>
+                                        </div>
+                                        <table class="table table-condensed">
+                                            @foreach (var stratCross in Model.TradeEngines[i].TradingStatus)
+                                            {
+                                                <tr class="@(stratCross.IsTrading ? "bg-success" : "bg-warning")">
+                                                    <td>@Html.DisplayFor(m => stratCross.StratName)</td>
+                                                    <td>@Html.DisplayFor(m => stratCross.StratVersion)</td>
+                                                    <td>@Html.DisplayFor(m => stratCross.Cross)</td>
+                                                    <td>
+                                                        @if (stratCross.IsTrading)
+                                                        {
+                                                            <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="stop-trading" data-trade-engine="@Model.TradeEngines[i].Name" data-strat-name="@stratCross.StratName" data-strat-version="@stratCross.StratVersion" data-cross="@stratCross.Cross">Stop Trading</button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="btn btn-xs btn-success" data-toggle="modal" data-target="#warningModal" data-goal="start-trading" data-trade-engine="@Model.TradeEngines[i].Name" data-strat-name="@stratCross.StratName" data-strat-version="@stratCross.StratVersion" data-cross="@stratCross.Cross">Start Trading</button>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4>Crosses</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <dl class="dl-horizontal">
+                                                    <dt>Trading Crosses:</dt>
+                                                    <dd>@(string.Join(", ", Model.TradeEngines[i].TradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
+                                                    <dt>Non-Trading Crosses:</dt>
+                                                    <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4>Strategies</h4>
+                                            </div>
+                                            <div class="panel-body">
+                                                <dl class="dl-horizontal">
+                                                    <dt>Trading Strategies:</dt>
+                                                    <dd>@(string.Join(", ", Model.TradeEngines[i].TradingStratsList.Select(s => s.Text)))</dd>
+                                                    <dt>Non-Trading Strategies:</dt>
+                                                    <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingStratsList.Select(s => s.Text)))</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal" asp-action="Index" method="post">
+                                                    <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
+                                                    <input hidden asp-for="Action.Action" value="StopTrading" />
+                                                    <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].TradingCrossesList"></select>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Stop Trading Cross</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal" asp-action="Index" method="post">
+                                                    <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
+                                                    <input hidden asp-for="Action.Action" value="StopTradingStrategy" />
+                                                    <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].TradingStratsList"></select>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Stop Trading Strategy</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal" asp-action="Index" method="post">
+                                                    <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
+                                                    <input hidden asp-for="Action.Action" value="ClosePosition" />
+                                                    <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Close Positions</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <form class="form-horizontal" asp-action="Index" method="post">
+                                                    <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
+                                                    <input hidden asp-for="Action.Action" value="CancelOrders" />
+                                                    <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Cancel Active Orders</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <select id="reset-position-strat" asp-items="@Model.TradeEngines[i].AllStratsList"></select>
+                                                <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-trade-engine="@Model.TradeEngines[i].Name">Reset Position Status</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="@(Model.TradeEngines[i].IsTradingConnectionConnected ? "panel panel-success" : "panel panel-danger")">
+                                            <div class="panel-body">
+                                                <label asp-for="TradeEngines[i].IsTradingConnectionConnected"></label>
+                                                <input id="@(Model.TradeEngines[i].Name)-trading-connection-new-status" type="checkbox" value="@Model.TradeEngines[i].IsTradingConnectionConnected" data-toggle="toggle" data-on="Connected" data-off="Disconnected" data-onstyle="success" data-offstyle="danger" />
+                                                <button class="btn btn-sm" data-toggle="modal" data-target="#warningModal" data-goal="reset-trading-connection-status" data-trade-engine="@Model.TradeEngines[i].Name">Set</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
     {
         <div class="row">
             <div class="col-lg-12">
-                <div class="@(Model.TradeEngines[i].Status?.OverallStatus == RED ? "panel panel-danger" : Model.TradeEngines[i].Status?.OverallStatus == YELLOW ? "panel panel-warning" : Model.TradeEngines[i].Status?.OverallStatus == GREEN ? "panel panel-success" : "panel panel-default")">
-                    <div class="panel-heading">
-                        <h2>@Html.DisplayFor(m => Model.TradeEngines[i].Name)</h2>
-                    </div>
+                <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>Crosses</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <dl class="dl-horizontal">
-                                            <dt>Trading Crosses:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].TradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
-                                            <dt>Non-Trading Crosses:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingCrossesList.Select(c => c.Text).Except(new string[1] { "ALL" })))</dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>Strategies</h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <dl class="dl-horizontal">
-                                            <dt>Active Strategies:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].ActiveStratsList.Select(s => s.Text)))</dd>
-                                            <dt>Inactive Strategies:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].InactiveStratsList.Select(s => s.Text)))</dd>
-                                            <dt>Trading Strategies:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].TradingStratsList.Select(s => s.Text)))</dd>
-                                            <dt>Non-Trading Strategies:</dt>
-                                            <dd>@(string.Join(", ", Model.TradeEngines[i].NonTradingStratsList.Select(s => s.Text)))</dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="panel panel-success">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="StartTrading" />
-                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].NonTradingCrossesList"></select>
-                                            <button type="submit" class="btn btn-sm btn-success">Start Trading</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="StopTrading" />
-                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].TradingCrossesList"></select>
-                                            <button type="submit" class="btn btn-sm btn-danger">Stop Trading</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="ClosePosition" />
-                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
-                                            <button type="submit" class="btn btn-sm btn-danger">Close Positions</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="CancelOrders" />
-                                            <select asp-for="Action.Cross" asp-items="@Model.TradeEngines[i].CrossesList"></select>
-                                            <button type="submit" class="btn btn-sm btn-danger">Cancel Active Orders</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <select id="reset-position-strat" asp-items="@Model.TradeEngines[i].AllStratsList"></select>
-                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#warningModal" data-goal="reset-position-status" data-trade-engine="@Model.TradeEngines[i].Name">Reset Position Status</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="panel panel-success">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="ActivateStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].InactiveStratsList"></select>
-                                            <button type="submit" class="btn btn-sm btn-success">Activate Strategy</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="DeactivateStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].ActiveStratsList"></select>
-                                            <button type="submit" class="btn btn-sm btn-danger">Deactivate Strategy</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-success">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="StartTradingStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].NonTradingStratsList"></select>
-                                            <button type="submit" class="btn btn-sm btn-success">Start Trading Strategy</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="panel panel-danger">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" asp-action="Index" method="post">
-                                            <input hidden asp-for="Action.TradeEngineName" value="@Model.TradeEngines[i].Name" />
-                                            <input hidden asp-for="Action.Action" value="StopTradingStrategy" />
-                                            <select asp-for="Action.Strat" asp-items="@Model.TradeEngines[i].TradingStratsList"></select>
-                                            <button type="submit" class="btn btn-sm btn-danger">Stop Trading Strategy</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="@(Model.TradeEngines[i].IsTradingConnectionConnected ? "panel panel-success" : "panel panel-danger")">
-                                    <div class="panel-body">
-                                        <label asp-for="TradeEngines[i].IsTradingConnectionConnected"></label>
-                                        <input id="@(Model.TradeEngines[i].Name)-trading-connection-new-status" type="checkbox" value="@Model.TradeEngines[i].IsTradingConnectionConnected" data-toggle="toggle" data-on="Connected" data-off="Disconnected" data-onstyle="success" data-offstyle="danger" />
-                                        <button class="btn btn-sm" data-toggle="modal" data-target="#warningModal" data-goal="reset-trading-connection-status" data-trade-engine="@Model.TradeEngines[i].Name">Set</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <p>No trade engine configured</p>
                     </div>
                 </div>
             </div>
         </div>
     }
-}
-else
-{
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <p>No trade engine configured</p>
+    <!-- Modals -->
+    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button id="btn-proceed" type="button" class="btn btn-danger" data-dismiss="modal">Proceed</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-}
-<!-- Modals -->
-<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Warning</h4>
-            </div>
-            <div class="modal-body">
+    <!-- End Modals -->
 
-            </div>
-            <div class="modal-footer">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    <button id="btn-proceed" type="button" class="btn btn-danger" data-dismiss="modal">Proceed</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Modals -->
+    @section Scripts
+        {
+        <script>
+            function startTrading(tradeEngine, stratName, stratVersion, cross) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/tradeengine/' + tradeEngine + '/starttrading/' + stratName + '/' + stratVersion + '/' + cross,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success) {
+                            showBootstrapAlert('success', 'Successfully started trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine);
+                            setTimeout(1000);
+                            location.reload();
+                        }
+                        else {
+                            showBootstrapAlert('danger', data.message || 'Failed to start trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine);
+                        }
+                    }
+                });
+            }
 
-@section Scripts
-{
-    <script>
-        function resetTradingConnectionStatus(tradeEngine, newConnectionStatus) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/tradeengine/' + tradeEngine + '/resettradingconnectionstatus/' + newConnectionStatus,
-                success: function (data) {
-                    console.log(data);
-                    if (data.item1) {
-                        showBootstrapAlert('success', data.item2 || 'Successfully reset trading connection status for ' + tradeEngine);
-                        location.reload();
+            function stopTrading(tradeEngine, stratName, stratVersion, cross) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/tradeengine/' + tradeEngine + '/stoptrading/' + stratName + '/' + stratVersion + '/' + cross,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success) {
+                            showBootstrapAlert('success', 'Successfully stopped trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine);
+                            setTimeout(1000);
+                            location.reload();
+                        }
+                        else {
+                            showBootstrapAlert('danger', data.message || 'Failed to stop trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine);
+                        }
                     }
-                    else {
-                        showBootstrapAlert('danger', data.item2 || 'Failed to reset trading connection status for ' + tradeEngine);
+                });
+            }
+
+            function resetTradingConnectionStatus(tradeEngine, newConnectionStatus) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/tradeengine/' + tradeEngine + '/resettradingconnectionstatus/' + newConnectionStatus,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.item1) {
+                            showBootstrapAlert('success', data.item2 || 'Successfully reset trading connection status for ' + tradeEngine);
+                            location.reload();
+                        }
+                        else {
+                            showBootstrapAlert('danger', data.item2 || 'Failed to reset trading connection status for ' + tradeEngine);
+                        }
                     }
-                }
+                });
+            }
+
+            function requestStratToResetPositionStatus(tradeEngine, strat) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/tradeengine/' + tradeEngine + '/resetpositionstatusstrategy/' + strat,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.item1) {
+                            showBootstrapAlert('success', data.item2 || 'Successfully requested strat ' + strat + ' of ' + tradeEngine + ' to reset its position status');
+                        }
+                        else {
+                            showBootstrapAlert('danger', data.item2 || 'Failed to request strat ' + strat + ' of ' + tradeEngine + ' to reset its position status');
+                        }
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                $('#warningModal').on('show.bs.modal', function (event) {
+                    // Get the button that triggered the modal
+                    var button = $(event.relatedTarget);
+
+                    // Extract value from data-* attributes
+                    var tradeEngine = button.data('trade-engine');
+
+                    var goal = button.data('goal');
+
+                    if (goal === 'reset-position-status') {
+                        var strat = $('#reset-position-strat').val();
+
+                        $(this).find('.modal-body').text('Request strat ' + strat + ' of ' + tradeEngine + ' to reset its position status?');
+
+                        $('#btn-proceed').click(function () {
+                            requestStratToResetPositionStatus(tradeEngine, strat);
+
+                            $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                        });
+                    } else if (goal === 'reset-trading-connection-status') {
+                        var newConnectedStatus = $('#' + tradeEngine + '-trading-connection-new-status').prop('checked');
+
+                        $(this).find('.modal-body').text('Reset trading connection status to ' + newConnectedStatus + ' for ' + tradeEngine + '?');
+
+                        $('#btn-proceed').click(function () {
+                            resetTradingConnectionStatus(tradeEngine, newConnectedStatus);
+
+                            $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                        });
+                    } else if (goal === 'start-trading') {
+                        var stratName = button.data('strat-name');
+                        var stratVersion = button.data('strat-version');
+                        var cross = button.data('cross');
+
+                        $(this).find('.modal-body').text('Start trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine + '?');
+
+                        $('#btn-proceed').click(function () {
+                            startTrading(tradeEngine, stratName, stratVersion, cross);
+
+                            $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                        });
+                    } else if (goal === 'stop-trading') {
+                        var stratName = button.data('strat-name');
+                        var stratVersion = button.data('strat-version');
+                        var cross = button.data('cross');
+
+                        $(this).find('.modal-body').text('Stop trading ' + cross + ' for strat ' + stratName + ' ' + stratVersion + ' on ' + tradeEngine + '?');
+
+                        $('#btn-proceed').click(function () {
+                            stopTrading(tradeEngine, stratName, stratVersion, cross);
+
+                            $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
+                        });
+                    }
+                });
             });
-        }
-
-        function requestStratToResetPositionStatus(tradeEngine, strat) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/tradeengine/' + tradeEngine + '/resetpositionstatusstrategy/' + strat,
-                success: function (data) {
-                    console.log(data);
-                    if (data.item1) {
-                        showBootstrapAlert('success', data.item2 || 'Successfully requested strat ' + strat + ' of ' + tradeEngine + ' to reset its position status');
-                    }
-                    else {
-                        showBootstrapAlert('danger', data.item2 || 'Failed to request strat ' + strat + ' of ' + tradeEngine + ' to reset its position status');
-                    }
-                }
-            });
-        }
-
-        $(document).ready(function () {
-            $('#warningModal').on('show.bs.modal', function (event) {
-                // Get the button that triggered the modal
-                var button = $(event.relatedTarget);
-
-                // Extract value from data-* attributes
-                var tradeEngine = button.data('trade-engine');
-
-                var goal = button.data('goal');
-
-                if (goal === 'reset-position-status') {
-                    var strat = $('#reset-position-strat').val();
-
-                    $(this).find('.modal-body').text('Request strat ' + strat + ' of ' + tradeEngine + ' to reset its position status?');
-
-                    $('#btn-proceed').click(function () {
-                        requestStratToResetPositionStatus(tradeEngine, strat);
-
-                        $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
-                    });
-                } else if (goal === 'reset-trading-connection-status') {
-                    var newConnectedStatus = $('#' + tradeEngine + '-trading-connection-new-status').prop('checked');
-
-                    $(this).find('.modal-body').text('Reset trading connection status to ' + newConnectedStatus + ' for ' + tradeEngine + '?');
-
-                    $('#btn-proceed').click(function () {
-                        resetTradingConnectionStatus(tradeEngine, newConnectedStatus);
-
-                        $('#btn-proceed').off('click'); // necessary to remove the event handler otherwise it might get called again by another popup
-                    });
-                }
-            });
-        });
-    </script>
-}
+        </script>
+    }

@@ -40,10 +40,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Capital.GSG.FX.Data.Core" Version="1.27.2" />
+    <PackageReference Include="Capital.GSG.FX.Data.Core" Version="1.28.0" />
     <PackageReference Include="Capital.GSG.FX.Utils.Core" Version="1.5.0" />
     <PackageReference Include="Capital.GSG.FX.Utils.Core.Logging" Version="2.2.1" />
-    <PackageReference Include="EPPlus.Core" Version="1.5.0" />
+    <PackageReference Include="EPPlus.Core" Version="1.5.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
@@ -54,7 +54,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
-    <PackageReference Include="Monitoring.Server.Connector" Version="3.20.2" />
+    <PackageReference Include="Monitoring.Server.Connector" Version="3.20.4" />
     <PackageReference Include="Syncfusion.EJ.AspNet.Core" Version="15.2600.0.43" />
   </ItemGroup>
   <ItemGroup>
