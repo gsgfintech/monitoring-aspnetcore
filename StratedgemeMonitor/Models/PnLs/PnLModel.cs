@@ -159,14 +159,25 @@ namespace StratedgemeMonitor.Models.PnLs
                 return new PnLModel();
 
             // We want to display the pairs in a specific order
-            Dictionary<Cross, PnLPerCrossModel> pnlPerCrossDict = new Dictionary<Cross, PnLPerCrossModel>();
-            pnlPerCrossDict.Add(Cross.EURUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.EURUSD).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.USDJPY, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDJPY).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.GBPUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.GBPUSD).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.AUDUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.AUDUSD).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.USDCAD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDCAD).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.USDCHF, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDCHF).ToPnLPerCrossModel());
-            pnlPerCrossDict.Add(Cross.NZDUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.NZDUSD).ToPnLPerCrossModel());
+            Dictionary<Cross, PnLPerCrossModel> pnlPerCrossDict = new Dictionary<Cross, PnLPerCrossModel>
+            {
+                { Cross.EURUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.EURUSD).ToPnLPerCrossModel() },
+                { Cross.USDJPY, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDJPY).ToPnLPerCrossModel() },
+                { Cross.GBPUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.GBPUSD).ToPnLPerCrossModel() },
+                { Cross.AUDUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.AUDUSD).ToPnLPerCrossModel() },
+                { Cross.USDCAD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDCAD).ToPnLPerCrossModel() },
+                { Cross.USDCHF, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.USDCHF).ToPnLPerCrossModel() },
+                { Cross.NZDUSD, pnl.PerCrossPnLs.FirstOrDefault(p => p.Cross == Cross.NZDUSD).ToPnLPerCrossModel() }
+            };
+
+            // Add other pairs, if any
+            var pnls = pnl.PerCrossPnLs.OrderBy(p => p.Cross.ToString());
+
+            foreach (var pnlPerCross in pnls)
+            {
+                if (!pnlPerCrossDict.ContainsKey(pnlPerCross.Cross))
+                    pnlPerCrossDict.Add(pnlPerCross.Cross, pnlPerCross.ToPnLPerCrossModel());
+            }
 
             return new PnLModel()
             {
