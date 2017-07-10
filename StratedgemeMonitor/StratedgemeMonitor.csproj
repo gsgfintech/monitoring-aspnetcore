@@ -22,29 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\images\favicon.png">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\images\LogoGSG_300x893_transparent_bg.png">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\js\site-alerts.js" />
-    <Content Include="wwwroot\js\site-systems.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\js\site.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\js\site.min.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Capital.GSG.FX.Data.Core" Version="1.28.0" />
+    <PackageReference Include="Capital.GSG.FX.Data.Core" Version="1.28.1" />
     <PackageReference Include="Capital.GSG.FX.Utils.Core" Version="1.5.0" />
     <PackageReference Include="Capital.GSG.FX.Utils.Core.Logging" Version="2.2.1" />
     <PackageReference Include="EPPlus.Core" Version="1.5.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="1.1.2" />
